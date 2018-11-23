@@ -1,0 +1,37 @@
+{
+    "COMMON": {
+        "SUBMIT": "Envoyer",
+        "BROWSE": "Parcourir",
+        "SAVE": "Sauvegarder",
+        "OK": "OK",
+        "CANCEL": "Annuler",
+        "FIRSTNAME": "Prénom",
+        "LASTNAME": "Nom",
+        "NAME": "Nom",
+        "GENDER": "Sexe",
+        "AGE": "Age",
+        "EMAIL": "Email",
+        "PHONE": "Téléphone",
+        "BIRTHDATE": "Date de naissance",
+        "COUNTRY": "Pays",
+        "EMIRATE": "Emirat",
+        "AREA": "Quartier",
+        "STATE": "Etat",
+        "CITY": "Ville",
+        "ZIP_CODE": "Code postal",
+        "CITY_ZIP_CODE": "Code postal/Ville",
+        "ADDRESS_LINE_1": "Adresse",
+        "ADDRESS_LINE_2": "Adresse 2",
+        "LANGUAGES": "Langues",
+        "GENDER_F": "Femme",
+        "GENDER_M": "Homme",
+        "ADDRESS": "Adresse"
+    },
+    "AUTH": {
+        "LOGIN": "Se connecter",
+        "LOGOUT": "Déconnecter"
+    },
+    "CUSTOMER": {
+        "PICTURE": "Photo"
+    }
+}

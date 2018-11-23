@@ -1,0 +1,37 @@
+{
+    "COMMON": {
+        "SUBMIT": "Submit",
+        "BROWSE": "Browse",
+        "SAVE": "Save",
+        "OK": "OK",
+        "CANCEL": "Cancel",
+        "FIRSTNAME": "First name",
+        "LASTNAME": "Last name",
+        "NAME": "Name",
+        "GENDER": "Gender",
+        "AGE": "Age",
+        "EMAIL": "Email",
+        "PHONE": "Phone number",
+        "BIRTHDATE": "Birth date",
+        "COUNTRY": "Country",
+        "EMIRATE": "Emirate",
+        "AREA": "Area",
+        "STATE": "State",
+        "CITY": "City",
+        "ZIP_CODE": "Zip code",
+        "CITY_ZIP_CODE": "Zip code postal/City",
+        "ADDRESS_LINE_1": "Address",
+        "ADDRESS_LINE_2": "Address 2",
+        "LANGUAGES": "Languages",
+        "GENDER_F": "Female",
+        "GENDER_M": "Male",
+        "ADDRESS": "Address"
+    },
+    "AUTH": {
+        "LOGIN": "Log in",
+        "LOGOUT": "Log  out"
+    },
+    "CUSTOMER": {
+        "PICTURE": "Picture"
+    }
+}

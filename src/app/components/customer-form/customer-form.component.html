@@ -1,0 +1,47 @@
+<form [formGroup]="form" *ngIf="!showCamera">
+  <div>
+    <div class="picture">
+      <label>{{ 'CUSTOMER.PICTURE' | translate }}</label>
+      <app-file-upload [onFileUpload]="addPicture" (onOpenCamera)="showCamera=true"></app-file-upload>
+      <img *ngIf="customer.picture && customer.picture.src" [src]="customer.picture.src" />
+    </div>
+    <mat-radio-group formControlName="gender">
+        <mat-radio-button style="margin-bottom: 11px" value="M">{{ 'COMMON.GENDER_M' | translate }}</mat-radio-button>
+        <mat-radio-button style="margin-left: 15px" value="F">{{ 'COMMON.GENDER_F' | translate }}</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="{{ 'COMMON.FIRSTNAME' | translate }}" formControlName="firstname" required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="{{ 'COMMON.LASTNAME' | translate }}" formControlName="lastname" required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input type='number' matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile">
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email">
+        <!-- <mat-error *ngIf="email.hasError('customEmailValidator')">
+            {{ 'ACCOUNT.INVALID_EMAIL' | translate }}
+        </mat-error> -->
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput [matDatepicker]="picker" placeholder="{{ 'COMMON.BIRTHDATE' | translate }}" formControlName="birthdate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}"
+            autoClose [control]="cityZipCode" formControlName="cityZipCode" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredCities | async" [value]="option.id">
+                {{ option.name }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <button mat-raised-button type="submit" class="btn btn-danger pull-left" (click)="saveUser()"
+    [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
+  <button mat-raised-button class="btn btn-secondary pull-right" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+</form>
+
+<app-webcam *ngIf="showCamera" (onCapture)="setCustomerPicture($event)"></app-webcam> 

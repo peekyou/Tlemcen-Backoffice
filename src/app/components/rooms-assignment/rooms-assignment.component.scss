@@ -1,0 +1,29 @@
+
+.drag-wrapper {
+    // background-color: #fff;
+
+    .drag-container {
+        // background-color: #ccc;
+        padding: 10px;
+
+        div {
+            margin: 4px 2px;
+            padding: 7px 10px;
+            transition: opacity 0.4s ease-in-out;
+        }
+    }
+
+    h4 {
+        margin-left: 12px;
+    }
+}
+
+.customer-scrollable {
+    padding-top: 0 !important;
+    height: 70vh;
+    overflow: scroll;
+}
+
+.customer {
+    color: #fff;
+}

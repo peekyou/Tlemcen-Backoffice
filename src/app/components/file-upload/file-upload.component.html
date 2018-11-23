@@ -1,0 +1,33 @@
+<div *ngIf="!simple" class="issue-drop-zone">
+
+  <div class="issue-drop-zone">
+    <span class="issue-drop-zone__text">
+        <button type="button" class="issue-drop-zone__button" (click)="fileInput.click()">
+            <span *ngIf="browseLabel">{{ browseLabel }}</span>
+            <span *ngIf="!browseLabel">{{ 'COMMON.BROWSE' | translate }}</span>
+        </button>
+        <input type="file" (change)="onFileChanged($event)" class="issue-drop-zone__file" accept="image/*" #fileInput>
+        <div>
+            <button mat-raised-button class="btn btn-sm" (click)="openCamera()">Ou prendre une photo</button>
+        </div>
+    </span>
+  </div>
+  <ng-container *ngTemplateOutlet="thumbnails"></ng-container>
+</div>
+
+<ng-template #thumbnails>
+  <div id="attachment_thumbnails" class="row item-attachments" *ngIf="!simple || file">
+    <div [ngClass]="{'hidden': loading}">
+        <div class="col attachment-content" *ngFor="let f of files || [file]">
+            <div *ngIf="f">
+                <div class="attachment-thumb">
+                    <img height="75" width="125" [src]="f.src" (load)="fileLoad()">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col" *ngIf="loading">
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw" style="margin-top: 1rem;"></i>
+    </div>
+  </div>
+</ng-template>

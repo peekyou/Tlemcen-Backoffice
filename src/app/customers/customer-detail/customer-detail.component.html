@@ -1,0 +1,73 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div *ngIf="!isEditing" class="card card-profile">
+                    <div class="card-body">
+                        <div class="card-avatar">
+                            <img class="img" src="../assets/img/faces/marc.jpg" />
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ customer.firstname }} {{ customer.lastname }}</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>{{ 'COMMON.GENDER' | translate }} :</b> {{ customer.gender }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>{{ 'COMMON.BIRTHDATE' | translate }} :</b> {{ customer.birthdate | date:'dd/MM/yyyy' }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>{{ 'COMMON.PHONE' | translate }} :</b> {{ customer.mobileNumber }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>{{ 'COMMON.EMAIL' | translate }} :</b> {{ customer.email }}
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="customer.address">
+                                <div class="col-12">
+                                    <b>Rue :</b> {{ customer.address.addressLine1 }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Code Postal :</b> {{ customer.address.zipCode }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Ville :</b> {{ customer.address.city }}
+                                </div>
+                            </div>
+                        </div>
+                        <button mat-raised-button type="submit" class="btn btn-danger pull-left" (click)="editCustomer()">Modifier</button>
+                        <button mat-raised-button type="submit" class="btn btn-secondary pull-right">Supprimer</button>
+                    </div>
+                </div>
+                <div *ngIf="isEditing" class="card">
+                    <div class="card-body">
+                      <app-customer-form [customer]="customer" (onSave)="saveCustomer($event)" (onCancel)="isEditing=false">
+                      </app-customer-form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Participations</h4>
+                    </div>
+                    <div class="card-body">
+                       <br>
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Omra Janvier 2017</td>
+                                </tr>
+                                <tr>
+                                    <td>Hajj 2015</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

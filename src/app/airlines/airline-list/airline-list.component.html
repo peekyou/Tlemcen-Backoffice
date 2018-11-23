@@ -1,0 +1,36 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-12">
+              <div class="card">
+                  <div class="card-header card-header-warning">
+                    <h4 class="card-title pull-left">Compagnies aériennes</h4>
+                    <div class="card-header-actions">
+                        <button mat-icon-button title="Ajouter une compagnie" (click)="openAirlineDialog()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                  </div>
+                  <div class="card-body table-responsive">
+                      <table class="table table-hover">
+                          <thead class="text-warning">
+                              <th>Nom</th>
+                              <th></th>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let airline of airlines" [routerLink]="['/airlines', airline.id]">
+                                <td>{{ airline.name }}</td>
+                                <td>
+                                    <button mat-icon-button>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

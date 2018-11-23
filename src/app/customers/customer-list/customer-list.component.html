@@ -1,0 +1,44 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title pull-left">Clients</h4>
+                        <div class="card-header-actions">
+                            <button mat-icon-button title="Ajouter un client" (click)="openCustomerDialog()">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="text-warning">
+                                <th>{{ 'COMMON.NAME' | translate }}</th>
+                                <th>{{ 'COMMON.GENDER' | translate }}</th>
+                                <th>{{ 'COMMON.AGE' | translate }}</th>
+                                <th>{{ 'COMMON.PHONE' | translate }}</th>
+                                <th>{{ 'COMMON.EMAIL' | translate }}</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let customer of customers" [routerLink]="['/customers', customer.id]">
+                                  <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+                                  <td>{{ customer.gender }}</td>
+                                  <td>{{ moment().diff(customer.birthdate, 'years') }}</td>
+                                  <td>{{ customer.mobileNumber }}</td>
+                                  <td>{{ customer.email }}</td>
+                                  <td>
+                                    <button mat-icon-button>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

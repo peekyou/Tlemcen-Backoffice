@@ -1,0 +1,23 @@
+<div class="action-btn">
+  <button mat-raised-button class="btn-info" (click)="triggerSnapshot();">
+    <mat-icon>camera_alt</mat-icon>Prendre une photo
+  </button>
+</div>
+<webcam [height]="380" [width]="380" [trigger]="triggerObservable" 
+  (imageCapture)="handleImage($event)"
+  [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+  [videoOptions]="videoOptions"
+  (cameraSwitched)="cameraWasSwitched($event)"
+  (initError)="handleInitError($event)"></webcam>
+<!-- <br/>
+<button class="actionBtn" (click)="showNextWebcam(true);" [disabled]="!multipleWebcamsAvailable">Next Webcam</button>
+<input id="cameraSwitchCheckbox" type="checkbox" [(ngModel)]="allowCameraSwitch"><label for="cameraSwitchCheckbox">Allow Camera Switch</label>
+<br/>
+<button (click)="showNextWebcam(deviceId);">Activate</button>
+<div class="snapshot" *ngIf="webcamImage">
+    <img [src]="webcamImage.imageAsDataUrl"/>
+</div> -->
+  
+<ul *ngFor="let error of errors">
+  <li>{{error | json}}</li>
+</ul>

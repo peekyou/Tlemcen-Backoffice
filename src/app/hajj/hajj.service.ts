@@ -7,7 +7,7 @@ export class HajjService {
     private api: string;
 
     hajjList: Hajj[] = [
-        { id: '1', year: 2018, pilgrimsCount: 33, revenues: 23455, status: 'En cours', 
+        { id: '1', year: 2018, revenues: 23455, status: 'En cours', 
           hotels: [
             { id: '1', name: 'Makkah Millennium Hotel', expanded: true, pilgrimsCount: 11, roomsCount: 57, rooms: [
               { id: '1', number: '3', bedsNumber: 2, personsNumber: 4, customers: [] },
@@ -123,9 +123,9 @@ export class HajjService {
             { id: '3', gender: 'F', firstname: 'Safia', lastname: 'Bouj', birthdate: new Date(1991, 1, 2), mobileNumber: '0688888888', email: 'safia.bouj@mail.fr', address: {} },
           ]
         },
-        { id: '2', year: 2017, pilgrimsCount: 25, revenues: 16775, status: 'Terminé' },
-        { id: '3', year: 2016, pilgrimsCount: 17, revenues: 13453, status: 'Terminé' },
-        { id: '4', year: 2015, pilgrimsCount: 13, revenues: 12112, status: 'Terminé' },
+        { id: '2', year: 2017, revenues: 16775, status: 'Terminé' },
+        { id: '3', year: 2016, revenues: 13453, status: 'Terminé' },
+        { id: '4', year: 2015, revenues: 12112, status: 'Terminé' },
       ];
 
     constructor() {

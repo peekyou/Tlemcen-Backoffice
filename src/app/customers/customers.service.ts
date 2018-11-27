@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
 import { Customer } from './customer.model';
 
@@ -13,4 +14,10 @@ export class CustomersService {
   ];
 
   constructor() { }
+
+  create(customer: Customer): Observable<Customer> {
+    customer.id = new Date().getMilliseconds().toString();
+    this.customers.unshift(customer);
+    return of(customer);
+  }
 }

@@ -91,6 +91,32 @@
         display: inline-block;
         float: none;
     }
+
+    &.bg-primary{
+        @include navbar-colors($bg-primary, $white-color);
+    }
+    &.bg-info{
+        @include navbar-colors($bg-info, $white-color);
+    }
+
+    &.bg-warning{
+        @include navbar-colors($bg-warning, $white-color);
+    }
+
+    &.bg-rose{
+        @include navbar-colors($bg-rose, $white-color);
+    }
+
+    &.bg-danger{
+        @include navbar-colors($bg-danger, $white-color);
+    }
+
+    &.bg-success{
+        @include navbar-colors($bg-success, $white-color);
+    }
+    &.bg-dark{
+        @include navbar-colors($grey-900, $white-color);
+    }
 }
 
 .off-canvas-sidebar {

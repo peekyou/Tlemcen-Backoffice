@@ -6,7 +6,6 @@ export class Hajj {
     id?: string;
     status?: string;
     year?: number;
-    pilgrimsCount?: number;
     revenues?: number;
 
     hotels?: Hotel[]

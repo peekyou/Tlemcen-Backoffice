@@ -6,16 +6,22 @@ import { SharedModule } from '../core/shared/shared.module';
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { CustomerFormComponent } from './customer-form/customer-form.component';
+import { CustomerFormComponent } from './customers/customer-form/customer-form.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { WebcamComponent } from './webcam/webcam.component';
-import { RoomsAssignmentComponent } from './rooms-assignment/rooms-assignment.component';
-import { SearchCustomerDialogComponent } from './search-customer-dialog/search-customer-dialog.component';
-import { CustomerDialogComponent } from './customer-dialog/customer-dialog.component';
+import { RoomsAssignmentComponent } from './hotels/rooms-assignment/rooms-assignment.component';
+import { SearchCustomerDialogComponent } from './customers/search-customer-dialog/search-customer-dialog.component';
+import { CustomerDialogComponent } from './customers/customer-dialog/customer-dialog.component';
+import { UploadDocumentsDialogComponent } from './upload-documents-dialog/upload-documents-dialog.component';
+import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
+import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
-  SearchCustomerDialogComponent
+  SearchCustomerDialogComponent,
+  UploadDocumentsDialogComponent,
+  PaymentDialogComponent,
+  HotelRoomsDialogComponent
 ];
 
 @NgModule({
@@ -32,7 +38,7 @@ const MODALS = [
     FileUploadComponent,
     WebcamComponent,
     RoomsAssignmentComponent,
-    ...MODALS
+    ...MODALS,
   ],
   exports: [
     FooterComponent,

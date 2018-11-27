@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 
 import { Customer } from '../customer.model';
 import { CustomersService } from '../customers.service';
-import { CustomerDialogComponent } from '../../components/customer-dialog/customer-dialog.component';
+import { CustomerDialogComponent } from '../../components/customers/customer-dialog/customer-dialog.component';
 import * as moment from 'moment';
 
 @Component({

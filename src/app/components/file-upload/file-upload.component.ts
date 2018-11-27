@@ -11,6 +11,8 @@ export class FileUploadComponent {
   _file: AppFile;
   loading: boolean = false;
 
+  @Input() simple: boolean = false;
+  @Input() enableCamera: boolean = true;
   @Input() browseLabel: string;
   @Input() files: AppFile[];
   @Input() fileHolder: any;
@@ -66,7 +68,7 @@ export class FileUploadComponent {
       }
   }
 
-  open(file: AppFile) {
+  delete(file: AppFile) {
       // const modalRef = this.modalService.open(DeleteModal);
       // modalRef.componentInstance.title = file.name;
 

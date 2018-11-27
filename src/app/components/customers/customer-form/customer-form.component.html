@@ -38,10 +38,12 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
-  </div>
-  <button mat-raised-button type="submit" class="btn btn-danger pull-left" (click)="saveUser()"
-    [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
-  <button mat-raised-button class="btn btn-secondary pull-right" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+    <div class="pull-right">
+      <button mat-raised-button type="submit" class="btn btn-info" (click)="saveUser()"
+              [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
+       <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
 </form>
 
 <app-webcam *ngIf="showCamera" (onCapture)="setCustomerPicture($event)"></app-webcam> 

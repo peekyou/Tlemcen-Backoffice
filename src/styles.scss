@@ -7,17 +7,27 @@
     float: right;
 }
 
+.table-hover {
+    cursor: pointer;
+}
+
 .background-pink {
-    background-color: #be058c;
+    background-color: #FFB6C1;
 }
 .background-cyan {
-    background-color: #0cb3c2;
+    background-color: #ADD8E6;
 }
 .pink {
-    color: #be058c;
+    color: #FFB6C1;
 }
 .cyan {
-    color: #0cb3c2;
+    color: #ADD8E6;
+}
+
+.table .mat-icon-button {
+    width: 27px;
+    height: 27px;
+    line-height: 27px;
 }
 
 /* in-flight clone */

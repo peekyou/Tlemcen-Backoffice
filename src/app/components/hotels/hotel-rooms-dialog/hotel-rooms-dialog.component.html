@@ -1,0 +1,22 @@
+<div mat-dialog-title>Nouvel hôtel</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div>
+      <mat-form-field class="full-width">
+          <input type='number' matInput placeholder="Nombre de chambres" formControlName="roomsCount">
+      </mat-form-field>
+      <div formArrayName="roomsPersonCount">
+        <div *ngFor="let roomPersonCount of form.controls.roomsPersonCount.controls; let i = index">
+          <mat-form-field class="full-width">
+              <input type='number' matInput placeholder="Nombre de personnes" formControlName="roomPersonCount">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="pull-right">
+      <button mat-raised-button type="submit" class="btn btn-info" (click)="save()"
+              [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
+        <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+  </form>
+</div>

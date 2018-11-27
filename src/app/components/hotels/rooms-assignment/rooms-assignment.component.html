@@ -1,9 +1,9 @@
 <div>
     <div class="row">
-      <button mat-raised-button type="submit" class="btn btn-danger pull-left" (click)="save()">
+      <button mat-raised-button type="submit" class="btn btn-info pull-left" color="accent" (click)="save()">
         Sauvegarder
       </button>
-      <button mat-raised-button type="submit" class="btn btn-danger pull-left" (click)="generate()">
+      <button mat-raised-button type="submit" class="btn btn-primary pull-left" (click)="generate()">
           Générer automatiqument
       </button>
     </div>
@@ -26,7 +26,7 @@
       </div>
       <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
         <div *ngFor="let hotel of hotels" class="card">
-            <div class="card-header card-header-danger">
+            <div class="card-header card-header-warning">
               <h4 class="card-title pull-left">{{ hotel.name }}</h4>
               <div class="card-header-actions">
                   <button mat-icon-button (click)="hotel.expanded = !hotel.expanded">

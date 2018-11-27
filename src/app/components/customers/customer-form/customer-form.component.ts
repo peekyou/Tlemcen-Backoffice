@@ -5,9 +5,10 @@ import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operato
 import { Subscription, Observable } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 
-import { LookupService } from '../../core/services/lookup.service';
-import { Lookup } from '../../core/models/lookup.model';
-import { Customer } from '../../customers/customer.model';
+import { LookupService } from '../../../core/services/lookup.service';
+import { Lookup } from '../../../core/models/lookup.model';
+import { Customer } from '../../../customers/customer.model';
+import { CustomersService } from '../../../customers/customers.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -30,6 +31,7 @@ export class CustomerFormComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private lookupService: LookupService,
+        private service: CustomersService,
         private router: Router) {
 
         this.lookupService.fetchCities('fr').subscribe(res => {
@@ -63,44 +65,28 @@ export class CustomerFormComponent implements OnInit {
     }
 
     saveUser() {
-        // this.loading = true;
-        // if (!this.service.user) {
-        //     this.service.user = new User();
-        // }
-        // this.service.user.gender = this.form.value.gender;
-        // this.service.user.firstname = this.form.value.firstname;
-        // this.service.user.lastname = this.form.value.lastname;
-        // this.service.user.email = this.form.value.email;
-        // this.service.user.mobileNumber = this.form.value.mobile;
-        // this.service.user.birthdate = this.form.value.birthdate;
-        // this.service.user.favoriteProducts = [this.form.value.favoriteProduct];
-        // if (this.s.config.address && Address.combineCityZipCode(this.s.config.address.country.id)) {
-        //     var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
-        //     this.service.user.address.city = cityZipCode[0];
-        //     this.service.user.address.zipCode = cityZipCode[1];
-        // }
-        // else {
-        //     this.service.user.address.city = Lookup.getValue(this.form.value.city);
-        // }
+        this.loading = true;
+        var newCustomer = new Customer();
+        newCustomer.gender = this.form.value.gender;
+        newCustomer.firstname = this.form.value.firstname;
+        newCustomer.lastname = this.form.value.lastname;
+        newCustomer.email = this.form.value.email;
+        newCustomer.mobileNumber = this.form.value.mobile;
+        newCustomer.birthdate = this.form.value.birthdate;
+		var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
+		newCustomer.address.city = cityZipCode[0];
+		newCustomer.address.zipCode = cityZipCode[1];
+		newCustomer.address.addressLine1 = this.form.value.address1;
         
-        // this.service.user.customField1 = CustomerCustomFields.getValue(this.form.value.customField1),
-        // this.service.user.customField2 = CustomerCustomFields.getValue(this.form.value.customField2),
-        // this.service.user.customField3 = CustomerCustomFields.getValue(this.form.value.customField3),
-        // this.service.user.customField4 = CustomerCustomFields.getValue(this.form.value.customField4),
-
-        // this.loader = this.service
-        //     .create(this.service.user)
-        //     .subscribe(
-        //         res => {
-        //             this.loading = false;
-        //             this.auth.afterLogin(res.loginToken);
-        //             this.service.launchTimer();
-        //             this.router.navigate(['/loyaltycard'], { queryParams: { t: res.urlToken }});
-        //         },
-        //         err =>this.loading = false
-        //     );
-
-    this.onSave.emit();
+        this.loader = this.service
+            .create(newCustomer)
+            .subscribe(
+                res => {
+                    this.loading = false;
+                },
+                err => this.loading = false
+            );
+		this.onSave.emit(newCustomer);
     }
 
     addPicture = (file, customer: Customer) => {

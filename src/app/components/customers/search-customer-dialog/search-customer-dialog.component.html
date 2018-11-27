@@ -1,21 +1,23 @@
-<div mat-dialog-title>Ajouter client à {{ data.title }}</div>
+<div mat-dialog-title>{{ data.title }}</div>
 <div mat-dialog-content>
     <div class="input-group no-border">
         <input type="text" value="" class="form-control" placeholder="Nom, Email, Téléphone...">
-        <button mat-raised-button class="btn btn-white btn-round btn-just-icon">
+        <button mat-icon-button title="Chercher">
             <i class="material-icons">search</i>
-            <div class="ripple-container"></div>
+        </button>
+        <button mat-icon-button title="Créer nouveau client" (click)="newCustomer()" >
+            <mat-icon>create</mat-icon>
         </button>
     </div>
 
-    <div class="row">
-        <button mat-icon-button *ngIf="customersChecked.length > 0">
+    <div class="action-buttons">
+        <button mat-icon-button *ngIf="customersChecked.length > 0" title="Ajouter" (click)="addExisting()">
             <mat-icon>add</mat-icon>
         </button>
-        <mat-divider [vertical]="true" *ngIf="customersChecked.length > 0"></mat-divider>
+        <!--<mat-divider [vertical]="true" *ngIf="customersChecked.length > 0"></mat-divider>
         <button mat-icon-button (click)="newCustomer()" >
             <mat-icon>create</mat-icon>
-        </button>
+        </button> -->
     </div>
 
     <table class="table table-hover">
@@ -23,12 +25,18 @@
             <th></th>
             <th>{{ 'COMMON.NAME' | translate }}</th>
             <th>{{ 'COMMON.PHONE' | translate }}</th>
+            <th></th>
         </thead>
         <tbody>
             <tr *ngFor="let customer of customers">
-                <td><mat-checkbox (change)="customerChecked($event, customer)" ></mat-checkbox></td>
+                <td><mat-checkbox (change)="customerChecked($event, customer)"></mat-checkbox></td>
                 <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                 <td>{{ customer.mobileNumber }}</td>
+                <td>
+                    <button mat-icon-button title="Ajouter" (click)="addExisting(customer)">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>

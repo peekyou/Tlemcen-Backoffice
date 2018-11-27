@@ -9,7 +9,8 @@ import { HajjService } from '../hajj.service';
 import { Hajj } from '../hajj.model';
 import { Hotel } from '../../hotels/hotel.model';
 import { Airline } from '../../airlines/airline.model';
-import { SearchCustomerDialogComponent } from '../../components/search-customer-dialog/search-customer-dialog.component';
+import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
+import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 
 @Component({
   selector: 'app-hajj-detail',
@@ -19,7 +20,6 @@ import { SearchCustomerDialogComponent } from '../../components/search-customer-
 export class HajjDetailComponent implements OnInit {
   moment;
   hajj: Hajj;
-  customers: Customer[];
 
   constructor(
     private service: HajjService, 
@@ -28,7 +28,6 @@ export class HajjDetailComponent implements OnInit {
     private route: ActivatedRoute) { 
 
     this.moment = moment;
-    this.customers = customerService.customers;
   }
 
   ngOnInit() {
@@ -44,12 +43,37 @@ export class HajjDetailComponent implements OnInit {
         autoFocus: false,
         width: '534px',
         data: {
-          title: 'Hajj ' + this.hajj.year
+          title: 'Pèlerins Hajj ' + this.hajj.year
         }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
+    const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
+      if (!this.hajj.customers) {
+        this.hajj.customers = [];
+      }
+      this.hajj.customers = this.hajj.customers.concat(customers);
+    });
+
+    dialogRef.afterClosed().subscribe(customer => {
+        dialogRef.componentInstance.onCustomersAdded.unsubscribe();
+    });
+  }
+
+  openAddHotelDialog() {
+    let dialogRef = this.dialog.open(HotelRoomsDialogComponent, {
+        autoFocus: false,
+        width: '534px',
+        data: {
+          title: 'Hôtel Hajj ' + this.hajj.year
+        }
+    });
+
+    dialogRef.afterClosed().subscribe(hotel => {
+        if (hotel) {
+          if (!this.hajj.hotels) {
+            this.hajj.hotels = [];
+          }
+          this.hajj.hotels.push(hotel);
         }
     });
   }

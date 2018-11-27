@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DndDropEvent } from "ngx-drag-drop";
 import { DragulaService } from 'ng2-dragula';
 
-import { Customer } from '../../customers/customer.model';
-import { Hotel } from '../../hotels/hotel.model';
+import { Customer } from '../../../customers/customer.model';
+import { Hotel } from '../../../hotels/hotel.model';
 
 @Component({
   selector: 'app-rooms-assignment',

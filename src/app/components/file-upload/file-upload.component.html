@@ -7,13 +7,23 @@
             <span *ngIf="!browseLabel">{{ 'COMMON.BROWSE' | translate }}</span>
         </button>
         <input type="file" (change)="onFileChanged($event)" class="issue-drop-zone__file" accept="image/*" #fileInput>
-        <div>
+        <div *ngIf="enableCamera">
             <button mat-raised-button class="btn btn-sm" (click)="openCamera()">Ou prendre une photo</button>
         </div>
     </span>
   </div>
   <ng-container *ngTemplateOutlet="thumbnails"></ng-container>
 </div>
+
+<span *ngIf="simple">
+    <button type="button" class="issue-drop-zone__button" (click)="fileInput.click()">
+        <span *ngIf="browseLabel">{{ browseLabel }}</span>
+        <span *ngIf="!browseLabel">{{ 'COMMON.BROWSE' | translate }}</span>
+    </button>
+    <input class="issue-drop-zone__file" type="file" (change)="onFileChanged($event)" #fileInput>
+    <small *ngIf="recommendedText" class="recommended-size text-muted">{{ recommendedText }}</small>
+    <ng-container *ngTemplateOutlet="thumbnails"></ng-container>            
+</span>
 
 <ng-template #thumbnails>
   <div id="attachment_thumbnails" class="row item-attachments" *ngIf="!simple || file">
@@ -23,6 +33,9 @@
                 <div class="attachment-thumb">
                     <img height="75" width="125" [src]="f.src" (load)="fileLoad()">
                 </div>
+                <dl>
+                    <i class="fa fa-trash" (click)="delete(f)"></i>
+                </dl>
             </div>
         </div>
     </div>

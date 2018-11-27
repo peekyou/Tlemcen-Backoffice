@@ -1,0 +1,21 @@
+<div mat-dialog-title>Documents</div>
+<div mat-dialog-content>
+	<div *ngFor="let customer of customers" class="card">
+		<div class="card-header">
+			<h4 class="card-title">{{ customer.firstname }} {{ customer.lastname }}</h4>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-lg-4 col-12" *ngFor="let document of customer.documents; let i = index">
+					<label>{{ document.name }}</label>
+					<app-file-upload [(file)]="document.file" [enableCamera]="false" [simple]="true"></app-file-upload>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="pull-right">
+		<button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="saveDocuments()"
+			  [disabled]="loading">{{ 'COMMON.SAVE' | translate }}</button>
+		<button mat-raised-button class="btn btn-sm btn-secondary" (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+	</div>
+</div>

@@ -1,0 +1,11 @@
+<div mat-dialog-title>Paiment</div>
+<div mat-dialog-content>
+  <div class="row">
+    
+  </div>
+  <div class="pull-right">
+      <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="pay()"
+              [disabled]="loading">{{ 'COMMON.SAVE' | translate }}</button>
+       <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+</div>

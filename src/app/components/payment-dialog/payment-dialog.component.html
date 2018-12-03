@@ -1,11 +1,22 @@
 <div mat-dialog-title>Paiment</div>
 <div mat-dialog-content>
-  <div class="row">
-    
-  </div>
-  <div class="pull-right">
-      <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="pay()"
-              [disabled]="loading">{{ 'COMMON.SAVE' | translate }}</button>
-       <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
-    </div>
+    <form [formGroup]="form">
+        <div formArrayName="amounts">
+            <div *ngFor="let customer of customers; let i = index" class="card">
+                <div class="card-header">
+                    <h4 class="card-title">{{ customer.firstname }} {{ customer.lastname }}</h4>
+                </div>
+                <div class="card-body">
+                    <mat-form-field>
+                        <input type='number' matInput min="0" placeholder="Montant payé" formControlName="{{i}}">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="pull-right">
+            <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="pay()"
+                    [disabled]="loading">{{ 'COMMON.SAVE' | translate }}</button>
+            <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+        </div>
+    </form>
 </div>

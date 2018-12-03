@@ -1,0 +1,18 @@
+import { NgModule } from '@angular/core';
+import { SharedModule } from '../core/shared/shared.module';
+import { ComponentsModule } from '../components/components.module';
+
+import { OmraRoutingModule } from './omra-routing.module';
+import { OmraDetailComponent } from './omra-detail/omra-detail.component';
+import { OmraListComponent } from './omra-list/omra-list.component';
+import { OmraRoomsPlanComponent } from './omra-rooms-plan/omra-rooms-plan.component';
+
+@NgModule({
+  declarations: [OmraDetailComponent, OmraListComponent, OmraRoomsPlanComponent],
+  imports: [
+    SharedModule,
+    ComponentsModule,
+    OmraRoutingModule
+  ]
+})
+export class OmraModule { }

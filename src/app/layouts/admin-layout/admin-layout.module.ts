@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../core/shared/shared.module';
 import { AdminLayoutRoutes } from './admin-layout.routing';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { OmraComponent } from '../../omra/omra.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
 import { TypographyComponent } from '../../typography/typography.component';
@@ -20,7 +19,6 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
   ],
   declarations: [
     DashboardComponent,
-    OmraComponent,
     UserProfileComponent,
     TableListComponent,
     TypographyComponent,

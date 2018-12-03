@@ -26,7 +26,7 @@ export class HajjListComponent implements OnInit {
       year: 2019,
       customers: [],
       airlines: [],
-      hotels: [],
+      reservations: [],
       revenues: 0,
       status: 'En cours'
     });

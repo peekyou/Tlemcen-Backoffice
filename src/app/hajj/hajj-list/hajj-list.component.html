@@ -6,7 +6,7 @@
                     <div class="card-header card-header-warning">
                         <h4 class="card-title pull-left">Historique des Hajj</h4>
                         <div class="card-header-actions">
-                            <button mat-icon-button title="Nouveau Hajj" (click)="newHajj()">
+                            <button mat-icon-button matTooltip="Nouveau Hajj" (click)="newHajj()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
@@ -25,7 +25,7 @@
                                         <td>{{ hajj.year }}</td>
                                         <td>{{ hajj.customers?.length }}</td>
                                         <td>{{ hajj.status }}</td>
-                                        <td class="text-primary">{{ hajj.revenues }}</td>
+                                        <td class="text-primary">{{ hajj.revenues }} €</td>
                                     </tr>
                                 </tbody>
                             </table>

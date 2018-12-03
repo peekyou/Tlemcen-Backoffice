@@ -2,9 +2,28 @@
     display: none;
 }
 
+.invalid-field {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.inactive {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    opacity: .6;
+}
+
 .card-header-actions {
     max-height: 50px;
     float: right;
+    margin-right: -15px !important;
 }
 
 .table-hover {
@@ -28,6 +47,33 @@
     width: 27px;
     height: 27px;
     line-height: 27px;
+}
+
+.mat-simple-snackbar-action {
+    color: #fff !important;
+}
+
+app-login, app-set-password, app-forget-password {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  app-login, app-set-password, app-forget-password {
+    width: 360px;
+  }
+}
+@media (min-width: 992px) {
+  app-login, app-set-password, app-forget-password {
+    width: 400px;
+  }
+}
+@media (min-width: 1200px) {
+  app-login, app-set-password, app-forget-password {
+    width: 450px;
+  }
 }
 
 /* in-flight clone */

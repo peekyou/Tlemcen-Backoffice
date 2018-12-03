@@ -2,16 +2,16 @@
 <div mat-dialog-content>
     <div class="input-group no-border">
         <input type="text" value="" class="form-control" placeholder="Nom, Email, Téléphone...">
-        <button mat-icon-button title="Chercher">
+        <button mat-icon-button matTooltip="Chercher">
             <i class="material-icons">search</i>
         </button>
-        <button mat-icon-button title="Créer nouveau client" (click)="newCustomer()" >
+        <button mat-icon-button matTooltip="Créer nouveau client" (click)="newCustomer()" >
             <mat-icon>create</mat-icon>
         </button>
     </div>
 
     <div class="action-buttons">
-        <button mat-icon-button *ngIf="customersChecked.length > 0" title="Ajouter" (click)="addExisting()">
+        <button mat-icon-button *ngIf="customersChecked.length > 0" matTooltip="Ajouter" (click)="addExisting()">
             <mat-icon>add</mat-icon>
         </button>
         <!--<mat-divider [vertical]="true" *ngIf="customersChecked.length > 0"></mat-divider>
@@ -33,7 +33,7 @@
                 <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                 <td>{{ customer.mobileNumber }}</td>
                 <td>
-                    <button mat-icon-button title="Ajouter" (click)="addExisting(customer)">
+                    <button mat-icon-button matTooltip="Ajouter" (click)="addExisting(customer)">
                         <mat-icon>add</mat-icon>
                     </button>
                 </td>

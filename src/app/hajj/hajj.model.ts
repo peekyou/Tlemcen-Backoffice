@@ -1,5 +1,5 @@
 import { Customer } from '../customers/customer.model';
-import { Hotel } from '../hotels/hotel.model';
+import { HotelReservation } from '../hotels/hotel-reservation.model';
 import { Airline } from '../airlines/airline.model';
 
 export class Hajj {
@@ -8,7 +8,7 @@ export class Hajj {
     year?: number;
     revenues?: number;
 
-    hotels?: Hotel[]
+    reservations?: HotelReservation[]
     customers?: Customer[];
     airlines?: Airline[];
 }

@@ -25,22 +25,22 @@
         </div>
       </div>
       <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
-        <div *ngFor="let hotel of hotels" class="card">
+        <div *ngFor="let reservation of hotelReservations" class="card">
             <div class="card-header card-header-warning">
-              <h4 class="card-title pull-left">{{ hotel.name }}</h4>
+              <h4 class="card-title pull-left">{{ reservation.hotel.name }}</h4>
               <div class="card-header-actions">
-                  <button mat-icon-button (click)="hotel.expanded = !hotel.expanded">
-                      <mat-icon *ngIf="hotel.expanded">expand_more</mat-icon>
-                      <mat-icon *ngIf="!hotel.expanded">chevron_right</mat-icon>
+                  <button mat-icon-button (click)="reservation.hotel.expanded = !reservation.hotel.expanded">
+                      <mat-icon *ngIf="reservation.hotel.expanded">expand_more</mat-icon>
+                      <mat-icon *ngIf="!reservation.hotel.expanded">chevron_right</mat-icon>
                   </button>
               </div>
             </div>
-            <div *ngIf="hotel.expanded" class="card-body">
+            <div *ngIf="reservation.hotel.expanded" class="card-body">
               <div class="card-columns">
-                <div class="drag-container card" [attr.id]="hotel.id + '-' + room.id + '-' + room.personsNumber" 
-                  dragula="ROOMS" *ngFor="let room of hotel.rooms"
+                <div class="drag-container card" [attr.id]="reservation.id + '-' + room.id + '-' + room.roomDetail.personsNumber" 
+                  dragula="ROOMS" *ngFor="let room of reservation.rooms"
                   [(dragulaModel)]="room.customers" style="min-height:100px; margin-bottom:11px;">
-                    Chambre {{ room.number }} ({{ room.personsNumber }} pers.)
+                    Chambre {{ room.roomDetail.number }} ({{ room.roomDetail.personsNumber }} pers.)
                     <div *ngFor="let customer of room.customers" class="customer"
                          [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
                         {{ customer.firstname }} {{ customer.lastname }}

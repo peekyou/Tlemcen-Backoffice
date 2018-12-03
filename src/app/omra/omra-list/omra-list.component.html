@@ -1,0 +1,39 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title pull-left">Historique des Omra</h4>
+                        <div class="card-header-actions">
+                            <button mat-icon-button matTooltip="Nouvelle Omra" (click)="newOmra()">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>Date</th>
+                                    <th>Nombre de personnes</th>
+                                    <th>Status</th>
+                                    <th>Revenus</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let omra of omraList" [routerLink]="['/omra', omra.id]">
+                                        <td>{{ omra.name }}</td>
+                                        <td>{{ omra.customers?.length }}</td>
+                                        <td>{{ omra.status }}</td>
+                                        <td class="text-primary">{{ omra.revenues }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  

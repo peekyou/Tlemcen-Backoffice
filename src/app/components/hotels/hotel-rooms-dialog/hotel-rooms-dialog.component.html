@@ -1,22 +1,42 @@
-<div mat-dialog-title>Nouvel hôtel</div>
+<div mat-dialog-title>Ajouter des chambres</div>
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div>
+			<h4 *ngIf="hotelReservation">{{ hotelReservation.hotel.name }}</h4>
+			<mat-form-field *ngIf="!hotelReservation">
+					<mat-select placeholder="Sélectionez un hôtel" formControlName="hotel">
+							<mat-option *ngFor="let h of hotels" [value]="h">
+									{{ h.name }}
+							</mat-option>
+					</mat-select>
+			</mat-form-field>
+
       <mat-form-field class="full-width">
-          <input type='number' matInput placeholder="Nombre de chambres" formControlName="roomsCount">
+          <input type='number' matInput min="0" placeholder="Nombre de chambres" formControlName="roomsCount">
       </mat-form-field>
       <div formArrayName="roomsPersonCount">
-        <div *ngFor="let roomPersonCount of form.controls.roomsPersonCount.controls; let i = index">
-          <mat-form-field class="full-width">
-              <input type='number' matInput placeholder="Nombre de personnes" formControlName="roomPersonCount">
-          </mat-form-field>
-        </div>
+		<table class="table table-bordered">
+			<thead>
+				<th>No</th>
+				<th>Nombre de personnes</th>
+			</thead>
+			<tbody>
+				<tr *ngFor="let roomPersonCount of roomsPersonCount.controls; let i = index">
+					<td>#{{ i + 1 }} </td>
+					<td>
+						<mat-form-field>
+							<input type='number' matInput min="0" placeholder="Nombre de personnes" formControlName="{{i}}">
+						</mat-form-field>
+					</td>
+				</tr>
+			</tbody>
+		</table>
       </div>
     </div>
     <div class="pull-right">
-      <button mat-raised-button type="submit" class="btn btn-info" (click)="save()"
+      <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="save()"
               [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
-        <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </form>
 </div>

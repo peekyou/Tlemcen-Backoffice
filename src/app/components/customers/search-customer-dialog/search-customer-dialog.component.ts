@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
@@ -23,6 +23,7 @@ export class SearchCustomerDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<SearchCustomerDialogComponent>,
+    public snackBar: MatSnackBar,
     private service: CustomersService) {
       
       this.customers = service.customers;
@@ -66,11 +67,23 @@ export class SearchCustomerDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(customers => {
       if (customers && customers.length > 0) {
         this.onCustomersAdded.emit(customers);
+        this.showMessage('Client ajouté');
+      }
+      else {
+        this.showMessage('Erreur lors de l\'ajout du client');
       }
     });
   }
   
   close(customer = null): void {
     this.dialogRef.close(customer);
+  }
+
+  showMessage(message: string, success: boolean = true) {
+    var bgColor = success ? 'bg-success' : 'bg-danger';
+    this.snackBar.open(message, '×', {
+      duration: 200000,
+      panelClass: [bgColor, 'text-white']
+    });
   }
 }

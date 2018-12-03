@@ -6,7 +6,7 @@
                     <div class="card-header card-header-warning">
                         <h4 class="card-title pull-left">Clients</h4>
                         <div class="card-header-actions">
-                            <button mat-icon-button title="Ajouter un client" (click)="openCustomerDialog()">
+                            <button mat-icon-button matTooltip="Ajouter un client" (click)="openCustomerDialog()">
                                 <mat-icon>add</mat-icon>
                             </button>
                         </div>
@@ -30,7 +30,7 @@
                                   <td>{{ customer.email }}</td>
                                   <td>
                                     <button mat-icon-button>
-                                        <mat-icon>delete</mat-icon>
+                                        <mat-icon class="text-danger">delete</mat-icon>
                                     </button>
                                   </td>
                                 </tr>

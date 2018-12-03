@@ -1,6 +1,6 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppFile } from '../../core/models/file.model';
+import { AppFile } from '../../../core/models/file.model';
 
 @Component({
   selector: 'app-file-upload',

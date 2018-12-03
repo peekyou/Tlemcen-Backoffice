@@ -3,6 +3,7 @@ import { CommonModule, } from '@angular/common';
 import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from './core/guards/auth.guard';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 const routes: Routes =[
@@ -10,14 +11,20 @@ const routes: Routes =[
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
-  }, {
+  }, 
+  {
     path: '',
     component: AdminLayoutComponent,
     children: [
-        {
-      path: '',
-      loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
-  }]}
+      {
+        canActivate: [ AuthGuard ],
+        path: '',
+        loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
+  }]},
+  {
+    path: 'auth',
+    loadChildren: './auth/auth.module#AuthModule'
+  }, 
 ];
 
 @NgModule({

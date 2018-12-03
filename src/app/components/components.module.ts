@@ -7,7 +7,7 @@ import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CustomerFormComponent } from './customers/customer-form/customer-form.component';
-import { FileUploadComponent } from './file-upload/file-upload.component';
+import { FileUploadComponent } from './common/file-upload/file-upload.component';
 import { WebcamComponent } from './webcam/webcam.component';
 import { RoomsAssignmentComponent } from './hotels/rooms-assignment/rooms-assignment.component';
 import { SearchCustomerDialogComponent } from './customers/search-customer-dialog/search-customer-dialog.component';
@@ -15,6 +15,8 @@ import { CustomerDialogComponent } from './customers/customer-dialog/customer-di
 import { UploadDocumentsDialogComponent } from './upload-documents-dialog/upload-documents-dialog.component';
 import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
 import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
+import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
+import { ErrorMessageComponent } from './common/error-message/error-message.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -38,6 +40,8 @@ const MODALS = [
     FileUploadComponent,
     WebcamComponent,
     RoomsAssignmentComponent,
+    SubmitButtonComponent,
+    ErrorMessageComponent,
     ...MODALS,
   ],
   exports: [
@@ -47,6 +51,8 @@ const MODALS = [
     CustomerFormComponent,
     FileUploadComponent,
     RoomsAssignmentComponent,
+    SubmitButtonComponent,
+    ErrorMessageComponent,
     ...MODALS
   ],
   entryComponents: MODALS

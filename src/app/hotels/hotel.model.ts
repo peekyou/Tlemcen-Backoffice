@@ -5,11 +5,9 @@ export class Hotel {
     id?: string;
     name?: string;
     roomsCount?: number;
-    pilgrimsCount?: number;
     email?: string;
     phone?: string;
     address?: Address;
-    rooms?: HotelRoom[];
     expanded?: boolean;
 }
 
@@ -18,5 +16,4 @@ export class HotelRoom {
     number?: string;
     bedsNumber?: number;
     personsNumber?: number;
-    customers?: Customer[];
 }

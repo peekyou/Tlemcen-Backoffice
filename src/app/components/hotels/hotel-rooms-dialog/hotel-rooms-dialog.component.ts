@@ -1,10 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription, Observable } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 
 import { Hotel } from '../../../hotels/hotel.model';
+import { HotelReservation } from '../../../hotels/hotel-reservation.model';
+import { HotelRoomReservation } from '../../../hotels/hotel-room-reservation.model';
 import { HotelsService } from '../../../hotels/hotels.service';
 
 @Component({
@@ -13,72 +15,98 @@ import { HotelsService } from '../../../hotels/hotels.service';
   styleUrls: ['./hotel-rooms-dialog.component.scss']
 })
 export class HotelRoomsDialogComponent implements OnInit {
-    form: FormGroup;
-    loader: Subscription;
-    loading = false;
-    hotel: Hotel = new Hotel();
+  form: FormGroup;
+  loader: Subscription;
+  loading = false;
+  hotelReservation: HotelReservation;
+  hotels: Hotel[];
 
-    constructor(
-      private service: HotelsService,
-      private fb: FormBuilder,
-      public dialogRef: MatDialogRef<HotelRoomsDialogComponent>,
-      private dialog: MatDialog) {
-    }
-
-    ngOnInit() {
-      this.form = this.fb.group({
-          roomsCount: this.fb.control(this.hotel.roomsCount),
-          roomsPersonCount: this.fb.array([]),
-      });
-
-      this.roomsCount.valueChanges.forEach(
-        (value: string) => {
-          var rooms = <FormArray>this.form.controls['roomsPersonCount'];
-          this.clearFormArray(rooms);
-          this.addArrayControl(rooms, this.roomsCount.value)
-      });
-    }
-
-    cancel() {
-      this.dialogRef.close();
-    }
-
-    saveHotel() {
-      this.loading = true;
-      var hotel = new Hotel();
-      hotel.name = this.form.value.name;
-      hotel.roomsCount = this.form.value.roomsCount;
-      hotel.email = this.form.value.email;
-      hotel.phone = this.form.value.phone;
-      
-      this.loader = this.service
-          .create(hotel)
-          .subscribe(
-              res => {
-                  this.loading = false;
-              },
-              err => this.loading = false
-          );
-    }
-
-    private addArrayControl(arrayControl: FormArray, count: number) {
-      for (let i = 0; i < count; i++) {
-        arrayControl.push(new FormControl());
+  constructor(
+    private service: HotelsService,
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<HotelRoomsDialogComponent>,
+    private dialog: MatDialog) {
+      if (data) {
+        this.hotelReservation = data.hotelReservation;
       }
-    }
-
-    private clearFormArray(formArray: FormArray) {
-      while (formArray.length !== 0) {
-          formArray.removeAt(0)
-      }
+  
+  this.hotels = service.hotels;
   }
 
-    private customEmailValidator(control: AbstractControl): ValidationErrors {
-      if (!control.value) {
-          return null;
-      }
-      return Validators.email(control);
+  ngOnInit() {
+    this.form = this.fb.group({
+    hotel: this.fb.control(null, (c) => this.customHotelValidator(c)),
+        roomsCount: this.fb.control(null, Validators.required),
+        roomsPersonCount: this.fb.array([]),
+    });
+
+    this.roomsCount.valueChanges.forEach(
+      (value: string) => {
+        var rooms = <FormArray>this.form.controls['roomsPersonCount'];
+        this.clearFormArray(rooms);
+        this.addArrayControl(rooms, this.roomsCount.value)
+    });
+  }
+
+  cancel() {
+    this.dialogRef.close();
+  }
+
+  save() {
+    this.loading = true;
+    var rooms = <FormArray>this.form.controls['roomsPersonCount'];
+    // var roomsReservation: HotelRoomReservation[] = [];
+    var reservation = this.hotelReservation;
+    if (!reservation) {
+      reservation = new HotelReservation();
+      reservation.hotel = this.form.value.hotel;
     }
 
-    get roomsCount() { return this.form.get('roomsCount'); }
+    rooms.controls.forEach((control, i) => {
+      // Call service to get id
+      reservation.rooms.push({
+        hotel: reservation.hotel,
+        id: new Date().getMilliseconds().toString(),
+        roomDetail: {
+          id: new Date().getMilliseconds().toString(),
+          number: (i + 1).toString(),
+          personsNumber: control.value
+        },
+        customers: []
+      });
+    });
+
+    this.loader = this.service
+      .saveHotelBooking(reservation)
+      .subscribe(
+          res => {
+              this.loading = false;
+              this.dialogRef.close(res);
+          },
+          err => this.loading = false
+      );
+  }
+
+  private addArrayControl(arrayControl: FormArray, count: number) {
+    for (let i = 0; i < count; i++) {
+      arrayControl.push(new FormControl(4));
+    }
+  }
+
+  private clearFormArray(formArray: FormArray) {
+    while (formArray.length !== 0) {
+        formArray.removeAt(0)
+    }
+  }
+
+  private customHotelValidator(control: AbstractControl): ValidationErrors {
+    if (!this.hotelReservation) {
+  return Validators.required(control);
+    }
+  return null;
+  }
+
+  get roomsCount() { return this.form.get('roomsCount'); }
+  get roomsPersonCount(): FormArray { return <FormArray>this.form.get('roomsPersonCount'); }
 }

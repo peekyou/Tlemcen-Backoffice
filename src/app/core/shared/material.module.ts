@@ -13,6 +13,8 @@ import {
     MatCheckboxModule,
     MatDividerModule,
     MatListModule,
+    MatSelectModule,
+    MatSnackBarModule,
     MAT_DATE_LOCALE
 } from '@angular/material';
 
@@ -31,6 +33,8 @@ import {
         MatCheckboxModule,
         MatDividerModule,
         MatListModule,
+        MatSelectModule,
+        MatSnackBarModule,
     ],
     declarations: [],
     providers: [{ provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }]

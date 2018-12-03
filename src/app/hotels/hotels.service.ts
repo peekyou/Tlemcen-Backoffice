@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { Hotel } from './hotel.model';
+import { HotelReservation } from './hotel-reservation.model';
+import { HotelRoomReservation } from './hotel-room-reservation.model';
 
 @Injectable()
 export class HotelsService {
@@ -19,5 +21,16 @@ export class HotelsService {
     hotel.id = new Date().getMilliseconds().toString();
     this.hotels.unshift(hotel);
     return of(hotel);
+  }
+
+  saveHotelBooking(reservation: HotelReservation) : Observable<HotelReservation> {
+    reservation.id = new Date().getMilliseconds().toString();
+    reservation.hotel.expanded = true;
+    return of(reservation);
+  }
+
+  createRoomsBooking(reservations: HotelRoomReservation[]) : Observable<HotelRoomReservation[]> {
+    // reservation.id = new Date().getMilliseconds().toString();
+    return of(reservations);
   }
 }

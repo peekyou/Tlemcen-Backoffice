@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
 
@@ -8,6 +8,8 @@ import { CustomersService } from '../../customers/customers.service';
 import { HajjService } from '../hajj.service';
 import { Hajj } from '../hajj.model';
 import { Hotel } from '../../hotels/hotel.model';
+import { HotelReservation } from '../../hotels/hotel-reservation.model';
+import { HotelRoomReservation } from '../../hotels/hotel-room-reservation.model';
 import { Airline } from '../../airlines/airline.model';
 import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
 import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
@@ -25,6 +27,7 @@ export class HajjDetailComponent implements OnInit {
     private service: HajjService, 
     private customerService: CustomersService, 
     private dialog: MatDialog, 
+    private router: Router,
     private route: ActivatedRoute) { 
 
     this.moment = moment;
@@ -34,6 +37,9 @@ export class HajjDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       if(params['id']) {
           this.hajj = this.service.hajjList.filter(c => c.id == params['id'])[0];
+      }
+      if (!this.hajj) {
+        this.router.navigate(['/hajj']);
       }
     });
   }
@@ -59,22 +65,23 @@ export class HajjDetailComponent implements OnInit {
     });
   }
 
-  openAddHotelDialog() {
+  openRoomReservationDialog(hotelReservation: HotelReservation = null) {
     let dialogRef = this.dialog.open(HotelRoomsDialogComponent, {
         autoFocus: false,
         width: '534px',
         data: {
-          title: 'Hôtel Hajj ' + this.hajj.year
+          title: 'Hôtel Hajj ' + this.hajj.year,
+          hotelReservation: hotelReservation
         }
     });
 
-    dialogRef.afterClosed().subscribe(hotel => {
-        if (hotel) {
-          if (!this.hajj.hotels) {
-            this.hajj.hotels = [];
-          }
-          this.hajj.hotels.push(hotel);
-        }
+    dialogRef.afterClosed().subscribe((newReservation: HotelReservation) => {
+      if (newReservation && hotelReservation) {
+        hotelReservation.rooms = newReservation.rooms;
+      }
+      else if (newReservation) {
+        this.hajj.reservations.push(newReservation);
+      }
     });
   }
 }

@@ -5,6 +5,9 @@
         "SAVE": "Sauvegarder",
         "OK": "OK",
         "CANCEL": "Annuler",
+        "USERNAME": "Nom utilisateur",
+        "PASSWORD": "Mot de passe",
+        "PASSWORD_CONFIRMATION": "Confirmer mot de passe",
         "FIRSTNAME": "Prénom",
         "LASTNAME": "Nom",
         "NAME": "Nom",
@@ -29,7 +32,16 @@
     },
     "AUTH": {
         "LOGIN": "Se connecter",
-        "LOGOUT": "Déconnecter"
+        "LOGOUT": "Déconnecter",
+        "LOGIN_TITLE": "Connexion à votre compte",
+        "INVALID_CREDENTIALS": "Echec connexion",
+        "FORGOT_PASSWORD": "Mot de passe oublié ?",
+        "SET_PASSWORD_TITLE": "Définir mot de passe",
+        "SET_PASSWORD_BUTTON": "Envoyer",
+        "PASSWORD_CRITERIA": "Le mot de passe doit contenir 8 caractères minimum",
+        "REDIRECT_MESSAGE": "Le mot de passe a été mis à jour. Vous allez être redirigé vers la page de connexion",
+        "FORGET_PASSWORD_TITLE": "Récupérer mot de passe",
+        "FORGET_PASSWORD_SUCCESS": "Un email a été envoyé pour réinitialiser votre mot de passe"
     },
     "CUSTOMER": {
         "PICTURE": "Photo"

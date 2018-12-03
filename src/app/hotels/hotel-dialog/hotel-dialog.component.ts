@@ -55,6 +55,7 @@ export class HotelDialogComponent implements OnInit {
           .subscribe(
               res => {
                   this.loading = false;
+                  this.dialogRef.close(res);
               },
               err => this.loading = false
           );

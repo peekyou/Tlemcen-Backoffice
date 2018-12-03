@@ -29,7 +29,7 @@ export class HotelListComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(res => {
+    dialogRef.afterClosed().subscribe(newHotel => {
     });
   }
 }

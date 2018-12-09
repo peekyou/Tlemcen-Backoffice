@@ -84,20 +84,23 @@ export class RoomsAssignmentComponent implements OnInit {
   }
 
   private assignGroup(group) {
-    for (let k = 0; this.hotelReservations && k < this.hotelReservations.length; k++) {
-      var hotel = this.hotelReservations[k];
-      for (let l = 0; hotel.rooms && l < hotel.rooms.length; l++) {
-        var room = hotel.rooms[l];
-        
-        if (!room.customers) {
-          room.customers = [];
-        }
-
-        while (group.length > 0) {
-          var peopleToAssign = group.pop();
+	var remainingGroups = [];
+	  
+    while (group.length > 0) {
+      var peopleToAssign = group.shift();
+		  var isPlaced = false;
+			
+      for (let i = 0; !isPlaced && this.hotelReservations && i < this.hotelReservations.length; i++) {
+        var hotel = this.hotelReservations[i];
+        for (let j = 0; !isPlaced && hotel.rooms && j < hotel.rooms.length; j++) {
+          var room = hotel.rooms[j];
+          
+          if (!room.customers) {
+            room.customers = [];
+          }
 
           // Check if there is no one of the opposite gender in the room
-          var canAssign = room.customers.length == 0 || room.customers.find(c => c.gender != peopleToAssign.values[0].gender) == null;
+          var canAssign = room.customers.find(c => c.gender != peopleToAssign.values[0].gender) == null;
           
           // Check if there is enough space for people of same name
           var remainingPlaces = room.roomDetail.personsNumber - room.customers.length;
@@ -107,21 +110,44 @@ export class RoomsAssignmentComponent implements OnInit {
               room.customers.push(c);
               this.customers = removeFromArray(this.customers, c);
             });
+            isPlaced = true;
           }
           else {
             // Repush the men which has not been assigned
-            group.push(peopleToAssign);
-            break;
+            //group.unshift(peopleToAssign);
+            //break;
           }
         }
       }
+	  
+	  if (!isPlaced) {
+		remainingGroups.push(peopleToAssign);
+	  }
     }
-  }
-
-  private hasOppositeSex(customers: Customer[], gender: string): boolean {
-    if (!customers) {
-      return false;
-    }
-    return customers.find(c => c.gender == gender) != null;
+	
+	// Place the people in remaining groups, one by one
+	// We should get the rooms with more space first
+	remainingGroups.forEach(group => {
+	  group.values.forEach(customer => {
+		
+		var isPlaced = false;
+		for (let i = 0; !isPlaced && this.hotelReservations && i < this.hotelReservations.length; i++) {
+          var hotel = this.hotelReservations[i];
+          for (let j = 0; !isPlaced && hotel.rooms && j < hotel.rooms.length; j++) {
+	        var room = hotel.rooms[j];
+			
+			// Check if there is no one of the opposite gender in the room
+            var canAssign = room.customers.find(c => c.gender != peopleToAssign.values[0].gender) == null;
+            var remainingPlaces = room.roomDetail.personsNumber - room.customers.length;
+            canAssign = canAssign && remainingPlaces >= 1;
+            if (canAssign) {
+              room.customers.push(customer);
+              this.customers = removeFromArray(this.customers, customer);
+              isPlaced = true;
+            }
+		  }
+		}
+	  });
+	});
   }
 }

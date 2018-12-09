@@ -13,6 +13,10 @@
     color: #fff;
 }
 
+.center {
+    text-align: center;
+}
+
 .inactive {
     pointer-events: none;
     cursor: default;
@@ -41,6 +45,10 @@
 }
 .cyan {
     color: #ADD8E6;
+}
+
+.action-buttons {
+    margin-left: 14px
 }
 
 .table .mat-icon-button {

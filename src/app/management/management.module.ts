@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../core/shared/shared.module';
 
 import { ManagementRoutingModule } from './management-routing.module';
+import { ManagementComponent } from './management/management.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ManagementComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     ManagementRoutingModule
   ]
 })

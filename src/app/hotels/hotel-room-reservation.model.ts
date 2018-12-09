@@ -6,4 +6,11 @@ export class HotelRoomReservation {
     hotel?: Hotel;
     roomDetail?: HotelRoom;
     customers?: Customer[];
+
+    static getAvailableSpace(reservation: HotelRoomReservation): number {
+        if (reservation && reservation.roomDetail) {
+            return reservation.roomDetail.personsNumber - reservation.customers.length;
+        }
+        return 0;
+    }
 }

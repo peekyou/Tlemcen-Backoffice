@@ -4,7 +4,7 @@ import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
 import { CustomerDialogComponent } from '../customer-dialog/customer-dialog.component';
-import { removeFromArray } from '../../../core/helpers/utils';
+import { showMessage, removeFromArray } from '../../../core/helpers/utils';
 
 import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/upload-documents-dialog.component';
 
@@ -67,23 +67,15 @@ export class SearchCustomerDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(customers => {
       if (customers && customers.length > 0) {
         this.onCustomersAdded.emit(customers);
-        this.showMessage('Client ajouté');
+        showMessage(this.snackBar, 'Client ajouté');
       }
-      else {
-        this.showMessage('Erreur lors de l\'ajout du client');
-      }
+      // else {
+      //   this.showMessage('Erreur lors de l\'ajout du client', false);
+      // }
     });
   }
   
   close(customer = null): void {
     this.dialogRef.close(customer);
-  }
-
-  showMessage(message: string, success: boolean = true) {
-    var bgColor = success ? 'bg-success' : 'bg-danger';
-    this.snackBar.open(message, '×', {
-      duration: 200000,
-      panelClass: [bgColor, 'text-white']
-    });
   }
 }

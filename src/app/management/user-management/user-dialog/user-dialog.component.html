@@ -1,0 +1,49 @@
+<div mat-dialog-title>Utilisateur</div>
+  <div mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="form.valid && submit()">
+      <div>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.USERNAME' | translate }}" formControlName="username" [readonly]="isEdit">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.FIRSTNAME' | translate }}" formControlName="firstname">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.LASTNAME' | translate }}" formControlName="lastname">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.STATUS' | translate }}" formControlName="status">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput type="password" placeholder="{{ 'COMMON.PASSWORD' | translate }}" formControlName="password" [required]="!isEdit" />
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input matInput type='password' placeholder="{{ 'COMMON.PASSWORD_CONFIRMATION' | translate }}" formControlName="passwordConfirmation" [required]="!isEdit" >
+        </mat-form-field>
+        <div class="row invalid-field" *ngIf="form.errors">{{ form.errors?.passwords | json }}</div>
+        
+        <label>{{ 'USER_MANAGEMENT.PERMISSIONS' | translate }}</label>
+        <div formArrayName="permissions">
+            <div class="form-check" *ngFor="let permission of permissions; let i = index">
+                <label class="form-check-label" formGroupName="{{i}}">
+                  <mat-checkbox (change)="onPermissionChange(permission, $event.target.checked)" formControlName="{{permission.id}}"></mat-checkbox>
+                    {{permission.resourceKey}}
+                </label>
+            </div>
+        </div>
+      </div>
+      
+      <div class="buttons center">
+          <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+              loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+              [subscription]="saveSubscription">
+          </app-submit-button>
+          <button *ngIf="isEdit" type="button" (click)="openDeleteModal()" class="btn btn-danger">
+              {{ 'COMMON.DELETE' | translate }}
+          </button>
+      </div>
+  </form>
+</div>

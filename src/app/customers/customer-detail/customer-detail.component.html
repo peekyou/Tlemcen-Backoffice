@@ -14,7 +14,7 @@
                                     <b>{{ 'COMMON.GENDER' | translate }} :</b> {{ customer.gender }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>{{ 'COMMON.BIRTHDATE' | translate }} :</b> {{ customer.birthdate | date:'dd/MM/yyyy' }}
+                                    <b>{{ 'COMMON.EMAIL' | translate }} :</b> {{ customer.email }}
                                 </div>
                             </div>
                             <div class="row">
@@ -22,18 +22,36 @@
                                     <b>{{ 'COMMON.PHONE' | translate }} :</b> {{ customer.mobileNumber }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>{{ 'COMMON.EMAIL' | translate }} :</b> {{ customer.email }}
+                                    <b>Téléphone fixe :</b> {{ customer.phoneNumber }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>{{ 'COMMON.BIRTHDATE' | translate }} :</b> {{ customer.birthdate | date:'dd/MM/yyyy' }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Pays de naissance :</b> {{ customer.birthcountry?.name }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>Numéro de passeport :</b> {{ customer.passportNumber }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Expiration du passeport :</b> {{ customer.passportExpiryDate | date:'dd/MM/yyyy' }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <b>Nationalité :</b> {{ customer.nationality?.name }}
+                                </div>
+                                <div class="col-md-6">
+                                    <b>Comment connu l'agence :</b> {{ customer.howKnewAgency?.name }}
                                 </div>
                             </div>
                             <div class="row" *ngIf="customer.address">
                                 <div class="col-12">
-                                    <b>Rue :</b> {{ customer.address.addressLine1 }}
-                                </div>
-                                <div class="col-md-6">
-                                    <b>Code Postal :</b> {{ customer.address.zipCode }}
-                                </div>
-                                <div class="col-md-6">
-                                    <b>Ville :</b> {{ customer.address.city }}
+                                    <b>Addresse :</b> {{ customer.address.addressLine1 }} {{ customer.address.zipCode }} {{ customer.address.city }}
                                 </div>
                             </div>
                         </div>

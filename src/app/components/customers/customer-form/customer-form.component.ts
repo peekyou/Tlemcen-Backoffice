@@ -45,10 +45,18 @@ export class CustomerFormComponent implements OnInit {
             firstname: this.fb.control(this.customer.firstname, Validators.required),
             lastname: this.fb.control(this.customer.lastname, Validators.required),
             mobile: this.fb.control(this.customer.mobileNumber),
+            phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
             birthdate: this.fb.control(this.customer.birthdate),
+            birthCountry: this.fb.control(this.customer.birthCountry),
+            nationality: this.fb.control(this.customer.nationality),
+            profession: this.fb.control(this.customer.profession),
             address1: this.fb.control(this.customer.address.addressLine1),
-            cityZipCode: this.fb.control(null)
+            cityZipCode: this.fb.control(null),
+            passportNumber: this.fb.control(this.customer.passportNumber),
+            passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
+            relationship: this.fb.control(this.customer.relationship),
+            howKnewAgency: this.fb.control(this.customer.howKnewAgency),
         });
 
         this.filteredCities = this.cityZipCode.valueChanges

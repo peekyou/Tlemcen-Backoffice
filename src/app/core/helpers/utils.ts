@@ -34,3 +34,11 @@ export function groupByArray(xs, key) {
         return rv; 
     }, []); 
 }
+
+export function showMessage(snackBar: any, message: string, success: boolean = true) {
+    var bgColor = success ? 'bg-success' : 'bg-danger';
+    snackBar.open(message, '×', {
+      duration: 200000,
+      panelClass: [bgColor, 'text-white']
+    });
+  }

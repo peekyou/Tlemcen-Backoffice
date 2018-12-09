@@ -9,41 +9,47 @@
                         <div class="text-icon">Ajouter des pèlerins</div>
                     </div>
                 </div>
-                <div *ngIf="hajj.customers && hajj.customers.length > 0" class="card">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title pull-left">Pèlerins</h4>
-                        <div class="card-header-actions">
-                            <button mat-icon-button matTooltip="Ajouter pèlerins" (click)="openAddCustomerDialog()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
+                <div *ngIf="hajj.customers && hajj.customers.length > 0">
+                    <div class="action-buttons">
+                        <button class="btn btn-info" (click)="openAddCustomerDialog()">Ajouter des pèlerins</button>
+                        <button class="btn btn-info">Ajouter une famille</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Nom</th>
-                                <th>Age</th>
-                                <th>Telephone</th>
-                                <th>Paiment</th>
-                                <th></th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let customer of hajj.customers" [routerLink]="['/customers', customer.id]">
-                                  <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                  <td>{{ moment().diff(customer.birthdate, 'years') }}</td>
-                                  <td>{{ customer.mobileNumber }}</td>
-								  <td *ngIf="payment">
-                                    <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
-									<span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
-								  </td>
-                                  <td>
-                                    <button mat-icon-button matTooltip="Enlever du Hajj">
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                  </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h4 class="card-title pull-left">Pèlerins</h4>
+                            <!-- <div class="card-header-actions">
+                                <button mat-icon-button matTooltip="Ajouter pèlerins" (click)="openAddCustomerDialog()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div> -->
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover">
+                                <thead class="text-warning">
+                                    <th>Nom</th>
+                                    <th>Age</th>
+                                    <th>Telephone</th>
+                                    <th>Paiment</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let customer of hajj.customers" [routerLink]="['/customers', customer.id]">
+                                    <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+                                    <td>{{ moment().diff(customer.birthdate, 'years') }}</td>
+                                    <td>{{ customer.mobileNumber }}</td>
+                                    <td *ngIf="payment">
+                                        <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
+                                        <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button matTooltip="Enlever du Hajj">
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,37 +62,46 @@
                         <div class="text-icon">Ajouter des hôtels</div>
                     </div>
                 </div>
-                <div *ngIf="hajj.reservations && hajj.reservations.length > 0" class="card">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title pull-left">Hôtels</h4>
-                        <div class="card-header-actions pull-right">
-                            <button mat-icon-button matTooltip="Organiser les chambres" routerLink="rooms">
-                                <mat-icon>view_module</mat-icon>
-                            </button>
-                            <button matTooltip="Réserver chambres dans un nouvel hôtel" mat-icon-button (click)="openRoomReservationDialog()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
+
+                <div *ngIf="hajj.reservations && hajj.reservations.length > 0">
+                    <div class="action-buttons">
+                        <button class="btn btn-info" (click)="openRoomReservationDialog()">Ajouter un hôtel</button>
+                        <button class="btn btn-info" routerLink="rooms">Organiser les chambres</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Nom</th>
-                                <th>Pèlerins</th>
-                                <th></th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let reservation of hajj.reservations" [routerLink]="['/hotels', reservation.hotel.id]">
-                                  <td>{{ reservation.hotel.name }}</td>
-                                  <td>{{ reservation.hotel.travelerCount }}</td>
-                                  <td>
-                                    <button matTooltip="Ajouter des chambres" mat-icon-button (click)="openRoomReservationDialog(reservation);$event.stopPropagation()">
-                                        <mat-icon>add</mat-icon>
-                                    </button>
-                                  </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h4 class="card-title pull-left">Hôtels</h4>
+                            <!-- <div class="card-header-actions pull-right">
+                                <button mat-icon-button matTooltip="Organiser les chambres" routerLink="rooms">
+                                    <mat-icon>view_module</mat-icon>
+                                </button>
+                                <button matTooltip="Réserver chambres dans un nouvel hôtel" mat-icon-button (click)="openRoomReservationDialog()">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div> -->
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover">
+                                <thead class="text-warning">
+                                    <th>{{ 'COMMON.NAME' | translate }}</th>
+                                    <th>Pèlerins</th>
+                                    <th>Nb chambres</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let reservation of hajj.reservations" [routerLink]="['/hotels', reservation.hotel.id]">
+                                    <td>{{ reservation.hotel.name }}</td>
+                                    <td>{{ reservation.hotel.travelerCount }}</td>
+                                    <td>{{ reservation.rooms.length }} ({{ getReservationAvailableSpace(reservation) }} places libres)</td>
+                                    <td>
+                                        <button matTooltip="Ajouter des chambres" mat-icon-button (click)="openRoomReservationDialog(reservation);$event.stopPropagation()">
+                                            <mat-icon>add</mat-icon>
+                                        </button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,23 +112,29 @@
                         <div class="text-icon">Ajouter des vols</div>
                     </div>
                 </div>
-                <div *ngIf="hajj.airlines && hajj.airlines.length > 0" class="card">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title">Vols</h4>
+                <div *ngIf="hajj.airlines && hajj.airlines.length > 0">
+                    <div class="action-buttons">
+                        <button class="btn btn-info">Ajouter un vol</button>
+                        <button class="btn btn-info">Organiser les vols</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Nom</th>
-                                <th>Pèlerins</th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let airline of hajj.airlines" [routerLink]="['/airlines', airline.id]">
-                                  <td>{{ airline.name }}</td>
-                                  <td>{{ airline.passengerCount }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h4 class="card-title">Vols</h4>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover">
+                                <thead class="text-warning">
+                                    <th>{{ 'COMMON.NAME' | translate }}</th>
+                                    <th>Pèlerins</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let airline of hajj.airlines" [routerLink]="['/airlines', airline.id]">
+                                    <td>{{ airline.name }}</td>
+                                    <td>{{ airline.passengerCount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,6 +9,9 @@ import { OmraService } from './omra/omra.service';
 import { AirlinesService } from './airlines/airlines.service';
 import { HotelsService } from './hotels/hotels.service';
 import { PaymentService } from './payments/payment.service';
+import { UserService } from './management/user-management/user.service';
+import { FeeService } from './management/fees-management/fee.service';
+import { DocumentService } from './management/documents-management/document.service';
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
@@ -25,6 +28,9 @@ export const APP_PROVIDERS = [
     AirlinesService,
     HotelsService,
     PaymentService,
+    UserService,
+    FeeService,
+    DocumentService,
     AuthGuard,
     PermissionGuard
 ];

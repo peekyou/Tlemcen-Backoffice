@@ -19,6 +19,9 @@
         <input type='number' matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile">
     </mat-form-field>
     <mat-form-field class="full-width">
+        <input type='number' matInput placeholder="Téléphone fixe" formControlName="phone">
+    </mat-form-field>
+    <mat-form-field class="full-width">
         <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email">
         <!-- <mat-error *ngIf="email.hasError('customEmailValidator')">
             {{ 'ACCOUNT.INVALID_EMAIL' | translate }}
@@ -30,10 +33,50 @@
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-form-field class="full-width">
+        <input matInput placeholder="Pays de naissance"
+            autoClose [control]="birthCountry" formControlName="birthCountry" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredCities | async" [value]="option">
+                {{ option.name }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="Numéro de passeport" formControlName="passportNumber">
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput [matDatepicker]="pickerPassport" placeholder="Date d'expiration du passeport" formControlName="passportExpiryDate">
+        <mat-datepicker-toggle matSuffix [for]="pickerPassport"></mat-datepicker-toggle>
+        <mat-datepicker #pickerPassport></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <input matInput placeholder="Nationalité"
+            autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredCities | async" [value]="option">
+                {{ option.name }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <mat-select placeholder="Lien de parenté" formControlName="relationship">
+            <mat-option *ngFor="let h of filteredCities" [value]="h">
+                    {{ h.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+        <mat-select placeholder="A connu l'agence" formControlName="howKnewAgency">
+            <mat-option *ngFor="let h of filteredCities" [value]="h">
+                    {{ h.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field class="full-width">
         <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}"
             autoClose [control]="cityZipCode" formControlName="cityZipCode" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-            <mat-option *ngFor="let option of filteredCities | async" [value]="option.id">
+            <mat-option *ngFor="let option of filteredCities | async" [value]="option">
                 {{ option.name }}
             </mat-option>
         </mat-autocomplete>

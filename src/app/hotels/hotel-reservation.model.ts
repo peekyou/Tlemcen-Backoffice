@@ -10,4 +10,12 @@ export class HotelReservation {
     constructor() {
 		  this.rooms = [];
     }
+
+    static getAvailableSpace(reservation: HotelReservation): number {
+        var availableSpace = 0;
+        for (let i = 0; reservation.rooms && i < reservation.rooms.length; i++) {
+            availableSpace += HotelRoomReservation.getAvailableSpace(reservation.rooms[i]);
+        }
+        return availableSpace;
+    }
 }

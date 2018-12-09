@@ -5,6 +5,7 @@
         "SAVE": "Save",
         "OK": "OK",
         "CANCEL": "Cancel",
+        "DELETE": "Delete",
         "USERNAME": "Username",
         "PASSWORD": "Password",
         "PASSWORD_CONFIRMATION": "Confirm password",
@@ -28,7 +29,8 @@
         "LANGUAGES": "Languages",
         "GENDER_F": "Female",
         "GENDER_M": "Male",
-        "ADDRESS": "Address"
+        "ADDRESS": "Address",
+        "STATUS": "Status"
     },
     "AUTH": {
         "LOGIN": "Log in",

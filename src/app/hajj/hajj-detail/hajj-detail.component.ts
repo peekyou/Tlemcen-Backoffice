@@ -84,4 +84,8 @@ export class HajjDetailComponent implements OnInit {
       }
     });
   }
+
+  getReservationAvailableSpace(reservation: HotelReservation) {
+    return HotelReservation.getAvailableSpace(reservation);
+  }
 }

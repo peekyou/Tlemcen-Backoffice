@@ -1,11 +1,13 @@
 <div>
     <div class="row">
-      <button mat-raised-button type="submit" class="btn btn-info pull-left" color="accent" (click)="save()">
-        Sauvegarder
-      </button>
-      <button mat-raised-button type="submit" class="btn btn-primary pull-left" (click)="generate()">
-          Générer automatiqument
-      </button>
+      <div class="action-buttons">
+        <button mat-raised-button type="submit" class="btn btn-info pull-left" color="accent" (click)="save()">
+          Sauvegarder
+        </button>
+        <button mat-raised-button type="submit" class="btn btn-primary pull-left" (click)="generate()">
+            Générer automatiqument
+        </button>
+      </div>
     </div>
     <div class="drag-wrapper row">
       <div [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">

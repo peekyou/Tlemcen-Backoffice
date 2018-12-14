@@ -2,14 +2,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <div class="action-buttons">
+                    <button class="btn btn-info" (click)="newOmra()"><mat-icon>add</mat-icon>Ajouter une Omra</button>
+                </div>
                 <div class="card">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title pull-left">Historique des Omra</h4>
-                        <div class="card-header-actions">
-                            <button mat-icon-button matTooltip="Nouvelle Omra" (click)="newOmra()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
+                        <h4 class="card-title">Historique des Omra</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -25,7 +23,7 @@
                                         <td>{{ omra.name }}</td>
                                         <td>{{ omra.customers?.length }}</td>
                                         <td>{{ omra.status }}</td>
-                                        <td class="text-primary">{{ omra.revenues }}</td>
+                                        <td class="text-primary">{{ omra.revenues }} €</td>
                                     </tr>
                                 </tbody>
                             </table>

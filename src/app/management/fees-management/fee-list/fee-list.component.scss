@@ -1,7 +1,21 @@
 .save-btn {
-    line-height: 40px;
+    margin-top: 12px;
 }
 
 .price-field {
     max-width: 100px;
+}
+
+.column-name {
+    max-width: 200px;
+}
+
+@media (min-width: 768px) {
+    .no-action-buttons {
+        margin-top: 82px;
+    }
+}
+
+.form-control-sm {
+    height: 28px;
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { Document} from '../../core/models/document.model';
+import { AppDocument } from '../../management/documents-management/document.model';
+import { DocumentService } from '../../management/documents-management/document.service';
 import { Customer} from '../../customers/customer.model';
 import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component'
 
@@ -13,16 +14,15 @@ import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.compone
 export class UploadDocumentsDialogComponent implements OnInit {
   customers: Customer[];
   loading: boolean;
-  documents: Document[] = [
-    { id: '1', name: 'Passeport', mandatory: true, file: null },
-    { id: '2', name: 'Visa', mandatory: true, file: null },
-    { id: '3', name: 'Assurance', mandatory: false, file: null },
-  ];
+  documents: AppDocument[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<UploadDocumentsDialogComponent>,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private documentService: DocumentService) {
+      
+      this.documents = this.documentService.documents.filter(x => x.categories.indexOf('Hajj') != -1 || x.categories.indexOf('Omra') != -1);
       if (data) {
         this.customers = data.customers;
         this.customers.forEach(c => c.documents = JSON.parse(JSON.stringify(this.documents)));

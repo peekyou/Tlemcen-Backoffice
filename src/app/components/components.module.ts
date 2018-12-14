@@ -17,13 +17,15 @@ import { PaymentDialogComponent } from './payment-dialog/payment-dialog.componen
 import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
+import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
   SearchCustomerDialogComponent,
   UploadDocumentsDialogComponent,
   PaymentDialogComponent,
-  HotelRoomsDialogComponent
+  HotelRoomsDialogComponent,
+  DeleteDialogComponent
 ];
 
 @NgModule({
@@ -43,6 +45,7 @@ const MODALS = [
     SubmitButtonComponent,
     ErrorMessageComponent,
     ...MODALS,
+    DeleteDialogComponent,
   ],
   exports: [
     FooterComponent,

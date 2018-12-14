@@ -14,16 +14,18 @@
                                     <th>Montant</th>
                                     <th>Client</th>
                                     <th>Status</th>
+                                    <th>Reste à payer</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let payment of payments" [routerLink]="['/customers', payment.customer.id]">
                                         <td>{{ payment.date | date:'dd/MM/yyyy' }}</td>
-                                        <td>{{ payment.amount }}</td>
+                                        <td>{{ payment.amountPaid }} €</td>
                                         <td><span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span></td>
                                         <td>
                                           <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
                                           <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
                                         </td>
+                                        <td>{{ payment.fees - payment.amountPaid - payment.discount }} €</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="action-buttons">
-                  <button class="btn btn-info" (click)="openUserDialog()">Ajouter un utilisateur</button>
+                  <button class="btn btn-info" (click)="openUserDialog()"><mat-icon>add</mat-icon>Ajouter un utilisateur</button>
                 </div>
                 <div class="card">
                     <div class="card-header card-header-warning">
@@ -16,7 +16,7 @@
                                     <th>{{ 'COMMON.USERNAME' | translate }}</th>
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th>{{ 'COMMON.STATUS' | translate }}</th>
-                                    <th *ngFor="let permission of permissions">{{ permission.resourceKey }}</th>
+                                    <!-- <th *ngFor="let permission of permissions">{{ permission.resourceKey }}</th> -->
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let user of users" (click)="openUserDialog(user)">

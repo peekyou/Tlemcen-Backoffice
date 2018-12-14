@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FeeListComponent } from './fee-list/fee-list.component';
 
 const routes: Routes = [
-  { path: '', component: FeeListComponent }  
+  { path: '', component: FeeListComponent }
 ];
 
 @NgModule({

@@ -1,7 +1,7 @@
 import { Address } from '../core/models/address.model';
 import { AppFile } from '../core/models/file.model';
 import { Lookup } from '../core/models/lookup.model';
-import { Document } from '../core/models/document.model';
+import { AppDocument } from '../management/documents-management/document.model';
 import { Payment } from '../payments/payment.model';
 
 export class Customer {
@@ -22,7 +22,7 @@ export class Customer {
     birthCountry?: Lookup;
     howKnewAgency?: Lookup;
     picture?: AppFile;
-    documents?: Document[]; 
+    documents?: AppDocument[]; 
     payments?: Payment[];
 
     constructor() {

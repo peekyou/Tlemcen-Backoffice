@@ -13,6 +13,10 @@
     color: #fff;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 .center {
     text-align: center;
 }
@@ -49,6 +53,14 @@
 
 .action-buttons {
     margin-left: 14px
+}
+
+.pull-buttons-right {
+    float: right;
+
+    button:first-child {
+        margin-right: 10px !important;
+    }
 }
 
 .table .mat-icon-button {

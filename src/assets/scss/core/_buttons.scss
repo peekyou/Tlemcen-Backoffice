@@ -1,12 +1,13 @@
 .mat-button.btn,.mat-raised-button.btn,.mat-raised-button.btn:not([class*=mat-elevation-z]),
 .btn{
   position: relative;
-  padding: 12px 30px;
+  padding: 0px 20px;
   margin: $bmd-btn-margin-bottom 1px;
   min-width: auto;
   font-size: .75rem; //  12px
   font-weight: 400;
-  line-height: $bmd-line-height;
+  line-height: 36px;
+  // line-height: $bmd-line-height;
   text-decoration: none;
   text-transform: uppercase;
   vertical-align: middle;
@@ -169,8 +170,11 @@
       top: 0;
       margin-top: -1em;
       margin-bottom: -1em;
-      font-size: 1.1rem;
+      font-size: 19px;
       vertical-align: middle;
+      margin-right: .3em;
+      height: 20px;
+      width: 20px;
     }
 
 // Disabled buttons and button groups

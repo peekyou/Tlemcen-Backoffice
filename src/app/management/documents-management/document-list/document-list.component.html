@@ -1,3 +1,43 @@
-<p>
-  document-list works!
-</p>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="action-buttons">
+                  <button class="btn btn-info" (click)="openDocumentDialog()"><mat-icon>add</mat-icon>Ajouter un document</button>
+                </div>
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Documents</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>Catégorie</th>
+                                    <th>{{ 'COMMON.NAME' | translate }}</th>
+                                    <th>Obligatoire</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let document of documents" (click)="openDocumentDialog(document)">
+                                      <td>{{ document.category }}</td>
+                                      <td>{{ document.name }}</td>
+                                      <td>
+                                        <span *ngIf="document.mandatory">Obligatoire</span>
+                                        <span *ngIf="!document.mandatory">Facultatif</span>
+                                      </td>
+                                      <td>
+                                          <button mat-icon-button (click)="openDeleteDialog(document);$event.stopPropagation()">
+                                              <mat-icon class="text-danger">delete</mat-icon>
+                                          </button>
+                                      </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>

@@ -25,7 +25,7 @@
         </mat-form-field>
         <div class="row invalid-field" *ngIf="form.errors">{{ form.errors?.passwords | json }}</div>
         
-        <label>{{ 'USER_MANAGEMENT.PERMISSIONS' | translate }}</label>
+        <label>Permissions</label>
         <div formArrayName="permissions">
             <div class="form-check" *ngFor="let permission of permissions; let i = index">
                 <label class="form-check-label" formGroupName="{{i}}">
@@ -36,11 +36,13 @@
         </div>
       </div>
       
-      <div class="buttons center">
+      <div class="pull-buttons-right">
           <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
               loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
               [subscription]="saveSubscription">
           </app-submit-button>
+          <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+          
           <button *ngIf="isEdit" type="button" (click)="openDeleteModal()" class="btn btn-danger">
               {{ 'COMMON.DELETE' | translate }}
           </button>

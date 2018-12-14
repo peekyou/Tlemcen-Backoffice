@@ -1,42 +1,40 @@
 <div class="main-content">
-  <div class="container-fluid">
+    <div class="container-fluid">
       <div class="row">
           <div class="col-12">
-              <div class="card">
-                  <div class="card-header card-header-warning">
+            <div class="action-buttons">
+                <button class="btn btn-info" (click)="openHotelDialog()"><mat-icon>add</mat-icon>Ajouter un hôtel</button>
+            </div>
+            <div class="card">
+                <div class="card-header card-header-warning">
                     <h4 class="card-title pull-left">Hôtels</h4>
-                    <div class="card-header-actions">
-                        <button mat-icon-button matTooltip="Ajouter un hôtels" (click)="openHotelDialog()">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </div>
-                  </div>
-                  <div class="card-body table-responsive">
-                      <table class="table table-hover">
-                          <thead class="text-warning">
-                              <th>Nom</th>
-                              <th>Chambres</th>
-                              <th>Téléphone</th>
-                              <th>Adresse</th>
-                              <th></th>
-                          </thead>
-                          <tbody>
-                              <tr *ngFor="let hotel of hotels" [routerLink]="['/hotels', hotel.id]">
-                                <td>{{ hotel.name }}</td>
-                                <td>{{ hotel.roomsCount }}</td>
-                                <td>{{ hotel.phone }}</td>
-                                <td></td>
-                                <td>
-                                    <button mat-icon-button>
-                                        <mat-icon class="text-danger">delete</mat-icon>
-                                    </button>
-                                </td>
-                              </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                        <thead class="text-warning">
+                            <th>Nom</th>
+                            <th>Chambres</th>
+                            <th>Téléphone</th>
+                            <th>Adresse</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let hotel of hotels" [routerLink]="['/hotels', hotel.id]">
+                            <td>{{ hotel.name }}</td>
+                            <td>{{ hotel.roomsCount }}</td>
+                            <td>{{ hotel.phone }}</td>
+                            <td></td>
+                            <td>
+                                <button mat-icon-button (click)="openDeleteDialog(hotel);$event.stopPropagation()">
+                                    <mat-icon class="text-danger">delete</mat-icon>
+                                </button>
+                            </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
           </div>
       </div>
-  </div>
+    </div>
 </div>

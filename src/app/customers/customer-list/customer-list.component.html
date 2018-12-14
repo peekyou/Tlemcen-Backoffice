@@ -2,14 +2,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
+                <div class="action-buttons">
+                    <button class="btn btn-info" (click)="openCustomerDialog()"><mat-icon>add</mat-icon>Ajouter un client</button>
+                </div>
                 <div class="card">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title pull-left">Clients</h4>
-                        <div class="card-header-actions">
-                            <button mat-icon-button matTooltip="Ajouter un client" (click)="openCustomerDialog()">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                        </div>
+                        <h4 class="card-title">Clients</h4>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-hover">
@@ -29,7 +27,7 @@
                                   <td>{{ customer.mobileNumber }}</td>
                                   <td>{{ customer.email }}</td>
                                   <td>
-                                    <button mat-icon-button>
+                                    <button mat-icon-button (click)="openDeleteDialog(customer);$event.stopPropagation()">
                                         <mat-icon class="text-danger">delete</mat-icon>
                                     </button>
                                   </td>

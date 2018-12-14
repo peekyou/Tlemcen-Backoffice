@@ -4,7 +4,9 @@ export class Payment {
     id?: string;
     status?: string;
     date?: Date;
-    amount?: number;
+    fees?: number;
+    amountPaid?: number;
+    discount?: number;
     deposit?: number
     customer?: Customer;
 }

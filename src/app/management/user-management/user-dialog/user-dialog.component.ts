@@ -107,30 +107,34 @@ export class UserDialogComponent implements OnInit {
     }
 }
 
-  submit() {
-    let user: User = {
-      id: this.user.id,
-      username: this.form.value.username,
-      password: this.form.value.password,
-      firstname: this.form.value.firstname,
-      email: this.form.value.email,
-      lastname: this.form.value.lastname,
-      status: this.form.value.status,
-      permissions: this.form.value.userPermissions
-    };
+submit() {
+  let user: User = {
+    id: this.user.id,
+    username: this.form.value.username,
+    password: this.form.value.password,
+    firstname: this.form.value.firstname,
+    email: this.form.value.email,
+    lastname: this.form.value.lastname,
+    status: this.form.value.status,
+    permissions: this.form.value.userPermissions
+  };
 
-    this.saveSubscription = this.service
-      .saveUser(user)
-      .subscribe(
-        res => { 
-            this.dialogRef.close(res);
-        },
-        err => {
-            var error = err.error && err.error.errorCode ? err.error.errorCode : true;
-            showMessage(this.snackBar, error, false);
-            console.log(err); 
-        }
+  this.saveSubscription = this.service
+    .saveUser(user)
+    .subscribe(
+      res => { 
+          this.dialogRef.close(res);
+      },
+      err => {
+          var error = err.error && err.error.errorCode ? err.error.errorCode : true;
+          showMessage(this.snackBar, error, false);
+          console.log(err); 
+      }
     );
+  }
+
+  cancel() {
+    this.dialogRef.close();
   }
 
   openDeleteModal() {

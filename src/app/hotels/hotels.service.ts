@@ -22,6 +22,12 @@ export class HotelsService {
     this.hotels.unshift(hotel);
     return of(hotel);
   }
+  
+  delete(id: string) : Observable<boolean> {
+    var index = this.hotels.findIndex(x => x.id == id);
+    this.hotels.splice(index, 1);
+    return of(true);
+  }
 
   saveHotelBooking(reservation: HotelReservation) : Observable<HotelReservation> {
     reservation.id = new Date().getMilliseconds().toString();

@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
+import { Observable, of } from 'rxjs'; 
 
 import { Omra } from './omra.model';
 
@@ -40,6 +41,12 @@ export class OmraService {
 
     constructor() {
         // this.api = config.ApiEndpoint + '/customers';
+    }
+
+    create(omra: Omra) : Observable<Omra> {
+      omra.id = new Date().getMilliseconds().toString();
+      this.omraList.unshift(omra);
+      return of(omra);
     }
 }
 

@@ -7,8 +7,8 @@ import { Payment } from './payment.model';
 export class PaymentService {
 
   payments: Payment[] = [
-    { id: '1', status: 'P', amount: 1252, date: new Date(2018, 1, 2), customer: { id: '1', gender: 'M', firstname: 'Pierre', lastname: 'Paul', birthdate: new Date(1977, 1, 2), mobileNumber: '0665491705', email: 'pierre.paul@mail.fr' }},
-    { id: '2', status: 'I', amount: 1252, date: new Date(2018, 1, 2), customer: { id: '2', gender: 'M', firstname: 'Hamim', lastname: 'Ahmed', birthdate: new Date(1952, 1, 2), mobileNumber: '0667777777', email: 'hamim.ahmed@mail.fr' }},
+    { id: '1', status: 'P', amountPaid: 1252, fees:1252, discount: 0, date: new Date(2018, 1, 2), customer: { id: '1', gender: 'M', firstname: 'Pierre', lastname: 'Paul', birthdate: new Date(1977, 1, 2), mobileNumber: '0665491705', email: 'pierre.paul@mail.fr' }},
+    { id: '2', status: 'I', amountPaid: 1000, fees:1252, discount: 0, date: new Date(2018, 1, 2), customer: { id: '2', gender: 'M', firstname: 'Hamim', lastname: 'Ahmed', birthdate: new Date(1952, 1, 2), mobileNumber: '0667777777', email: 'hamim.ahmed@mail.fr' }},
   ];
 
   constructor() { }

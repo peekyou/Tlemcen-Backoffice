@@ -6,13 +6,15 @@ import { OmraRoutingModule } from './omra-routing.module';
 import { OmraDetailComponent } from './omra-detail/omra-detail.component';
 import { OmraListComponent } from './omra-list/omra-list.component';
 import { OmraRoomsPlanComponent } from './omra-rooms-plan/omra-rooms-plan.component';
+import { OmraDialogComponent } from './omra-dialog/omra-dialog.component';
 
 @NgModule({
-  declarations: [OmraDetailComponent, OmraListComponent, OmraRoomsPlanComponent],
+  declarations: [OmraDetailComponent, OmraListComponent, OmraRoomsPlanComponent, OmraDialogComponent],
   imports: [
     SharedModule,
     ComponentsModule,
     OmraRoutingModule
-  ]
+  ],
+  entryComponents: [OmraDialogComponent]
 })
 export class OmraModule { }

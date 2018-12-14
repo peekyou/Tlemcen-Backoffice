@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { Omra } from '../omra.model';
 import { OmraService } from '../omra.service';
+import { OmraDialogComponent } from '../omra-dialog/omra-dialog.component';
 
 @Component({
   selector: 'app-omra-list',
@@ -12,7 +14,10 @@ import { OmraService } from '../omra.service';
 export class OmraListComponent implements OnInit {
   omraList: Omra[];
   
-  constructor(private router: Router, private service: OmraService) {
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private service: OmraService) {
     this.omraList = service.omraList;  
   }
 
@@ -20,17 +25,20 @@ export class OmraListComponent implements OnInit {
   }
 
   newOmra() {
-    var id = new Date().getMilliseconds().toString();
-    this.service.omraList.unshift({
-      id: id,
-      name: 'Janvier 2019',
-      customers: [],
-      airlines: [],
-      reservations: [],
-      revenues: 0,
-      status: 'En cours'
+    let dialogRef = this.dialog.open(OmraDialogComponent, {
+      autoFocus: false,
+      width: '534px'
     });
 
-    this.router.navigate(['/omra', id]);
+    dialogRef.afterClosed().subscribe(newOmra => {
+      if (!this.omraList) {
+        this.omraList = [];
+      }
+
+      if (newOmra) {
+        this.omraList = this.service.omraList;
+        this.router.navigate(['/omra', newOmra.id]);
+      }
+    });
   }
 }

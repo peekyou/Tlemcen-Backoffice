@@ -20,4 +20,10 @@ export class CustomersService {
     this.customers.unshift(customer);
     return of(customer);
   }
+
+  delete(id: string) : Observable<boolean> {
+    var index = this.customers.findIndex(x => x.id == id);
+    this.customers.splice(index, 1);
+    return of(true);
+  }
 }

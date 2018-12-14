@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
 import { Fee } from './fee.model';
 
@@ -6,13 +7,18 @@ import { Fee } from './fee.model';
 export class FeeService {
     private api: string;
 
-    users: Fee[] = [
-        { id: '2', email: 'jeremie.paas@gmail.com', firstname: 'Jeremie', lastname: 'Paas', status: 'admin', username: 'jeremie', password: 'admin', permissions: [] },
-        { id: '3', email: 'test@gmail.com', firstname: 'Test', lastname: 'Test', status: 'admin', username: 'test', password: 'admin', permissions: [] },
-      ];
+    fees: Fee[] = [
+        { id: '1', name: 'Hajj 2018', amount: 12333, categories: ['Hajj'] },
+        { id: '2', name: 'Omra decembre 2018', amount: 4588, categories: ['Omra'] },
+    ];
 
     constructor() {
         // this.api = config.ApiEndpoint + '/customers';
+    }
+
+    createServiceFee(fee: Fee) : Observable<Fee> {
+        fee.id = new Date().getMilliseconds().toString();
+        return of(fee);
     }
 }
 

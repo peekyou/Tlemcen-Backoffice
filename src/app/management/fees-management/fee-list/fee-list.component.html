@@ -1,37 +1,142 @@
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <!-- <div class="action-buttons">
-                  <button class="btn btn-info" (click)="openUserDialog()">Ajouter un utilisateur</button>
-                </div> -->
-                <div class="card">
-                    <h4 class="card-header">Hajj et Omras</h4>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead class=" text-primary">
-                                  <th>Name</th>
-                                  <th>Prix</th>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                      <td>Hajj 2018</td>
-                                      <td class="row">
-                                        <mat-form-field class="price-field">
-                                            <input matInput placeholder="Prix">
-                                        </mat-form-field>
-                                        <button class="save-btn" mat-icon-button>
-                                            <mat-icon class="text-success">save</mat-icon>
-                                        </button>
-                                      </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header card-header-warning">
+            <h4 class="card-title">Hajj et Omras</h4>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead class=" text-primary">
+                <th class="column-name">Name</th>
+                <th>Prix</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hajjOmra of hajjOmraList">
+                  <td>
+                    <span *ngIf="hajjOmra.year">Hajj {{ hajjOmra.year }}</span>
+                    <span *ngIf="hajjOmra.name">Omra {{ hajjOmra.name }}</span>
+                  </td>
+                  <td class="row m-0 form-inline">
+                    <input type="text" class="col form-control form-control-sm" placeholder="Prix"/>
+                    <button class="save-btn" mat-icon-button>
+                      <mat-icon class="text-success">check_circle_outline</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card">
+          <div class="card-header card-header-warning">
+            <h4 class="card-title">Hôtels</h4>
+          </div>
+          <div class="card-body">
+          <table class="table">
+            <thead class=" text-primary">
+              <th class="column-name">Name</th>
+              <th>Prix</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let hotel of hotels">
+                <td>
+                  <button mat-icon-button (click)="hotel.expanded = !hotel.expanded">
+                    <mat-icon class="text-success" *ngIf="!hotel.expanded">add</mat-icon>
+                    <mat-icon class="text-success" *ngIf="hotel.expanded">remove</mat-icon>
+                  </button>{{ hotel.name }}
+                  <div *ngIf="hotel.expanded">
+                    <div class="form-control-sm">Chambre simple</div>
+                    <div class="form-control-sm">Chambre double</div>
+                    <div class="form-control-sm">Chambre triple</div>
+                    <div class="form-control-sm">Chambre 4 pers.</div>
+                  </div>
+                </td>
+                <td class="row">
+                  <div *ngIf="hotel.expanded">
+                    <br>
+                    <div>
+                      <input type="text" class="form-control form-control-sm" placeholder="Prix"/>
+                    </div>
+                    <div>
+                      <input type="text" class="form-control form-control-sm" placeholder="Prix"/>
+                    </div>
+                    <div>
+                      <input type="text" class="form-control form-control-sm" placeholder="Prix"/>
+                    </div>
+                    <div>
+                      <input type="text" class="form-control form-control-sm" placeholder="Prix"/>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <div class="card no-action-buttons">
+        <div class="card-header card-header-warning">
+          <h4 class="card-title">Vols</h4>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead class=" text-primary">
+              <th class="column-name">Name</th>
+              <th>Prix</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let flight of flights">
+                <td>{{ flight.name }}</td>
+                <td class="row m-0 form-inline">
+                  <input type="text" class="col form-control form-control-sm" placeholder="Prix"/>
+                  <button class="save-btn" mat-icon-button>
+                    <mat-icon class="text-success">check-circle</mat-icon>
+                  </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="action-buttons">
+          <button class="btn btn-info" (click)="openServiceFeeDialog()"><mat-icon>add</mat-icon>Ajouter un service</button>
+        </div>
+        <div class="card">
+          <div class="card-header card-header-warning">
+            <h4 class="card-title">Services supplémentaires</h4>
+          </div>
+          <div class="card-body">
+            <table class="table">
+              <thead class=" text-primary">
+                <th class="column-name">Catégories</th>
+                <th class="column-name">Name</th>
+                <th>Prix</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let additionalFee of additionalFees">
+                  <td>{{ additionalFee.categories.join(', ') }}</td>
+                  <td>{{ additionalFee.name }}</td>
+                  <td class="row m-0 form-inline">
+                    <input type="text" class="col form-control form-control-sm" placeholder="Prix" [value]="additionalFee.amount"/>
+                    <button class="save-btn" mat-icon-button>
+                      <mat-icon class="text-success">check-circle</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

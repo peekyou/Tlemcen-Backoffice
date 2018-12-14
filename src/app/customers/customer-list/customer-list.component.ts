@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 import { Customer } from '../customer.model';
 import { CustomersService } from '../customers.service';
 import { CustomerDialogComponent } from '../../components/customers/customer-dialog/customer-dialog.component';
@@ -32,6 +33,23 @@ export class CustomerListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
         if (result === true) {
         }
+    });
+  }
+
+  openDeleteDialog(customer: Customer) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: customer.firstname + " " + customer.lastname }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.delete(customer.id)
+        .subscribe(
+          res => this.customers = this.service.customers,
+          err => console.log(err)
+        );
+      }
     });
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 import { HotelDialogComponent } from '../hotel-dialog/hotel-dialog.component';
 import { HotelsService } from '../hotels.service';
 import { Hotel } from '../hotel.model';
@@ -30,6 +31,23 @@ export class HotelListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newHotel => {
+    });
+  }
+
+  openDeleteDialog(hotel: Hotel) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: hotel.name }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.delete(hotel.id)
+        .subscribe(
+          res => this.hotels = this.service.hotels,
+          err => console.log(err)
+        );
+      }
     });
   }
 }

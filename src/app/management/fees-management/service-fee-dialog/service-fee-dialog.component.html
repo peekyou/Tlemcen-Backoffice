@@ -1,0 +1,27 @@
+<div mat-dialog-title>Nouveau service</div>
+<div mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="form.valid && saveFee()">
+      <div>
+        <label>S'applique à</label>
+        <br>
+        <mat-radio-group formControlName="type">
+          <mat-radio-button style="margin-bottom: 11px" value="HAJJOMRA">Hajj/Omra</mat-radio-button>
+          <mat-radio-button style="margin-left: 15px" value="HOTEL">Hôtel</mat-radio-button>
+          <mat-radio-button style="margin-left: 15px" value="FLIGHT">Vol</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field class="full-width">
+            <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+            <input type="number" matInput placeholder="Prix" formControlName="amount" required>
+        </mat-form-field>
+        </div>
+        <div class="pull-buttons-right">
+          <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+            loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+            [subscription]="saveSubscription">
+          </app-submit-button>
+          <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+        </div>
+      </form>
+</div>

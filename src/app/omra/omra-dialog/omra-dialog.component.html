@@ -1,0 +1,15 @@
+<div mat-dialog-title>Nouvelle Omra</div>
+<div mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="form.valid && save()">
+    <mat-form-field class="full-width">
+      <input formControlName="name" matInput placeholder="{{ 'COMMON.NAME' | translate }}" required>
+    </mat-form-field>
+    <div class="pull-buttons-right">
+      <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+        loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+        [subscription]="saveSubscription">
+      </app-submit-button>
+      <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+  </form>
+</div>

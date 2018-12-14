@@ -1,0 +1,11 @@
+<div mat-dialog-title>Supprimer</div>
+<div mat-dialog-content>
+  <div>
+    Confirmer la suppression de {{ name }} ?
+  </div>
+  <br>
+  <div class="pull-buttons-right">
+    <button mat-raised-button type="button" class="btn btn-sm btn-info" (click)="close(true)">{{ 'COMMON.DELETE' | translate }}</button>
+    <button mat-raised-button class="btn btn-sm btn-secondary" (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+  </div>
+</div>

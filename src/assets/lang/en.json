@@ -1,5 +1,12 @@
 {
+    "TOOLBAR": {
+        "DASHBOARD": "Dashboard",
+        "LOGOUT": "Logout",
+        "HELP": "Help"
+    },
     "COMMON": {
+        "LOADING": "Loading...",
+        "SAVING": "Saving...",
         "SUBMIT": "Submit",
         "BROWSE": "Browse",
         "SAVE": "Save",
@@ -32,6 +39,12 @@
         "ADDRESS": "Address",
         "STATUS": "Status"
     },
+    "FORM": {
+        "REQUIRED": "Required field",
+        "INVALID_VALUE": "Invalid value",
+        "INVALID_EMAIL": "Invalid email",
+        "INVALID_DATE": "Invalid date"
+    },
     "AUTH": {
         "LOGIN": "Log in",
         "LOGOUT": "Log  out",
@@ -47,5 +60,17 @@
     },
     "CUSTOMER": {
         "PICTURE": "Picture"
+    },
+    "ERRORS": {
+        "SERVER_ERROR": "An error occured",
+        "NOT_FOUND": "Element not found",
+        "InvalidPhoneNumber": "Invalid phone number",
+        "DuplicatePhoneNumber": "This phone number is already registered",
+        "DuplicateUsername": "A user with the same username already exists",
+        "DuplicateEmail": "A user with the same email already exists",
+        "UserInactive": "User is not activated, please activate it from the activation email",
+        "LoginFailed": "Invalid credentials",
+        "TokenExpired": "Invalid token",
+        "TokenMismatch": "Invalid token"
     }
 }

@@ -1,0 +1,61 @@
+.nav-user-container {
+    position: absolute;
+    color: #000;
+    top: 100%;
+    background-color: white;
+    min-width: 16rem;
+    min-height: 6rem;
+    z-index: 999999;
+    right: 6%;
+    -webkit-box-shadow: 0 0.5rem 0.625rem -0.3125rem rgba(0,0,0,0.14), 0 1rem 1.5rem 0.125rem rgba(0,0,0,0.098), 0 0.375rem 1.875rem 0.3125rem rgba(0,0,0,0.082);
+    box-shadow: 0 0.5rem 0.625rem -0.3125rem rgba(0,0,0,0.14), 0 1rem 1.5rem 0.125rem rgba(0,0,0,0.098), 0 0.375rem 1.875rem 0.3125rem rgba(0,0,0,0.082);
+}
+
+.nav-user-container-top {
+    height: 3.125rem;
+    line-height: 3.125rem;
+    font-size: 0.8125rem;
+    width: 100%;
+    padding: 0 0.75rem;
+}
+
+.border-bottom {
+    border-bottom: 0.0625rem solid #e0e0e0;
+}
+
+.nav-user-container-content {
+    position: absolute;
+    bottom: 3.75rem;
+    top: 3.125rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.nav-user-container-bottom {
+    height: 3.75rem;
+    line-height: 3.5rem;
+    width: 100%;
+    padding: 0 0.75rem;
+    text-align: justify;
+    position: absolute;
+    overflow: hidden;
+    bottom: 0;
+
+    .logout {
+        float: right;
+    }
+}
+
+.border-top {
+    border-top: 0.0625rem solid #e0e0e0;
+}
+
+.nav-container-username {
+    float: left;
+}
+
+.close-cross {
+    float: right;
+    cursor: pointer;
+}

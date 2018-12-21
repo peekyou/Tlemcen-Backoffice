@@ -36,7 +36,7 @@
                                 <tbody>
                                     <tr *ngFor="let customer of omra.customers" [routerLink]="['/customers', customer.id]">
                                     <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                    <td>{{ moment().diff(customer.birthdate, 'years') }}</td>
+                                    <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
                                     <td>{{ customer.mobileNumber }}</td>
                                     <td>
                                         <div *ngIf="customer.payments">

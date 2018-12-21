@@ -35,7 +35,7 @@
                                 <tbody>
                                     <tr *ngFor="let customer of hajj.customers" [routerLink]="['/customers', customer.id]">
                                     <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                    <td>{{ moment().diff(customer.birthdate, 'years') }}</td>
+                                    <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
                                     <td>{{ customer.mobileNumber }}</td>
                                     <td *ngIf="payment">
                                         <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>

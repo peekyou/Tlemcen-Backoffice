@@ -23,7 +23,7 @@ export class UserListComponent implements OnInit {
   openUserDialog(user: User = null) {
     let dialogRef = this.dialog.open(UserDialogComponent, {
       autoFocus: false,
-      width: '534px',
+      // width: '534px',
       data: {
         user: user
       }

@@ -5,6 +5,7 @@ import { SharedModule } from '../core/shared/shared.module';
 
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { UserPopoverComponent } from './navbar/popover/user-popover.component'
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CustomerFormComponent } from './customers/customer-form/customer-form.component';
 import { FileUploadComponent } from './common/file-upload/file-upload.component';
@@ -18,6 +19,7 @@ import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-roo
 import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
 import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
+import { SpinnerComponent } from './common/spinner/spinner.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -25,7 +27,7 @@ const MODALS = [
   UploadDocumentsDialogComponent,
   PaymentDialogComponent,
   HotelRoomsDialogComponent,
-  DeleteDialogComponent
+  DeleteDialogComponent,
 ];
 
 @NgModule({
@@ -37,6 +39,7 @@ const MODALS = [
   declarations: [
     FooterComponent,
     NavbarComponent,
+    UserPopoverComponent,
     SidebarComponent,
     CustomerFormComponent,
     FileUploadComponent,
@@ -44,8 +47,8 @@ const MODALS = [
     RoomsAssignmentComponent,
     SubmitButtonComponent,
     ErrorMessageComponent,
+    SpinnerComponent,
     ...MODALS,
-    DeleteDialogComponent,
   ],
   exports: [
     FooterComponent,
@@ -56,6 +59,7 @@ const MODALS = [
     RoomsAssignmentComponent,
     SubmitButtonComponent,
     ErrorMessageComponent,
+    SpinnerComponent,
     ...MODALS
   ],
   entryComponents: MODALS

@@ -9,6 +9,7 @@ import { LookupService } from '../../../core/services/lookup.service';
 import { Lookup } from '../../../core/models/lookup.model';
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
+import { validateDate } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-customer-form',
@@ -16,13 +17,21 @@ import { CustomersService } from '../../../customers/customers.service';
   styleUrls: ['./customer-form.component.scss']
 })
 export class CustomerFormComponent implements OnInit {
+    validateDate: Function;
     form: FormGroup;
     loader: Subscription;
     loading = false
     showCamera = false;
     filteredCities: Observable<Lookup[]>;
-    filteredProducts: Observable<Lookup[]>;
+    filteredProfessions: Observable<Lookup[]>;
+    filteredCountries: Observable<Lookup[]>;
+    filteredNationalities: Observable<Lookup[]>;
     cities: Lookup[] = [];
+    professions: Lookup[] = [];
+    countries: Lookup[] = [];
+    nationalities: Lookup[] = [];
+    relationships: Lookup[] = [];
+    knewAgency: Lookup[] = [];
 
     @Input() customer: Customer = new Customer();
     @Output() onSave: EventEmitter<any> = new EventEmitter();
@@ -34,8 +43,22 @@ export class CustomerFormComponent implements OnInit {
         private service: CustomersService,
         private router: Router) {
 
+        this.validateDate = validateDate;
+        this.lookupService.fetchCountries('fr').subscribe(res => {
+            this.countries = res;
+            this.nationalities = res;
+        });
+        this.lookupService.fetchProfessions('fr').subscribe(res => {
+            this.professions = res;
+        });
         this.lookupService.fetchCities('fr').subscribe(res => {
             this.cities = res;
+        });
+        this.lookupService.fetchRelationships('fr').subscribe(res => {
+            this.relationships = res;
+        });
+        this.lookupService.fetchKnewAgency('fr').subscribe(res => {
+            this.knewAgency = res;
         });
     }
 
@@ -44,10 +67,10 @@ export class CustomerFormComponent implements OnInit {
             gender: this.fb.control(this.customer.gender ? this.customer.firstname : 'M', Validators.required),
             firstname: this.fb.control(this.customer.firstname, Validators.required),
             lastname: this.fb.control(this.customer.lastname, Validators.required),
+            birthDate: this.fb.control(this.customer.birthDate, Validators.required),
             mobile: this.fb.control(this.customer.mobileNumber),
             phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
-            birthdate: this.fb.control(this.customer.birthdate),
             birthCountry: this.fb.control(this.customer.birthCountry),
             nationality: this.fb.control(this.customer.nationality),
             profession: this.fb.control(this.customer.profession),
@@ -59,13 +82,37 @@ export class CustomerFormComponent implements OnInit {
             howKnewAgency: this.fb.control(this.customer.howKnewAgency),
         });
 
+        this.filteredNationalities = this.nationality.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? this._filterLookup(option, this.nationalities) : [])
+            );
+
+        this.filteredCountries = this.birthCountry.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? this._filterLookup(option, this.countries) : [])
+            );
+
+        this.filteredProfessions = this.profession.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? this._filterLookup(option, this.professions) : [])
+            );
+
         this.filteredCities = this.cityZipCode.valueChanges
-        .pipe(
-            startWith(''),
-            debounceTime(200),
-            distinctUntilChanged(),
-            map(option => option && option.length >= 3 ? this._filterLookup(option, this.cities) : [])
-        );
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 3 ? this._filterLookup(option, this.cities) : [])
+            );
     }
 
     cancel() {
@@ -80,14 +127,14 @@ export class CustomerFormComponent implements OnInit {
         newCustomer.lastname = this.form.value.lastname;
         newCustomer.email = this.form.value.email;
         newCustomer.mobileNumber = this.form.value.mobile;
-        newCustomer.birthdate = this.form.value.birthdate;
+        newCustomer.birthDate = this.form.value.birthDate;
 		var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
 		newCustomer.address.city = cityZipCode[0];
 		newCustomer.address.zipCode = cityZipCode[1];
 		newCustomer.address.addressLine1 = this.form.value.address1;
         
         this.loader = this.service
-            .create(newCustomer)
+            .createCustomer(newCustomer)
             .subscribe(
                 res => {
                     this.loading = false;
@@ -149,5 +196,10 @@ export class CustomerFormComponent implements OnInit {
     }
   
     get cityZipCode() { return this.form.get('cityZipCode'); }
+    get birthCountry() { return this.form.get('birthCountry'); }
+    get nationality() { return this.form.get('nationality'); }
+    get profession() { return this.form.get('profession'); }
     get email() { return this.form.get('email'); }
+    get birthDate() { return this.form.get('birthDate'); }
+    get passportExpiryDate() { return this.form.get('passportExpiryDate'); }
 }

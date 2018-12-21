@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 import { Customer } from '../customer.model';
 import { CustomersService } from '../customers.service';
 import { CustomerDialogComponent } from '../../components/customers/customer-dialog/customer-dialog.component';
+import { PagingResponse } from '../../core/models/paging';
+
 import * as moment from 'moment';
 
 @Component({
@@ -14,24 +17,35 @@ import * as moment from 'moment';
 })
 export class CustomerListComponent implements OnInit {
   moment;
-  customers: Customer[];
-
+  loader: Subscription;
+  customers: PagingResponse<Customer>;
+  
   constructor(private service: CustomersService, private dialog: MatDialog) { 
-    this.customers = service.customers;
     this.moment = moment;
+    this.loadCustomers();
   }
 
   ngOnInit() {
   }
 
+  loadCustomers() {
+    this.loader = this.service.getCustomers()
+      .subscribe(
+        res => this.customers = res,
+        err => console.log(err)
+      );
+  }
+
   openCustomerDialog() {
     let dialogRef = this.dialog.open(CustomerDialogComponent, {
         autoFocus: false,
-        width: '434px'
+        width: '634px',
+        // height: '550px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
+    dialogRef.afterClosed().subscribe(customer => {
+        if (customer) {
+          this.loadCustomers();
         }
     });
   }
@@ -44,9 +58,15 @@ export class CustomerListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.service.delete(customer.id)
+        this.service.deleteCustomer(customer.id)
         .subscribe(
-          res => this.customers = this.service.customers,
+          res => {
+            var index = this.customers.data.indexOf(customer);
+            if (index > -1) {
+                this.customers.data.splice(index, 1);
+                this.customers.paging.totalCount--;
+            }
+          },
           err => console.log(err)
         );
       }

@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
       }
   }
   
-  onSumbit() {
+  login() {
       this.loginSubscription = this.auth.login(this.username.value, this.password.value)
           .subscribe(result => {
               if (result === true) {

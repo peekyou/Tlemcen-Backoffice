@@ -29,9 +29,9 @@ export class OmraService {
             { id: '1', name: 'Saudi Airlines', passengerCount: 11 },
           ],
           customers: [
-            { id: '1', gender: 'M', firstname: 'Pierre', lastname: 'Paul', birthdate: new Date(1977, 1, 2), mobileNumber: '0665491705', email: 'pierre.paul@mail.fr', address: {} },
-            { id: '2', gender: 'M', firstname: 'Hamim', lastname: 'Ahmed', birthdate: new Date(1952, 1, 2), mobileNumber: '0667777777', email: 'hamim.ahmed@mail.fr', address: {} },
-            { id: '3', gender: 'F', firstname: 'Safia', lastname: 'Bouj', birthdate: new Date(1991, 1, 2), mobileNumber: '0688888888', email: 'safia.bouj@mail.fr', address: {} },
+            { id: '1', gender: 'M', firstname: 'Pierre', lastname: 'Paul', birthDate: new Date(1977, 1, 2), mobileNumber: '0665491705', email: 'pierre.paul@mail.fr', address: {} },
+            { id: '2', gender: 'M', firstname: 'Hamim', lastname: 'Ahmed', birthDate: new Date(1952, 1, 2), mobileNumber: '0667777777', email: 'hamim.ahmed@mail.fr', address: {} },
+            { id: '3', gender: 'F', firstname: 'Safia', lastname: 'Bouj', birthDate: new Date(1991, 1, 2), mobileNumber: '0688888888', email: 'safia.bouj@mail.fr', address: {} },
           ]
         },
         { id: '2', name: 'Juillet 2018', revenues: 16775, status: 'Terminé' },

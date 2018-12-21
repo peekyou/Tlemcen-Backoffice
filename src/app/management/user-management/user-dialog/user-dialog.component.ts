@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
-import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { UserService } from '../user.service';
 import { User, Permission } from '../user.model';
-import { showMessage } from '../../../core/helpers/utils';
+import { ToasterService } from '../../../core/services/toaster.service';
 
 @Component({
   selector: 'app-user-dialog',
@@ -22,7 +22,7 @@ export class UserDialogComponent implements OnInit {
   constructor(
     private service: UserService,
     private fb: FormBuilder,
-    public snackBar: MatSnackBar,
+    public toasterService: ToasterService,
     public dialogRef: MatDialogRef<UserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog) {
@@ -127,7 +127,7 @@ submit() {
       },
       err => {
           var error = err.error && err.error.errorCode ? err.error.errorCode : true;
-          showMessage(this.snackBar, error, false);
+          this.toasterService.showToaster(error, false);
           console.log(err); 
       }
     );

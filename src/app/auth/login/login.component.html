@@ -3,7 +3,7 @@
       <h3 class="card-title">{{ 'AUTH.LOGIN_TITLE' | translate }}</h3>
   </div>
   <div class="card-body">
-    <form [formGroup]="form" (submit)="onSumbit()">
+    <form [formGroup]="form" (ngSubmit)="form.valid && login()">
         <mat-form-field class="full-width">
             <input matInput placeholder="{{ 'COMMON.USERNAME' | translate }}" formControlName="username" required>
         </mat-form-field>
@@ -19,8 +19,8 @@
             <input type="password" class="form-control" id="password" formControlName="password" />
         </div> -->
         
-            <app-submit-button value="{{ 'AUTH.LOGIN' | translate }}"
-                              loadingValue="{{ 'COMMON.LOADING' | translate }}" 
+            <app-submit-button value="{{ 'AUTH.LOGIN' | translate }}" [form]="form"
+                              loadingValue="{{ 'AUTH.LOGIN' | translate }}" 
                               [subscription]="loginSubscription">
             </app-submit-button>
     </form>

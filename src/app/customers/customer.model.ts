@@ -10,7 +10,7 @@ export class Customer {
     firstname?: string;
     lastname?: string;
     email?: string;
-    birthdate?: Date;
+    birthDate?: Date;
     mobileNumber?: string;
     phoneNumber?: string;
     profession?: Lookup;

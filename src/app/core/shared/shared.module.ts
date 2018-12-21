@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { DndModule } from 'ngx-drag-drop';
 
 import { AppMaterialModules } from './material.module';
@@ -16,6 +17,7 @@ const IMPORTS = [
     RouterModule,
     HttpClientModule,
     TranslateModule,
+    NgxPaginationModule,
     DndModule,
     AppMaterialModules,
     DirectivesModule

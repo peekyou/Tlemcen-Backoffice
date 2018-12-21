@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/upload-documents-dialog.component';
@@ -10,6 +10,7 @@ import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/up
 })
 export class CustomerDialogComponent implements OnInit {
   success = true;
+  @Input() showDocuments = false;
   
   constructor(
     public dialogRef: MatDialogRef<CustomerDialogComponent>,
@@ -20,17 +21,22 @@ export class CustomerDialogComponent implements OnInit {
   }
 
   onSubmit(customer) {
-    let dialogRef = this.dialog.open(UploadDocumentsDialogComponent, {
-      autoFocus: false,
-      width: '534px',
-      data: {
-        customers: [customer]
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(customers => {
-      this.close(customers);
-    });
+    if (this.showDocuments) {
+      let dialogRef = this.dialog.open(UploadDocumentsDialogComponent, {
+        autoFocus: false,
+        width: '534px',
+        data: {
+          customers: [customer]
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(customers => {
+        this.close(customers);
+      });
+    }
+    else {
+      this.close(customer)
+    }
   }
 
   close(customers = null): void {

@@ -35,10 +35,11 @@ export function groupByArray(xs, key) {
     }, []); 
 }
 
-export function showMessage(snackBar: any, message: string, success: boolean = true) {
-    var bgColor = success ? 'bg-success' : 'bg-danger';
-    snackBar.open(message, '×', {
-      duration: 200000,
-      panelClass: [bgColor, 'text-white']
-    });
-  }
+export function validateDate(event: any) {
+    const pattern = /^[0-9/]*$/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+        // invalid character, prevent input
+        event.preventDefault();
+    }
+}

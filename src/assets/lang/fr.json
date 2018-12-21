@@ -1,5 +1,12 @@
 {
+    "TOOLBAR": {
+        "DASHBOARD": "Tableau de bord",
+        "LOGOUT": "Déconnexion",
+        "HELP": "Aide"
+    },
     "COMMON": {
+        "LOADING": "Chargement",
+        "SAVING": "En cours...",
         "SUBMIT": "Envoyer",
         "BROWSE": "Parcourir",
         "SAVE": "Sauvegarder",
@@ -32,6 +39,12 @@
         "ADDRESS": "Adresse",
         "STATUS": "Statut"
     },
+    "FORM": {
+        "REQUIRED": "Champs obligatoire",
+        "INVALID_VALUE": "Valeur incorrecte",
+        "INVALID_EMAIL": "Email incorrect",
+        "INVALID_DATE": "Date incorrecte"
+    },
     "AUTH": {
         "LOGIN": "Se connecter",
         "LOGOUT": "Déconnecter",
@@ -47,5 +60,15 @@
     },
     "CUSTOMER": {
         "PICTURE": "Photo"
+    },
+    "ERRORS": {
+        "SERVER_ERROR": "Une erreur est survenue",
+        "NOT_FOUND": "Elément introuvable",
+        "InvalidPhoneNumber": "Numéro de téléphone incorrect",
+        "DuplicatePhoneNumber": "Ce numéro de téléphone est déjà enregistré",
+        "UserInactive": "Cet utilisateur est inactif. Veuillez l'activer grâce à l'email d'activation",
+        "LoginFailed": "Mot de passe ou utilisateur incorrect",
+        "TokenExpired": "Token invalide",
+        "TokenMismatch": "Token invalide"
     }
 }

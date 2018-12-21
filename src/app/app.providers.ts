@@ -2,6 +2,7 @@ import { HttpService } from './core/services/http.service';
 import { AuthHttpService } from './core/services/auth-http.service';
 import { TranslationService } from './core/services/translation.service';
 import { LookupService } from './core/services/lookup.service';
+import { ToasterService } from './core/services/toaster.service';
 import { AuthService } from './auth/auth.service';
 import { CustomersService } from './customers/customers.service';
 import { HajjService } from './hajj/hajj.service';
@@ -21,6 +22,7 @@ export const APP_PROVIDERS = [
     AuthHttpService,
     TranslationService,
     LookupService,
+    ToasterService,
     AuthService,
     CustomersService,
     HajjService,

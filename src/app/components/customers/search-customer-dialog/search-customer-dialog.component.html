@@ -20,7 +20,7 @@
         </button> -->
     </div>
 
-    <table class="table table-hover">
+    <table class="table table-hover" *ngIf="customers && customer.data && customers.data.length > 0">
         <thead class="text-warning">
             <th></th>
             <th>{{ 'COMMON.NAME' | translate }}</th>
@@ -28,7 +28,7 @@
             <th></th>
         </thead>
         <tbody>
-            <tr *ngFor="let customer of customers">
+            <tr *ngFor="let customer of customers.data">
                 <td><mat-checkbox (change)="customerChecked($event, customer)"></mat-checkbox></td>
                 <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                 <td>{{ customer.mobileNumber }}</td>
@@ -40,4 +40,7 @@
             </tr>
         </tbody>
     </table>
+    <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" 
+        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+    </pagination-controls>
 </div>

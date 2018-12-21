@@ -1,10 +1,12 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
-import { MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { ToasterService } from '../../../core/services/toaster.service';
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
 import { CustomerDialogComponent } from '../customer-dialog/customer-dialog.component';
-import { showMessage, removeFromArray } from '../../../core/helpers/utils';
+import { removeFromArray } from '../../../core/helpers/utils';
+import { PagingResponse } from '../../../core/models/paging';
 
 import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/upload-documents-dialog.component';
 
@@ -14,8 +16,8 @@ import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/up
   styleUrls: ['./search-customer-dialog.component.scss']
 })
 export class SearchCustomerDialogComponent implements OnInit {
-  customers: Customer[];
-  customersChecked: Customer[] = [];
+  customers: PagingResponse<Customer>;
+  customersChecked: Customer[];
 
   @Output() onCustomersAdded: EventEmitter<Customer[]> = new EventEmitter();
   
@@ -23,10 +25,11 @@ export class SearchCustomerDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<SearchCustomerDialogComponent>,
-    public snackBar: MatSnackBar,
+    public toasterService: ToasterService,
     private service: CustomersService) {
       
-      this.customers = service.customers;
+      service.getCustomers()
+        .subscribe(res => this.customers = res);
   }
 
   ngOnInit() {
@@ -67,7 +70,7 @@ export class SearchCustomerDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(customers => {
       if (customers && customers.length > 0) {
         this.onCustomersAdded.emit(customers);
-        showMessage(this.snackBar, 'Client ajouté');
+        this.toasterService.showToaster('Client ajouté');
       }
       // else {
       //   this.showMessage('Erreur lors de l\'ajout du client', false);

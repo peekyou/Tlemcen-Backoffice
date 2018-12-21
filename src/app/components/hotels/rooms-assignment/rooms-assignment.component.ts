@@ -45,8 +45,8 @@ export class RoomsAssignmentComponent implements OnInit {
       }
     }
 
-    men = men.sort((a,b) => a.birthdate.getTime() - b.birthdate.getTime());
-    women = women.sort((a,b) => a.birthdate.getTime() - b.birthdate.getTime());
+    men = men.sort((a,b) => a.birthDate.getTime() - b.birthDate.getTime());
+    women = women.sort((a,b) => a.birthDate.getTime() - b.birthDate.getTime());
 
     var menByLastName: any[] = groupByArray(men, 'lastname');
     var womenByLastName: any[] = groupByArray(women, 'lastname');

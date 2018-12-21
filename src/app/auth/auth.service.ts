@@ -2,8 +2,11 @@ import { Injectable, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { HttpService } from '../core/services/http.service';
 import { parseJwt } from '../core/helpers/utils';
+import { Claims } from '../core/helpers/claims';
 
 @Injectable()
 export class AuthService {
@@ -15,31 +18,24 @@ export class AuthService {
     private userId: string;
     public token: string = null;
     
-    constructor() {
+    constructor(private http: HttpService) {
         this.token = localStorage.getItem(this.tokenKey);
-        // this.setPermissions();
-        this.logout();
+        this.setPermissions();
     }
 
     login(username: string, password: string): Observable<boolean> {
-      // return this.http
-      // .post(this.api + '/login', { username: username, password: password, userType: 'merchant', groupId: this.config.GroupId })
-      // .map((response: any) => {
-      //     // login successful if there's a jwt token in the response
-      //     let token = response.token; 
-      //     if (token) {
-      //         this.token = token;
-      //         localStorage.setItem(this.tokenKey, token);
-      //         this.setPermissions();
-      //         this.setCustomerCustomFields();
-      //         return true;
-      //     } else {
-      //         return false;
-      //     }
-      // });
-      this.token = 'test.test.test';
-      localStorage.setItem(this.tokenKey, this.token);
-      return of(true);
+      return this.http
+        .post('login', { username: username, password: password })
+        .pipe(map(token => {
+            if (token) {
+                this.token = token;
+                localStorage.setItem(this.tokenKey, token);
+                this.setPermissions();
+                return true;
+            } else {
+                return false;
+            }
+        }));
     }
 
     setPassword(password: string, token: string, code: string): Observable<boolean> {
@@ -55,7 +51,7 @@ export class AuthService {
     setPermissions() {
         if (this.token) {
             var claims = parseJwt(this.token);
-            // this.permissions = claims[Claims.Permissions];
+            this.permissions = claims[Claims.Permissions];
         }
         else {
             this.permissions = [];
@@ -76,7 +72,7 @@ export class AuthService {
     getUsername(): string {
         if (this.token && !this.username) {
             var claims = parseJwt(this.token);
-            // this.username = claims[Claims.Name];
+            this.username = claims[Claims.Name];
         }
         return this.username;
     }

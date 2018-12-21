@@ -21,7 +21,8 @@ export class CustomerDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.customer = this.service.customers.filter(c => c.id == params['id'])[0];
+          this.service.getCustomer(params['id'])
+            .subscribe(res => this.customer = res);
       }
     })
   }

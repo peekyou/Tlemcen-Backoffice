@@ -32,8 +32,8 @@ export class HotelDialogComponent implements OnInit {
     ngOnInit() {
         this.form = this.fb.group({
             name: this.fb.control(this.hotel.name, Validators.required),
-            phone: this.fb.control(this.hotel.phone),
-            email: this.fb.control(this.hotel.email, (c) => this.customEmailValidator(c)),
+            phone: this.fb.control(this.hotel.contactPhoneNumber),
+            email: this.fb.control(this.hotel.contactEmail, (c) => this.customEmailValidator(c)),
             roomsCount: this.fb.control(this.hotel.roomsCount)
         });
     }
@@ -47,11 +47,11 @@ export class HotelDialogComponent implements OnInit {
       var hotel = new Hotel();
       hotel.name = this.form.value.name;
       hotel.roomsCount = this.form.value.roomsCount;
-      hotel.email = this.form.value.email;
-      hotel.phone = this.form.value.phone;
+      hotel.contactEmail = this.form.value.email;
+      hotel.contactPhoneNumber = this.form.value.phone;
       
       this.loader = this.service
-          .create(hotel)
+          .createHotel(hotel)
           .subscribe(
               res => {
                   this.loading = false;

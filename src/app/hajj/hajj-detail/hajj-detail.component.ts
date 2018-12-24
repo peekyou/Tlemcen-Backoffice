@@ -11,6 +11,7 @@ import { Hotel } from '../../hotels/hotel.model';
 import { HotelReservation } from '../../hotels/hotel-reservation.model';
 import { HotelRoomReservation } from '../../hotels/hotel-room-reservation.model';
 import { Airline } from '../../airlines/airline.model';
+import { TravelType } from '../../travels/travel.model';
 import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
 import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 
@@ -36,10 +37,14 @@ export class HajjDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.hajj = this.service.hajjList.filter(c => c.id == params['id'])[0];
-      }
-      if (!this.hajj) {
-        this.router.navigate(['/hajj']);
+        this.service.getHajj(params['id'])
+          .subscribe(
+            res => {
+              this.hajj = res
+              if (!this.hajj) {
+                this.router.navigate(['/hajj']);
+              }
+            });
       }
     });
   }
@@ -49,15 +54,13 @@ export class HajjDetailComponent implements OnInit {
         autoFocus: false,
         width: '534px',
         data: {
-          title: 'Pèlerins Hajj ' + this.hajj.year
+          title: 'Pèlerins Hajj ' + this.hajj.name,
+          travel: this.hajj
         }
     });
 
     const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
-      if (!this.hajj.customers) {
-        this.hajj.customers = [];
-      }
-      this.hajj.customers = this.hajj.customers.concat(customers);
+      this.service.createHajj
     });
 
     dialogRef.afterClosed().subscribe(customer => {
@@ -70,7 +73,7 @@ export class HajjDetailComponent implements OnInit {
         autoFocus: false,
         width: '534px',
         data: {
-          title: 'Hôtel Hajj ' + this.hajj.year,
+          title: 'Hôtel Hajj ' + this.hajj.name,
           hotelReservation: hotelReservation
         }
     });

@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { Customer } from './customer.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
+import { AppFile } from '../core/models/file.model';
 
 @Injectable()
 export class CustomersService {
@@ -11,8 +12,8 @@ export class CustomersService {
 
   constructor(private http: AuthHttpService) { }
 
-  getCustomers(): Observable<PagingResponse<Customer>> {
-    return this.http.get(this.resource);
+  getCustomers(page: number = null, count: number = null, searchTerm: string = ''): Observable<PagingResponse<Customer>> {
+    return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count+ '&searchTerm=' + searchTerm);
   }
 
   getCustomer(id): Observable<Customer> {
@@ -25,5 +26,10 @@ export class CustomersService {
 
   deleteCustomer(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);
+  }
+
+  uploadCustomerDocument(customerId: string, documentTypeId: string, file: AppFile): Observable<Customer> {
+    file.data = file.src;
+    return this.http.post(this.resource + '/document?customerId=' + customerId + '&documentTypeId=' + documentTypeId, file);
   }
 }

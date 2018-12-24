@@ -2,18 +2,19 @@
 <div mat-dialog-content>
     <form [formGroup]="form" (ngSubmit)="form.valid && saveFee()">
       <div>
-        <label>S'applique à</label>
-        <br>
-        <mat-radio-group formControlName="type">
-          <mat-radio-button style="margin-bottom: 11px" value="HAJJOMRA">Hajj/Omra</mat-radio-button>
-          <mat-radio-button style="margin-left: 15px" value="HOTEL">Hôtel</mat-radio-button>
-          <mat-radio-button style="margin-left: 15px" value="FLIGHT">Vol</mat-radio-button>
-        </mat-radio-group>
         <mat-form-field class="full-width">
             <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
         </mat-form-field>
+        <label>S'applique à</label>
+        <br>
+        <mat-checkbox formControlName="hajj" style="margin-bottom: 11px">Hajj</mat-checkbox>
+        <mat-checkbox formControlName="omra" style="margin-left: 15px">Omra</mat-checkbox>
+        <mat-checkbox formControlName="travel" style="margin-left: 15px">Voyage</mat-checkbox>
+        <mat-checkbox formControlName="hotel" style="margin-left: 15px">Hôtel</mat-checkbox>
+        <mat-checkbox formControlName="flight" style="margin-left: 15px">Vol</mat-checkbox>
+        <br>
         <mat-form-field class="full-width">
-            <input type="number" matInput placeholder="Prix" formControlName="amount" required>
+            <input type="number" matInput placeholder="Prix" formControlName="price" required>
         </mat-form-field>
         </div>
         <div class="pull-buttons-right">

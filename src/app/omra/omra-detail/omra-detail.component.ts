@@ -11,6 +11,7 @@ import { Hotel } from '../../hotels/hotel.model';
 import { HotelReservation } from '../../hotels/hotel-reservation.model';
 import { HotelRoomReservation } from '../../hotels/hotel-room-reservation.model';
 import { Airline } from '../../airlines/airline.model';
+import { TravelType } from '../../travels/travel.model';
 import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
 import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 
@@ -36,10 +37,14 @@ export class OmraDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.omra = this.service.omraList.filter(c => c.id == params['id'])[0];
-      }
-      if (!this.omra) {
-        this.router.navigate(['/omra']);
+        this.service.getOmra(params['id'])
+        .subscribe(
+          res => {
+            this.omra = res
+            if (!this.omra) {
+              this.router.navigate(['/omra']);
+            }
+          });
       }
     });
   }
@@ -49,7 +54,8 @@ export class OmraDetailComponent implements OnInit {
         autoFocus: false,
         width: '534px',
         data: {
-          title: 'Pèlerins Omra ' + this.omra.name
+          title: 'Pèlerins Omra ' + this.omra.name,
+          travel: this.omra
         }
     });
 

@@ -5,8 +5,9 @@ export class Hotel {
     id?: string;
     name?: string;
     roomsCount?: number;
-    email?: string;
-    phone?: string;
+    contactEmail?: string;
+    contactPhoneNumber?: string;
+    category?: string;
     address?: Address;
     expanded?: boolean;
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
+import { PagingResponse } from '../../core/models/paging';
 import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 import { HotelDialogComponent } from '../hotel-dialog/hotel-dialog.component';
 import { HotelsService } from '../hotels.service';
@@ -12,13 +14,31 @@ import { Hotel } from '../hotel.model';
   styleUrls: ['./hotel-list.component.scss']
 })
 export class HotelListComponent implements OnInit {
-  hotels: Hotel[];
+  loader: Subscription;
+  currentPage: number = 1;
+  itemsPerPage: number = 20;
+  hotels: PagingResponse<Hotel>;
 
-  constructor(private service: HotelsService, private dialog: MatDialog) { 
-    this.hotels = service.hotels;
+    constructor(private service: HotelsService, private dialog: MatDialog) { 
+      this.getHotels();
   }
 
   ngOnInit() {
+  }
+
+  getHotels() {
+    window.scroll(0,0);
+
+    this.loader = this.service.getHotels(this.currentPage, this.itemsPerPage)
+    .subscribe(
+      res => this.hotels = res,
+      err => console.log(err)
+    );
+  }
+
+  pageChanged(page) {
+    this.currentPage = page;
+    this.getHotels();
   }
 
   openHotelDialog(hotel: Hotel = null) {
@@ -31,6 +51,10 @@ export class HotelListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newHotel => {
+      if (newHotel) {
+        this.currentPage = 1;
+        this.getHotels();
+      }
     });
   }
 
@@ -42,9 +66,15 @@ export class HotelListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       if (confirmed) {
-        this.service.delete(hotel.id)
+        this.service.deleteHotel(hotel.id)
         .subscribe(
-          res => this.hotels = this.service.hotels,
+          res => {
+            var index = this.hotels.data.indexOf(hotel);
+            if (index > -1) {
+                this.hotels.data.splice(index, 1);
+                this.hotels.paging.totalCount--;
+            }
+          },
           err => console.log(err)
         );
       }

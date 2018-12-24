@@ -55,7 +55,6 @@ export class FileUploadComponent {
                   name: file.name,
                   createdDate: new Date()
               };
-
               if (typeof this.file !== 'undefined') {
                   this._file = newFile;
                   this.fileChange.emit(this._file);

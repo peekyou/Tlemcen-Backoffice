@@ -2,7 +2,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
+                <app-spinner [loader]="loader"></app-spinner>
+                <div class="card" *ngIf="loader.closed && payments && payments.data && payments.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title pull-left">Historique des paiments</h4>
                     </div>
@@ -17,7 +18,7 @@
                                     <th>Reste à payer</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let payment of payments" [routerLink]="['/customers', payment.customer.id]">
+                                    <tr *ngFor="let payment of payments.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: payments?.paging?.totalCount }" [routerLink]="['/customers', payment.customer.id]">
                                         <td>{{ payment.date | date:'dd/MM/yyyy' }}</td>
                                         <td>{{ payment.amountPaid }} €</td>
                                         <td><span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span></td>
@@ -31,6 +32,9 @@
                             </table>
                         </div>
                     </div>
+                    <pagination-controls *ngIf="payments" (pageChange)="pageChanged($event)" 
+                        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                    </pagination-controls>
                 </div>
             </div>
         </div>

@@ -30,8 +30,8 @@ export class HotelRoomsDialogComponent implements OnInit {
       if (data) {
         this.hotelReservation = data.hotelReservation;
       }
-  
-  this.hotels = service.hotels;
+      service.getHotels(null, null)
+        .subscribe(res => this.hotels = res.data);
   }
 
   ngOnInit() {

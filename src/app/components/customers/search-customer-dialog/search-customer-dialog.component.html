@@ -1,15 +1,17 @@
 <div mat-dialog-title>{{ data.title }}</div>
 <div mat-dialog-content>
-    <div class="input-group no-border">
-        <input type="text" value="" class="form-control" placeholder="Nom, Email, Téléphone...">
-        <button mat-icon-button matTooltip="Chercher">
-            <i class="material-icons">search</i>
-        </button>
-        <button mat-icon-button matTooltip="Créer nouveau client" (click)="newCustomer()" >
-            <mat-icon>create</mat-icon>
-        </button>
-    </div>
-
+    <form class="form" (ngSubmit)="searchCustomers()" novalidate>
+        <div class="input-group no-border">
+            <input type="text" value="" class="form-control" name="searchTerm"
+                [(ngModel)]="searchTerm" placeholder="Nom, Email, Téléphone...">
+            <button type="submit" mat-icon-button matTooltip="Chercher">
+                <i class="material-icons">search</i>
+            </button>
+            <button mat-icon-button matTooltip="Créer nouveau client" (click)="newCustomer()" >
+                <mat-icon>create</mat-icon>
+            </button>
+        </div>
+    </form>
     <div class="action-buttons">
         <button mat-icon-button *ngIf="customersChecked.length > 0" matTooltip="Ajouter" (click)="addExisting()">
             <mat-icon>add</mat-icon>
@@ -19,8 +21,8 @@
             <mat-icon>create</mat-icon>
         </button> -->
     </div>
-
-    <table class="table table-hover" *ngIf="customers && customer.data && customers.data.length > 0">
+    <app-spinner [loader]="loader"></app-spinner>
+    <table class="table table-hover"  *ngIf="loader.closed && customers && customers.data && customers.data.length > 0">
         <thead class="text-warning">
             <th></th>
             <th>{{ 'COMMON.NAME' | translate }}</th>
@@ -28,12 +30,16 @@
             <th></th>
         </thead>
         <tbody>
-            <tr *ngFor="let customer of customers.data">
+            <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }"
+                (mouseenter)="customer.hovered = true" (mouseleave)="customer.hovered = false">
                 <td><mat-checkbox (change)="customerChecked($event, customer)"></mat-checkbox></td>
                 <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                 <td>{{ customer.mobileNumber }}</td>
                 <td>
-                    <button mat-icon-button matTooltip="Ajouter" (click)="addExisting(customer)">
+                    <button class="dummy" mat-icon-button>
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button *ngIf="customer.hovered" mat-icon-button matTooltip="Ajouter" (click)="addExisting(customer)">
                         <mat-icon>add</mat-icon>
                     </button>
                 </td>

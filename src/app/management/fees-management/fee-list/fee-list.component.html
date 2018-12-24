@@ -15,8 +15,7 @@
               <tbody>
                 <tr *ngFor="let hajjOmra of hajjOmraList">
                   <td>
-                    <span *ngIf="hajjOmra.year">Hajj {{ hajjOmra.year }}</span>
-                    <span *ngIf="hajjOmra.name">Omra {{ hajjOmra.name }}</span>
+                    <span *ngIf="hajjOmra.name">Hajj/Omra {{ hajjOmra.name }}</span>
                   </td>
                   <td class="row m-0 form-inline">
                     <input type="text" class="col form-control form-control-sm" placeholder="Prix"/>
@@ -110,7 +109,8 @@
         <div class="action-buttons">
           <button class="btn btn-info" (click)="openServiceFeeDialog()"><mat-icon>add</mat-icon>Ajouter un service</button>
         </div>
-        <div class="card">
+        <app-spinner [loader]="loader"></app-spinner>
+        <div class="card" *ngIf="loader.closed && additionalFees && additionalFees.data && additionalFees.data.length > 0">
           <div class="card-header card-header-warning">
             <h4 class="card-title">Services supplémentaires</h4>
           </div>
@@ -122,11 +122,11 @@
                 <th>Prix</th>
               </thead>
               <tbody>
-                <tr *ngFor="let additionalFee of additionalFees">
-                  <td>{{ additionalFee.categories.join(', ') }}</td>
+                <tr *ngFor="let additionalFee of additionalFees.data | paginate: { itemsPerPage: itemsPerPage, currentPage: feesCurrentPage, totalItems: additionalFees?.paging?.totalCount }">
+                  <td>{{ displayCategories(additionalFee) }}</td>
                   <td>{{ additionalFee.name }}</td>
                   <td class="row m-0 form-inline">
-                    <input type="text" class="col form-control form-control-sm" placeholder="Prix" [value]="additionalFee.amount"/>
+                    <input type="text" class="col form-control form-control-sm" placeholder="Prix" [value]="additionalFee.price"/>
                     <button class="save-btn" mat-icon-button>
                       <mat-icon class="text-success">check-circle</mat-icon>
                     </button>
@@ -135,6 +135,9 @@
               </tbody>
             </table>
           </div>
+          <pagination-controls *ngIf="additionalFees" (pageChange)="feesPageChanged($event)" 
+              autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+          </pagination-controls>
         </div>
       </div>
     </div>

@@ -26,7 +26,8 @@ export class CustomerDialogComponent implements OnInit {
         autoFocus: false,
         width: '534px',
         data: {
-          customers: [customer]
+          customers: [customer],
+          travelType: this.data.travelType
         }
       });
   

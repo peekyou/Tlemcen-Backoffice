@@ -20,6 +20,7 @@ import { SubmitButtonComponent } from './common/submit-button/submit-button.comp
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
 import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
 import { SpinnerComponent } from './common/spinner/spinner.component';
+import { TravelServicesDialogComponent } from './travel-services-dialog/travel-services-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -28,6 +29,7 @@ const MODALS = [
   PaymentDialogComponent,
   HotelRoomsDialogComponent,
   DeleteDialogComponent,
+  TravelServicesDialogComponent
 ];
 
 @NgModule({

@@ -17,7 +17,7 @@ export class HajjRoomsPlanComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.hajj = this.service.hajjList.filter(c => c.id == params['id'])[0];
+        this.service.getHajj(params['id']).subscribe(res => this.hajj = res );
       }
     });
   }

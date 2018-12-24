@@ -30,7 +30,7 @@
                                     <b>{{ 'COMMON.BIRTHDATE' | translate }} :</b> {{ customer.birthDate | date:'dd/MM/yyyy' }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Pays de naissance :</b> {{ customer.birthcountry?.name }}
+                                    <b>Pays de naissance :</b> {{ customer.birthCountry }}
                                 </div>
                             </div>
                             <div class="row">
@@ -43,10 +43,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <b>Nationalité :</b> {{ customer.nationality?.name }}
+                                    <b>Nationalité :</b> {{ customer.nationality }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Comment connu l'agence :</b> {{ customer.howKnewAgency?.name }}
+                                    <b>Comment connu l'agence :</b> {{ customer.howKnewAgency }}
                                 </div>
                             </div>
                             <div class="row" *ngIf="customer.address">

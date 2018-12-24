@@ -1,10 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { AppDocument } from '../../management/documents-management/document.model';
 import { DocumentService } from '../../management/documents-management/document.service';
-import { Customer} from '../../customers/customer.model';
-import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component'
+import { Customer } from '../../customers/customer.model';
+import { CustomersService } from '../../customers/customers.service';
+import { TravelServicesDialogComponent } from '../travel-services-dialog/travel-services-dialog.component';
 
 @Component({
   selector: 'app-upload-documents-dialog',
@@ -15,41 +17,44 @@ export class UploadDocumentsDialogComponent implements OnInit {
   customers: Customer[];
   loading: boolean;
   documents: AppDocument[];
+  loader: Subscription;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<UploadDocumentsDialogComponent>,
     private dialog: MatDialog,
-    private documentService: DocumentService) {
+    private documentService: DocumentService,
+    private customerService: CustomersService) {
       
-      this.documents = this.documentService.documents.filter(x => x.categories.indexOf('Hajj') != -1 || x.categories.indexOf('Omra') != -1);
       if (data) {
         this.customers = data.customers;
-        this.customers.forEach(c => c.documents = JSON.parse(JSON.stringify(this.documents)));
+        this.loader = this.documentService.getDocumentsByCategory(data.travel.travelTypeId)
+          .subscribe(res => {
+            this.documents = res;
+            this.customers.forEach(c => c.documents = JSON.parse(JSON.stringify(this.documents)));
+          });
       }
     }
 
   ngOnInit() {
   }
 
-  addDocument = (file, customer: any) => {
-    // this.service
-    //     .uploadFile(file, page.id)
-    //     .subscribe(
-    //         r => {
-    //             file.id = r;
-    //             page.pictures.push(file);
-    //         },
-    //         err => { console.log(err); }
-    //     );
+  uploadDocument(file, customer, document) {
+    this.customerService
+        .uploadCustomerDocument(customer.id, document.id, file)
+        .subscribe(
+            r => { },
+            err => { console.log(err); }
+        );
   }
 
   saveDocuments() {
-    let dialogRef = this.dialog.open(PaymentDialogComponent, {
+    let dialogRef = this.dialog.open(TravelServicesDialogComponent, {
       autoFocus: false,
       width: '534px',
       data: {
-        customers: this.customers
+        customers: this.customers,
+        travel: this.data.travel
       }
     });
 

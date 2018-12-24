@@ -5,6 +5,7 @@ import { Subscription, Observable } from 'rxjs';
 
 import { Fee } from '../fee.model';
 import { FeeService } from '../fee.service';
+import { Category } from '../../../core/models/category.model';
 
 @Component({
   selector: 'app-service-fee-dialog',
@@ -25,9 +26,13 @@ export class ServiceFeeDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      type: this.fb.control(this.fee.categories ? this.fee.categories : 'HAJJOMRA', Validators.required),
+      hajj: this.fb.control(this.fee.categories.indexOf(Category.Hajj) > -1),
+      omra: this.fb.control(this.fee.categories.indexOf(Category.Omra) > -1),
+      travel: this.fb.control(this.fee.categories.indexOf(Category.Travel) > -1),
+      hotel: this.fb.control(this.fee.categories.indexOf(Category.Hotel) > -1),
+      flight: this.fb.control(this.fee.categories.indexOf(Category.Flight) > -1),
       name: this.fb.control(this.fee.name, Validators.required),
-      amount: this.fb.control(this.fee.amount, Validators.required)
+      price: this.fb.control(this.fee.price, Validators.required)
     });
   }
 
@@ -38,19 +43,25 @@ export class ServiceFeeDialogComponent implements OnInit {
   saveFee() {
     var fee = new Fee();
     fee.name = this.form.value.name;
-    fee.amount = this.form.value.amount;
-    if (this.form.value.type == 'HAJJOMRA') {
-      fee.categories = ['Hajj', 'Omra'];
+    fee.price = this.form.value.price;
+    if (this.form.value.hajj == true) {
+      fee.categories.push(Category.Hajj);
     }
-    else if (this.form.value.type == 'HOTEL') {
-      fee.categories = ['Hôtel'];
+    if (this.form.value.omra == true) {
+      fee.categories.push(Category.Omra);
     }
-    else if (this.form.value.type == 'FLIGHT') {
-      fee.categories = ['Vol'];
+    if (this.form.value.travel == true) {
+      fee.categories.push(Category.Travel);
     }
-    
+    if (this.form.value.hotel == true) {
+      fee.categories.push(Category.Hotel);
+    }
+    if (this.form.value.flight == true) {
+      fee.categories.push(Category.Flight);
+    }
+
     this.saveSubscription = this.service
-        .createServiceFee(fee)
+        .createFee(fee)
         .subscribe(
             res => {
                 this.dialogRef.close(res);

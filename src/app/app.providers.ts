@@ -7,6 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { CustomersService } from './customers/customers.service';
 import { HajjService } from './hajj/hajj.service';
 import { OmraService } from './omra/omra.service';
+import { TravelService } from './travels/travel.service';
 import { AirlinesService } from './airlines/airlines.service';
 import { HotelsService } from './hotels/hotels.service';
 import { PaymentService } from './payments/payment.service';
@@ -27,6 +28,7 @@ export const APP_PROVIDERS = [
     CustomersService,
     HajjService,
     OmraService,
+    TravelService,
     AirlinesService,
     HotelsService,
     PaymentService,

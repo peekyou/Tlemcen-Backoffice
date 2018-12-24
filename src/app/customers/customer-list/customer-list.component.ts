@@ -7,6 +7,7 @@ import { Customer } from '../customer.model';
 import { CustomersService } from '../customers.service';
 import { CustomerDialogComponent } from '../../components/customers/customer-dialog/customer-dialog.component';
 import { PagingResponse } from '../../core/models/paging';
+import { TravelType } from '../../travels/travel.model';
 
 import * as moment from 'moment';
 
@@ -18,34 +19,43 @@ import * as moment from 'moment';
 export class CustomerListComponent implements OnInit {
   moment;
   loader: Subscription;
+  currentPage: number = 1;
+  itemsPerPage: number = 20;
   customers: PagingResponse<Customer>;
   
   constructor(private service: CustomersService, private dialog: MatDialog) { 
     this.moment = moment;
-    this.loadCustomers();
+    this.getCustomers();
   }
 
   ngOnInit() {
   }
 
-  loadCustomers() {
-    this.loader = this.service.getCustomers()
-      .subscribe(
-        res => this.customers = res,
-        err => console.log(err)
-      );
+  getCustomers() {
+    window.scroll(0,0);
+
+    this.loader = this.service.getCustomers(this.currentPage, this.itemsPerPage)
+    .subscribe(
+      res => this.customers = res,
+      err => console.log(err)
+    );
+}
+
+  pageChanged(page) {
+    this.currentPage = page;
+    this.getCustomers();
   }
 
   openCustomerDialog() {
     let dialogRef = this.dialog.open(CustomerDialogComponent, {
         autoFocus: false,
-        width: '634px',
-        // height: '550px'
+        width: '634px'
     });
 
     dialogRef.afterClosed().subscribe(customer => {
         if (customer) {
-          this.loadCustomers();
+          this.currentPage = 1;
+          this.getCustomers();
         }
     });
   }

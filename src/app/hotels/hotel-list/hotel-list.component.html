@@ -5,7 +5,8 @@
             <div class="action-buttons">
                 <button class="btn btn-info" (click)="openHotelDialog()"><mat-icon>add</mat-icon>Ajouter un hôtel</button>
             </div>
-            <div class="card">
+            <app-spinner [loader]="loader"></app-spinner>
+            <div class="card" *ngIf="loader.closed && hotels && hotels.data && hotels.data.length > 0">
                 <div class="card-header card-header-warning">
                     <h4 class="card-title pull-left">Hôtels</h4>
                 </div>
@@ -19,10 +20,10 @@
                             <th></th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let hotel of hotels" [routerLink]="['/hotels', hotel.id]">
+                            <tr *ngFor="let hotel of hotels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hotels?.paging?.totalCount }" [routerLink]="['/hotels', hotel.id]">
                             <td>{{ hotel.name }}</td>
                             <td>{{ hotel.roomsCount }}</td>
-                            <td>{{ hotel.phone }}</td>
+                            <td>{{ hotel.contactPhoneNumber }}</td>
                             <td></td>
                             <td>
                                 <button mat-icon-button (click)="openDeleteDialog(hotel);$event.stopPropagation()">
@@ -33,6 +34,9 @@
                         </tbody>
                     </table>
                 </div>
+                <pagination-controls *ngIf="hotels" (pageChange)="pageChanged($event)" 
+                    autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                </pagination-controls>
             </div>
           </div>
       </div>

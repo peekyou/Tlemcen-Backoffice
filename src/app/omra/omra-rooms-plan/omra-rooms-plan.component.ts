@@ -17,7 +17,7 @@ export class OmraRoomsPlanComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.omra = this.service.omraList.filter(c => c.id == params['id'])[0];
+        this.service.getOmra(params['id']).subscribe(res => this.omra = res );
       }
     });
   }

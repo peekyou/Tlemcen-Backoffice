@@ -5,6 +5,7 @@ import { Subscription, Observable } from 'rxjs';
 
 import { AppDocument } from '../document.model';
 import { DocumentService } from '../document.service';
+import { TravelType } from '../../../travels/travel.model';
 
 @Component({
   selector: 'app-document-dialog',
@@ -25,7 +26,9 @@ export class DocumentDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      type: this.fb.control(this.document.categories ? this.document.categories : 'HAJJ', Validators.required),
+      hajj: this.fb.control(this.document.categories.indexOf(TravelType.Hajj) > -1),
+      omra: this.fb.control(this.document.categories.indexOf(TravelType.Omra) > -1),
+      travel: this.fb.control(this.document.categories.indexOf(TravelType.Travel) > -1),
       name: this.fb.control(this.document.name, Validators.required),
       mandatory: this.fb.control(this.document.mandatory)
     });
@@ -38,19 +41,19 @@ export class DocumentDialogComponent implements OnInit {
   save() {
     var doc = new AppDocument();
     doc.name = this.form.value.name;
-    doc.mandatory = this.form.value.mandatory;
-    if (this.form.value.type == 'HAJJ') {
-      doc.categories = ['Hajj'];
+    doc.mandatory = this.form.value.mandatory == true;
+    if (this.form.value.hajj == true) {
+      doc.categories.push(TravelType.Hajj);
     }
-    else if (this.form.value.type == 'OMRA') {
-      doc.categories = ['Omra'];
+    if (this.form.value.omra == true) {
+      doc.categories.push(TravelType.Omra);
     }
-    else if (this.form.value.type == 'TRAVEL') {
-      doc.categories = ['Voyage'];
+    if (this.form.value.travel == true) {
+      doc.categories.push(TravelType.Travel);
     }
     
     this.saveSubscription = this.service
-        .create(doc)
+        .createDocument(doc)
         .subscribe(
             res => {
                 this.dialogRef.close(res);

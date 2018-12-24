@@ -71,8 +71,8 @@ export class CustomerFormComponent implements OnInit {
             mobile: this.fb.control(this.customer.mobileNumber),
             phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
-            birthCountry: this.fb.control(this.customer.birthCountry),
-            nationality: this.fb.control(this.customer.nationality),
+            birthCountry: this.fb.control(this.customer.birthCountryCode),
+            nationality: this.fb.control(this.customer.nationalityCode),
             profession: this.fb.control(this.customer.profession),
             address1: this.fb.control(this.customer.address.addressLine1),
             cityZipCode: this.fb.control(null),
@@ -127,7 +127,15 @@ export class CustomerFormComponent implements OnInit {
         newCustomer.lastname = this.form.value.lastname;
         newCustomer.email = this.form.value.email;
         newCustomer.mobileNumber = this.form.value.mobile;
+        newCustomer.phoneNumber = this.form.value.phone;
         newCustomer.birthDate = this.form.value.birthDate;
+        newCustomer.birthCountryCode = this.form.value.birthCountry ? this.form.value.birthCountry.id : null;
+        newCustomer.howKnewAgency = this.form.value.howKnewAgency ? this.form.value.howKnewAgency.name : null;
+        newCustomer.passportNumber = this.form.value.passportNumber;
+        newCustomer.passportExpiryDate = this.form.value.passportExpiryDate;
+        newCustomer.nationalityCode = this.form.value.nationality ? this.form.value.nationality.id : null;
+        newCustomer.relationship = this.form.value.relationship ? this.form.value.relationship.name : null;
+        newCustomer.profession = this.form.value.profession ? this.form.value.profession.name : null;
 		var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
 		newCustomer.address.city = cityZipCode[0];
 		newCustomer.address.zipCode = cityZipCode[1];

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
+import { PagingResponse } from '../../core/models/paging';
 import { Airline } from '../airline.model';
 import { AirlinesService } from '../airlines.service';
 
@@ -9,13 +11,31 @@ import { AirlinesService } from '../airlines.service';
   styleUrls: ['./airline-list.component.scss']
 })
 export class AirlineListComponent implements OnInit {
-  airlines: Airline[];
+  loader: Subscription;
+  currentPage: number = 1;
+  itemsPerPage: number = 20;
+  airlines: PagingResponse<Airline>;
 
-  constructor(private service: AirlinesService) { 
-    this.airlines = service.airlines
+  constructor(private service: AirlinesService) {
+    this.getAirlines();
   }
 
   ngOnInit() {
+  }
+
+  getAirlines() {
+    window.scroll(0,0);
+
+    this.loader = this.service.getAirlines(this.currentPage, this.itemsPerPage)
+    .subscribe(
+      res => this.airlines = res,
+      err => console.log(err)
+    );
+}
+
+  pageChanged(page) {
+    this.currentPage = page;
+    this.getAirlines();
   }
 
   openAirlineDialog(){

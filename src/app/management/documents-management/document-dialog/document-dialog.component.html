@@ -2,24 +2,24 @@
 <div mat-dialog-content>
     <form [formGroup]="form" (ngSubmit)="form.valid && save()">
       <div>
-        <label>S'applique à</label>
-        <br>
-        <mat-radio-group formControlName="type">
-          <mat-radio-button style="margin-bottom: 11px" value="HAJJ">Hajj</mat-radio-button>
-          <mat-radio-button style="margin-left: 15px" value="OMRA">Omra</mat-radio-button>
-          <mat-radio-button style="margin-left: 15px" value="TRAVEL">Voyage</mat-radio-button>
-        </mat-radio-group>
         <mat-form-field class="full-width">
             <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
         </mat-form-field>
-        <mat-checkbox formControlName="mandatory">Obligatoire</mat-checkbox>
-        </div>
-        <div class="pull-buttons-right">
-          <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
-            loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
-            [subscription]="saveSubscription">
-          </app-submit-button>
-          <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
-        </div>
-      </form>
+        <label>S'applique à</label>
+        <br>
+        <mat-checkbox formControlName="hajj" style="margin-bottom: 11px">Hajj</mat-checkbox>
+        <mat-checkbox formControlName="omra" style="margin-left: 15px">Omra</mat-checkbox>
+        <mat-checkbox formControlName="travel" style="margin-left: 15px">Voyage</mat-checkbox>
+        <br>
+        <br>
+        <mat-checkbox formControlName="mandatory">Document obligatoire ?</mat-checkbox>
+      </div>
+      <div class="pull-buttons-right">
+        <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+          loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+          [subscription]="saveSubscription">
+        </app-submit-button>
+        <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+      </div>
+    </form>
 </div>

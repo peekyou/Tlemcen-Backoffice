@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { ToasterService } from '../../../core/services/toaster.service';
 import { Customer } from '../../../customers/customer.model';
@@ -16,8 +17,12 @@ import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/up
   styleUrls: ['./search-customer-dialog.component.scss']
 })
 export class SearchCustomerDialogComponent implements OnInit {
+  loader: Subscription;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
   customers: PagingResponse<Customer>;
-  customersChecked: Customer[];
+  customersChecked: Customer[] = [];
+  searchTerm: string = '';
 
   @Output() onCustomersAdded: EventEmitter<Customer[]> = new EventEmitter();
   
@@ -27,12 +32,27 @@ export class SearchCustomerDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<SearchCustomerDialogComponent>,
     public toasterService: ToasterService,
     private service: CustomersService) {
-      
-      service.getCustomers()
-        .subscribe(res => this.customers = res);
+      this.getCustomers();
   }
 
   ngOnInit() {
+  }
+
+  getCustomers() {
+    this.loader = this.service.getCustomers(this.currentPage, this.itemsPerPage, this.searchTerm)
+    .subscribe(
+      res => this.customers = res
+    );
+  }
+
+  pageChanged(page) {
+    this.currentPage = page;
+    this.getCustomers();
+  }
+
+  searchCustomers() {
+    this.currentPage = 1;
+    this.getCustomers();
   }
 
   customerChecked($event, customer: Customer) {
@@ -63,7 +83,8 @@ export class SearchCustomerDialogComponent implements OnInit {
       autoFocus: false,
       width: '534px',
       data: {
-        customers: selected
+        customers: selected,
+        travel: this.data.travel
       }
     });
 
@@ -77,7 +98,7 @@ export class SearchCustomerDialogComponent implements OnInit {
       // }
     });
   }
-  
+
   close(customer = null): void {
     this.dialogRef.close(customer);
   }

@@ -2,23 +2,42 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { Fee } from './fee.model';
+import { PagingResponse } from '../../core/models/paging';
+import { AuthHttpService } from '../../core/services/auth-http.service';
 
 @Injectable()
 export class FeeService {
-    private api: string;
+    resource = 'fees';
+    
+    // fees: Fee[] = [
+    //     { id: '1', name: 'Hajj 2018', amount: 12333, categories: ['Hajj'] },
+    //     { id: '2', name: 'Omra decembre 2018', amount: 4588, categories: ['Omra'] },
+    // ];
 
-    fees: Fee[] = [
-        { id: '1', name: 'Hajj 2018', amount: 12333, categories: ['Hajj'] },
-        { id: '2', name: 'Omra decembre 2018', amount: 4588, categories: ['Omra'] },
-    ];
-
-    constructor() {
-        // this.api = config.ApiEndpoint + '/customers';
+    constructor(private http: AuthHttpService) { }
+    
+    getFees(page: number, count: number): Observable<PagingResponse<Fee>> {
+        return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
     }
 
-    createServiceFee(fee: Fee) : Observable<Fee> {
-        fee.id = new Date().getMilliseconds().toString();
-        return of(fee);
+    getFeesByCategory(category): Observable<Fee[]> {
+        return this.http.get(this.resource + '/category/' + category);
+    }
+
+    getFee(id): Observable<Fee> {
+        return this.http.get(this.resource + '/' + id);
+    }
+
+    createFee(fee: Fee) : Observable<Fee> {
+        return this.http.post(this.resource, fee);
+    }
+
+    updateFee(fee: Fee): Observable<Fee> {
+        return this.http.put(this.resource + '/' + fee.id, fee);
+    }
+    
+    deleteFee(id: string) : Observable<boolean> {
+        return this.http.delete(this.resource + '/' + id);
     }
 }
 

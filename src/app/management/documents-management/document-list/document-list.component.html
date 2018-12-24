@@ -5,7 +5,7 @@
                 <div class="action-buttons">
                   <button class="btn btn-info" (click)="openDocumentDialog()"><mat-icon>add</mat-icon>Ajouter un document</button>
                 </div>
-                <div class="card">
+                <div class="card" *ngIf="loader.closed && documents && documents.data && documents.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Documents</h4>
                     </div>
@@ -13,14 +13,14 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class=" text-primary">
-                                    <th>Catégorie</th>
+                                    <th>Catégories</th>
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th>Obligatoire</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let document of documents" (click)="openDocumentDialog(document)">
-                                      <td>{{ document.category }}</td>
+                                    <tr *ngFor="let document of documents.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: documents?.paging?.totalCount }" (click)="openDocumentDialog(document)">
+                                      <td>{{ displayCategories(document) }}</td>
                                       <td>{{ document.name }}</td>
                                       <td>
                                         <span *ngIf="document.mandatory">Obligatoire</span>
@@ -36,6 +36,9 @@
                             </table>
                         </div>
                     </div>
+                    <pagination-controls *ngIf="documents" (pageChange)="pageChanged($event)" 
+                        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                    </pagination-controls>
                 </div>
             </div>
         </div>

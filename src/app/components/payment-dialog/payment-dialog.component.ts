@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { Customer } from '../../customers/customer.model';
 import { Payment } from '../../payments/payment.model';
@@ -19,6 +20,7 @@ export class PaymentDialogComponent implements OnInit {
   fees: Fee[];
   form: FormGroup;
   totalAmount: number = 0;
+  loader: Subscription;
   
   constructor(
     private fb: FormBuilder,
@@ -28,11 +30,16 @@ export class PaymentDialogComponent implements OnInit {
     private paymentService: PaymentService,
     private feeService: FeeService) {
 
-      this.customers = data.customers;
-      this.fees = this.feeService.fees.filter(x => x.categories.indexOf('Hajj') != -1 || x.categories.indexOf('Omra') != -1);
-      this.totalAmount = this.fees.reduce(function(a, b){
-        return a + b.amount;
-      }, 0);
+      if (data) {
+        this.customers = data.customers;
+        this.loader = this.feeService.getFeesByCategory(data.travel.travelTypeId)
+          .subscribe(res => {
+            this.fees = res;
+            this.totalAmount = this.fees.reduce(function(a, b){
+              return a + b.amount;
+            }, 0);
+          });
+      }
   }
 
   ngOnInit() {

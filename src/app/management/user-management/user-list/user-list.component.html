@@ -5,7 +5,8 @@
                 <div class="action-buttons">
                   <button class="btn btn-info" (click)="openUserDialog()"><mat-icon>add</mat-icon>Ajouter un utilisateur</button>
                 </div>
-                <div class="card">
+                <app-spinner [loader]="loader"></app-spinner>
+                <div class="card" *ngIf="loader.closed && users && users.data && users.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Utilisateurs</h4>
                     </div>
@@ -19,7 +20,7 @@
                                     <!-- <th *ngFor="let permission of permissions">{{ permission.resourceKey }}</th> -->
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let user of users" (click)="openUserDialog(user)">
+                                    <tr *ngFor="let user of users.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: users?.paging?.totalCount }" (click)="openUserDialog(user)">
                                       <td class="bold">{{user?.username}}</td>
                                       <td>{{user?.firstname}} {{user?.lastname}}</td>
                                       <td>{{user?.status}}</td>
@@ -32,6 +33,9 @@
                             </table>
                         </div>
                     </div>
+                    <pagination-controls *ngIf="users" (pageChange)="pageChanged($event)" 
+                        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                    </pagination-controls>
                 </div>
             </div>
         </div>

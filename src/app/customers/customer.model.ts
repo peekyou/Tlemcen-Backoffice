@@ -16,14 +16,17 @@ export class Customer {
     profession?: Lookup;
     address?: Address;
     relationship?: Lookup;
-    nationality?: Lookup;
+    nationalityCode?: Lookup;
     passportNumber?: string;
     passportExpiryDate?: Date;
-    birthCountry?: Lookup;
+    birthCountryCode?: Lookup;
     howKnewAgency?: Lookup;
     picture?: AppFile;
     documents?: AppDocument[]; 
     payments?: Payment[];
+
+    // UI properties
+    hovered: boolean;
 
     constructor() {
         this.address = {};

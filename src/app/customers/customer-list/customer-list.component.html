@@ -8,7 +8,7 @@
 
                 <app-spinner [loader]="loader"></app-spinner>
                 
-                <div class="card" *ngIf="customers && customers.data && customers.data.length > 0">
+                <div class="card" *ngIf="loader.closed && customers && customers.data && customers.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Clients</h4>
                     </div>
@@ -23,7 +23,7 @@
                                 <th></th>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let customer of customers.data" [routerLink]="['/customers', customer.id]">
+                                <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }" [routerLink]="['/customers', customer.id]">
                                   <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                                   <td>{{ customer.gender }}</td>
                                   <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
@@ -38,10 +38,10 @@
                             </tbody>
                         </table>
                     </div>
+                    <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" 
+                        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                    </pagination-controls>
                 </div>
-                <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" 
-                    autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
-                </pagination-controls>
             </div>
         </div>
     </div>

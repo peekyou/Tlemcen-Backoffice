@@ -5,7 +5,8 @@
                 <div class="action-buttons">
                   <button class="btn btn-info" (click)="newHajj()"><mat-icon>add</mat-icon>Ajouter un Hajj</button>
                 </div>
-                <div class="card">
+                <app-spinner [loader]="loader"></app-spinner>
+                <div class="card" *ngIf="loader.closed && hajjList && hajjList.data && hajjList.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Historique des Hajj</h4>
                         <!-- <div class="card-header-actions">
@@ -24,8 +25,8 @@
                                     <th>Revenus</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let hajj of hajjList" [routerLink]="['/hajj', hajj.id]">
-                                        <td>{{ hajj.year }}</td>
+                                    <tr *ngFor="let hajj of hajjList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hajjList?.paging?.totalCount }" [routerLink]="['/hajj', hajj.id]">
+                                        <td>{{ hajj.name }}</td>
                                         <td>{{ hajj.customers?.length }}</td>
                                         <td>{{ hajj.status }}</td>
                                         <td class="text-primary">{{ hajj.revenues }} €</td>
@@ -34,6 +35,9 @@
                             </table>
                         </div>
                     </div>
+                    <pagination-controls *ngIf="hajjList" (pageChange)="pageChanged($event)" 
+                        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                    </pagination-controls>
                 </div>
             </div>
         </div>

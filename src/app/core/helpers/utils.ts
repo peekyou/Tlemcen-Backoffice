@@ -43,3 +43,10 @@ export function validateDate(event: any) {
         event.preventDefault();
     }
 }
+
+export function filterLookup(value: string, list: any[]): any[] {
+    if (typeof value === 'string') {
+        const filterValue = value.toLowerCase();
+        return list.filter(c => c.name.toLowerCase().indexOf(filterValue) !== -1);
+    }
+}

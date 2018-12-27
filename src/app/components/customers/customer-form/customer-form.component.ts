@@ -9,7 +9,7 @@ import { LookupService } from '../../../core/services/lookup.service';
 import { Lookup } from '../../../core/models/lookup.model';
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
-import { validateDate } from '../../../core/helpers/utils';
+import { validateDate, filterLookup } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-customer-form',
@@ -87,7 +87,7 @@ export class CustomerFormComponent implements OnInit {
                 startWith(''),
                 debounceTime(200),
                 distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? this._filterLookup(option, this.nationalities) : [])
+                map(option => option && option.length >= 2 ? filterLookup(option, this.nationalities) : [])
             );
 
         this.filteredCountries = this.birthCountry.valueChanges
@@ -95,7 +95,7 @@ export class CustomerFormComponent implements OnInit {
                 startWith(''),
                 debounceTime(200),
                 distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? this._filterLookup(option, this.countries) : [])
+                map(option => option && option.length >= 2 ? filterLookup(option, this.countries) : [])
             );
 
         this.filteredProfessions = this.profession.valueChanges
@@ -103,7 +103,7 @@ export class CustomerFormComponent implements OnInit {
                 startWith(''),
                 debounceTime(200),
                 distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? this._filterLookup(option, this.professions) : [])
+                map(option => option && option.length >= 2 ? filterLookup(option, this.professions) : [])
             );
 
         this.filteredCities = this.cityZipCode.valueChanges
@@ -111,7 +111,7 @@ export class CustomerFormComponent implements OnInit {
                 startWith(''),
                 debounceTime(200),
                 distinctUntilChanged(),
-                map(option => option && option.length >= 3 ? this._filterLookup(option, this.cities) : [])
+                map(option => option && option.length >= 3 ? filterLookup(option, this.cities) : [])
             );
     }
 
@@ -173,13 +173,6 @@ export class CustomerFormComponent implements OnInit {
             this.customer.picture.src = picture.imageAsDataUrl;
         }
         this.showCamera = false;
-    }
-
-    private _filterLookup(value: string, list: Lookup[]): any[] {
-        if (typeof value === 'string') {
-            const filterValue = value.toLowerCase();
-            return list.filter(c => c.name.toLowerCase().indexOf(filterValue) !== -1);
-        }
     }
 
     displayFn(val: Lookup) {

@@ -27,12 +27,4 @@ export class PaymentService {
   createPayment(payment: Payment): Observable<Payment> {
     return this.http.post(this.resource, payment);
   }
-
-  createMultiple(payments: Payment[]): Observable<Payment[]> {
-    payments.forEach(payment => {
-      payment.id = new Date().getMilliseconds().toString();
-      // this.payments.unshift(payment);
-    });
-    return of(payments);
-  }
 }

@@ -9,8 +9,6 @@ import { CustomerDialogComponent } from '../customer-dialog/customer-dialog.comp
 import { removeFromArray } from '../../../core/helpers/utils';
 import { PagingResponse } from '../../../core/models/paging';
 
-import { UploadDocumentsDialogComponent } from '../../upload-documents-dialog/upload-documents-dialog.component';
-
 @Component({
   selector: 'app-search-customer-dialog',
   templateUrl: './search-customer-dialog.component.html',
@@ -24,7 +22,7 @@ export class SearchCustomerDialogComponent implements OnInit {
   customersChecked: Customer[] = [];
   searchTerm: string = '';
 
-  @Output() onCustomersAdded: EventEmitter<Customer[]> = new EventEmitter();
+  // @Output() onCustomersAdded: EventEmitter<Customer[]> = new EventEmitter();
   
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -72,34 +70,18 @@ export class SearchCustomerDialogComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(customers => {
       if (customers && customers.length > 0) {
-        this.onCustomersAdded.emit(customers);
+        // this.onCustomersAdded.emit(customers);
+        this.close(customers);
       }
     });
   }
 
   addExisting(customer = null) {
-  	var selected: Customer[] = customer ? [customer] : this.customersChecked;
-    let dialogRef = this.dialog.open(UploadDocumentsDialogComponent, {
-      autoFocus: false,
-      width: '534px',
-      data: {
-        customers: selected,
-        travel: this.data.travel
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(customers => {
-      if (customers && customers.length > 0) {
-        this.onCustomersAdded.emit(customers);
-        this.toasterService.showToaster('Client ajouté');
-      }
-      // else {
-      //   this.showMessage('Erreur lors de l\'ajout du client', false);
-      // }
-    });
+    var selected: Customer[] = customer ? [customer] : this.customersChecked;
+    this.close(selected);
   }
 
-  close(customer = null): void {
-    this.dialogRef.close(customer);
+  close(customers: Customer[]): void {
+    this.dialogRef.close(customers);
   }
 }

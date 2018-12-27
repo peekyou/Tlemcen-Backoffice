@@ -1,8 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
-import { FormBuilder, FormControl, Validators,  FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Subscription, Observable } from 'rxjs';
-import { WebcamImage } from 'ngx-webcam';
+import { Subscription } from 'rxjs';
 
 import { Hotel } from '../hotel.model';
 import { HotelsService } from '../hotels.service';

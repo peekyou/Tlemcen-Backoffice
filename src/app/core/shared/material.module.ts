@@ -17,6 +17,7 @@ import {
     MatSnackBarModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
     MAT_DATE_LOCALE,
     MAT_DATE_FORMATS,
     MAT_NATIVE_DATE_FORMATS,
@@ -45,6 +46,7 @@ import { MomentDateAdapter, MOMENT_DATE_FORMATS } from '../helpers/date.adapter'
         MatSnackBarModule,
         MatProgressBarModule,
         MatProgressSpinnerModule,
+        MatExpansionModule,
     ],
     declarations: [],
     providers: [

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { PagingResponse } from '../../core/models/paging';
@@ -43,7 +43,7 @@ export class HotelListComponent implements OnInit {
 
   openHotelDialog(hotel: Hotel = null) {
     let dialogRef = this.dialog.open(HotelDialogComponent, {
-      autoFocus: false,
+      autoFocus: true,
       width: '534px',
       data: {
         hotel: hotel

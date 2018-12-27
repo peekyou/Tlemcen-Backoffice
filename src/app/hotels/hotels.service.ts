@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { Hotel } from './hotel.model';
+import { Hotel, RoomType } from './hotel.model';
 import { HotelReservation } from './hotel-reservation.model';
 import { HotelRoomReservation } from './hotel-room-reservation.model';
 import { PagingResponse } from '../core/models/paging';
@@ -22,6 +22,10 @@ export class HotelsService {
 
   getHotels(page: number, count: number): Observable<PagingResponse<Hotel>> {
     return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
+  }
+
+  getRoomTypes(page: number, count: number): Observable<RoomType[]> {
+    return this.http.get(this.resource + '/roomtypes');
   }
 
   getHotel(id): Observable<Hotel> {

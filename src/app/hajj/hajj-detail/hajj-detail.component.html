@@ -37,12 +37,12 @@
                                     <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                                     <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
                                     <td>{{ customer.mobileNumber }}</td>
-                                    <td *ngIf="payment">
-                                        <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
-                                        <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                                    <td *ngIf="customer.travelPayment">
+                                        <span *ngIf="customer.travelPayment.status == 'P'" class="badge badge-success">Payé</span>
+                                        <span *ngIf="customer.travelPayment.status == 'I'" class="badge badge-danger">Incomplet</span>
                                     </td>
                                     <td>
-                                        <button mat-icon-button matTooltip="Enlever du Hajj">
+                                        <button mat-icon-button matTooltip="Enlever du Hajj" (click)="openDeletePilgrimDialog(customer);$event.stopPropagation()">
                                             <mat-icon>close</mat-icon>
                                         </button>
                                     </td>
@@ -56,14 +56,14 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-md-12">
-                <div *ngIf="!hajj.reservations || hajj.reservations.length == 0" class="card card-block">
+                <div *ngIf="!hajj.hotelBookings || hajj.hotelBookings.length == 0" class="card card-block">
                     <div class="card-body" (click)="openRoomReservationDialog()">
                         <mat-icon>hotel</mat-icon>
                         <div class="text-icon">Ajouter des hôtels</div>
                     </div>
                 </div>
 
-                <div *ngIf="hajj.reservations && hajj.reservations.length > 0">
+                <div *ngIf="hajj.hotelBookings && hajj.hotelBookings.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openRoomReservationDialog()">Ajouter un hôtel</button>
                         <button class="btn btn-info" routerLink="rooms">Organiser les chambres</button>
@@ -89,7 +89,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let reservation of hajj.reservations" [routerLink]="['/hotels', reservation.hotel.id]">
+                                    <tr *ngFor="let reservation of hajj.hotelBookings" [routerLink]="['/hotels', reservation.hotel.id]">
                                     <td>{{ reservation.hotel.name }}</td>
                                     <td>{{ reservation.hotel.travelerCount }}</td>
                                     <td>{{ reservation.rooms.length }} ({{ getReservationAvailableSpace(reservation) }} places libres)</td>
@@ -106,13 +106,13 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-12">
-                <div *ngIf="!hajj.airlines || hajj.airlines.length == 0" class="card card-block">
+                <div *ngIf="!hajj.flightBookings || hajj.flightBookings.length == 0" class="card card-block">
                     <div class="card-body">
                         <mat-icon>flight</mat-icon>
                         <div class="text-icon">Ajouter des vols</div>
                     </div>
                 </div>
-                <div *ngIf="hajj.airlines && hajj.airlines.length > 0">
+                <div *ngIf="hajj.flightBookings && hajj.flightBookings.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info">Ajouter un vol</button>
                         <button class="btn btn-info">Organiser les vols</button>
@@ -128,9 +128,9 @@
                                     <th>Pèlerins</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let airline of hajj.airlines" [routerLink]="['/airlines', airline.id]">
-                                    <td>{{ airline.name }}</td>
-                                    <td>{{ airline.passengerCount }}</td>
+                                    <tr *ngFor="let booking of hajj.flightBookings">
+                                    <td>{{ booking.flight?.airline?.name }}</td>
+                                    <td></td>
                                     </tr>
                                 </tbody>
                             </table>

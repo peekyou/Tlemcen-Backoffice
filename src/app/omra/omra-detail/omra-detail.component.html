@@ -68,14 +68,14 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-md-12">
-                <div *ngIf="!omra.reservations || omra.reservations.length == 0" class="card card-block">
+                <div *ngIf="!omra.hotelBookings || omra.hotelBookings.length == 0" class="card card-block">
                     <div class="card-body" (click)="openRoomReservationDialog()">
                         <mat-icon>hotel</mat-icon>
                         <div class="text-icon">Ajouter des hôtels</div>
                     </div>
                 </div>
                 
-                <div *ngIf="omra.reservations && omra.reservations.length > 0">
+                <div *ngIf="omra.hotelBookings && omra.hotelBookings.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openRoomReservationDialog()"><mat-icon>group_add</mat-icon>Ajouter un hôtel</button>
                         <button class="btn btn-info" routerLink="rooms"><mat-icon>view_module</mat-icon>Organiser les chambres</button>
@@ -92,7 +92,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let reservation of omra.reservations" [routerLink]="['/hotels', reservation.hotel.id]">
+                                    <tr *ngFor="let reservation of omra.hotelBookings" [routerLink]="['/hotels', reservation.hotel.id]">
                                     <td>{{ reservation.hotel.name }}</td>
                                     <td>{{ reservation.hotel.travelerCount }}</td>
                                     <td>
@@ -108,13 +108,13 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-12">
-                <div *ngIf="!omra.airlines || omra.airlines.length == 0" class="card card-block">
+                <div *ngIf="!omra.flightBookings || omra.flightBookings.length == 0" class="card card-block">
                     <div class="card-body">
                         <mat-icon>flight</mat-icon>
                         <div class="text-icon">Ajouter des vols</div>
                     </div>
                 </div>
-                <div *ngIf="omra.airlines && omra.airlines.length > 0" class="card">
+                <div *ngIf="omra.flightBookings && omra.flightBookings.length > 0" class="card">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Vols</h4>
                     </div>
@@ -125,9 +125,9 @@
                                 <th>Pèlerins</th>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let airline of omra.airlines" [routerLink]="['/airlines', airline.id]">
-                                  <td>{{ airline.name }}</td>
-                                  <td>{{ airline.passengerCount }}</td>
+                                <tr *ngFor="let flight of omra.flightBookings" [routerLink]="['/flightBookings', flight.id]">
+                                  <td>{{ flight.name }}</td>
+                                  <td>{{ flight.passengerCount }}</td>
                                 </tr>
                             </tbody>
                         </table>

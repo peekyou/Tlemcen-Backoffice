@@ -20,7 +20,7 @@
                             <th></th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let hotel of hotels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hotels?.paging?.totalCount }" [routerLink]="['/hotels', hotel.id]">
+                            <tr *ngFor="let hotel of hotels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hotels?.paging?.totalCount }" (click)="openHotelDialog(hotel)">
                             <td>{{ hotel.name }}</td>
                             <td>{{ hotel.roomsCount }}</td>
                             <td>{{ hotel.contactPhoneNumber }}</td>

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import * as moment from 'moment';
 
 import { Customer } from '../../customers/customer.model';
-import { CustomersService } from '../../customers/customers.service';
+import { TravelService } from '../../travels/travel.service';
 import { HajjService } from '../hajj.service';
 import { Hajj } from '../hajj.model';
 import { Hotel } from '../../hotels/hotel.model';
@@ -14,6 +14,7 @@ import { Airline } from '../../airlines/airline.model';
 import { TravelType } from '../../travels/travel.model';
 import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
 import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-hajj-detail',
@@ -26,7 +27,7 @@ export class HajjDetailComponent implements OnInit {
 
   constructor(
     private service: HajjService, 
-    private customerService: CustomersService, 
+    private travelService: TravelService, 
     private dialog: MatDialog, 
     private router: Router,
     private route: ActivatedRoute) { 
@@ -59,12 +60,16 @@ export class HajjDetailComponent implements OnInit {
         }
     });
 
-    const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
-      this.service.createHajj
-    });
+    // const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
+    // });
 
-    dialogRef.afterClosed().subscribe(customer => {
-        dialogRef.componentInstance.onCustomersAdded.unsubscribe();
+    dialogRef.afterClosed().subscribe((customers: Customer[]) => {
+        this.travelService.validateTravelers(this.hajj.id, customers.map(a => a.id))
+          .subscribe(res => {
+            // dialogRef.componentInstance.onCustomersAdded.unsubscribe();
+            this.travelService.travelWithCustomers = { travel: this.hajj, customers: customers };
+            this.router.navigate(['./customers/add'], { relativeTo: this.route });
+          })
     });
   }
 
@@ -83,12 +88,33 @@ export class HajjDetailComponent implements OnInit {
         hotelReservation.rooms = newReservation.rooms;
       }
       else if (newReservation) {
-        this.hajj.reservations.push(newReservation);
+        this.hajj.hotelBookings.push(newReservation);
       }
     });
   }
 
   getReservationAvailableSpace(reservation: HotelReservation) {
     return HotelReservation.getAvailableSpace(reservation);
+  }
+
+  openDeletePilgrimDialog(customer: Customer) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: customer.firstname + ' ' + customer.lastname }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.travelService.removeTravelers(this.hajj.id, [customer.id])
+        .subscribe(
+          res => {
+            var index = this.hajj.customers.indexOf(customer);
+            if (index > -1) {
+                this.hajj.customers.splice(index, 1);
+                // this.hajj.paging.totalCount--;
+            }
+          });
+      }
+    });
   }
 }

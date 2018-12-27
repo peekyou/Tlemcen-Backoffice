@@ -86,7 +86,7 @@ export class OmraDetailComponent implements OnInit {
         hotelReservation.rooms = newReservation.rooms;
       }
       else if (newReservation) {
-        this.omra.reservations.push(newReservation);
+        this.omra.hotelBookings.push(newReservation);
       }
     });
   }

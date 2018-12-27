@@ -1,15 +1,16 @@
 import { Customer } from '../customers/customer.model';
-import { Hotel, HotelRoom } from './hotel.model';
+import { Hotel, RoomType } from './hotel.model';
 
 export class HotelRoomReservation {
     id?: string;
+    price?: number;
     hotel?: Hotel;
-    roomDetail?: HotelRoom;
+    roomType?: RoomType;
     customers?: Customer[];
 
     static getAvailableSpace(reservation: HotelRoomReservation): number {
-        if (reservation && reservation.roomDetail) {
-            return reservation.roomDetail.personsNumber - reservation.customers.length;
+        if (reservation && reservation.roomType) {
+            return reservation.roomType.personNumber - reservation.customers.length;
         }
         return 0;
     }

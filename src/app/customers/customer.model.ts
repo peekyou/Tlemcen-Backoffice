@@ -24,9 +24,10 @@ export class Customer {
     picture?: AppFile;
     documents?: AppDocument[]; 
     payments?: Payment[];
-
+    travelPayment?: Payment;
+    
     // UI properties
-    hovered: boolean;
+    hovered?: boolean;
 
     constructor() {
         this.address = {};

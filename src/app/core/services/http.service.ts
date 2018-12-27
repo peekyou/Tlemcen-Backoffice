@@ -38,7 +38,10 @@ export class HttpService {
     }
 
     delete(resource: string, data?: any): Observable<any> {
-        return this.http.delete(this.apiHost + resource, { headers: this.headers })
+        return this.http.request('DELETE', this.apiHost + resource, {
+                headers: this.headers,
+                body: data
+            })
             .pipe(catchError(this.handleError));
     }
     

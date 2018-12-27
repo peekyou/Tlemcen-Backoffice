@@ -13,23 +13,21 @@ import { WebcamComponent } from './webcam/webcam.component';
 import { RoomsAssignmentComponent } from './hotels/rooms-assignment/rooms-assignment.component';
 import { SearchCustomerDialogComponent } from './customers/search-customer-dialog/search-customer-dialog.component';
 import { CustomerDialogComponent } from './customers/customer-dialog/customer-dialog.component';
-import { UploadDocumentsDialogComponent } from './upload-documents-dialog/upload-documents-dialog.component';
-import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
+import { UploadDocumentsComponent } from './upload-documents/upload-documents.component';
+import { PaymentComponent } from './payment/payment.component';
 import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
 import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
 import { SpinnerComponent } from './common/spinner/spinner.component';
-import { TravelServicesDialogComponent } from './travel-services-dialog/travel-services-dialog.component';
+import { TravelServicesComponent } from './travel-services/travel-services.component';
+import { CustomerTravelComponent } from './customers/customer-travel/customer-travel.component';
 
 const MODALS = [
   CustomerDialogComponent,
   SearchCustomerDialogComponent,
-  UploadDocumentsDialogComponent,
-  PaymentDialogComponent,
   HotelRoomsDialogComponent,
   DeleteDialogComponent,
-  TravelServicesDialogComponent
 ];
 
 @NgModule({
@@ -50,6 +48,10 @@ const MODALS = [
     SubmitButtonComponent,
     ErrorMessageComponent,
     SpinnerComponent,
+    UploadDocumentsComponent,
+    PaymentComponent,
+    TravelServicesComponent,
+    CustomerTravelComponent,
     ...MODALS,
   ],
   exports: [
@@ -62,6 +64,10 @@ const MODALS = [
     SubmitButtonComponent,
     ErrorMessageComponent,
     SpinnerComponent,
+    UploadDocumentsComponent,
+    PaymentComponent,
+    TravelServicesComponent,
+    CustomerTravelComponent,
     ...MODALS
   ],
   entryComponents: MODALS

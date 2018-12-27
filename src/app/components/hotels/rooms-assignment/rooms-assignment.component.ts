@@ -103,7 +103,7 @@ export class RoomsAssignmentComponent implements OnInit {
           var canAssign = room.customers.find(c => c.gender != peopleToAssign.values[0].gender) == null;
           
           // Check if there is enough space for people of same name
-          var remainingPlaces = room.roomDetail.personsNumber - room.customers.length;
+          var remainingPlaces = room.roomType.personNumber - room.customers.length;
           canAssign = canAssign && remainingPlaces >= peopleToAssign.values.length;
           if (canAssign) {
             peopleToAssign.values.forEach(c => {
@@ -138,7 +138,7 @@ export class RoomsAssignmentComponent implements OnInit {
 			
 			// Check if there is no one of the opposite gender in the room
             var canAssign = room.customers.find(c => c.gender != peopleToAssign.values[0].gender) == null;
-            var remainingPlaces = room.roomDetail.personsNumber - room.customers.length;
+            var remainingPlaces = room.roomType.personNumber - room.customers.length;
             canAssign = canAssign && remainingPlaces >= 1;
             if (canAssign) {
               room.customers.push(customer);

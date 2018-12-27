@@ -17,10 +17,10 @@
                               <th></th>
                           </thead>
                           <tbody>
-                              <tr *ngFor="let airline of airlines.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: airlines?.paging?.totalCount }" [routerLink]="['/airlines', airline.id]">
+                              <tr *ngFor="let airline of airlines.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: airlines?.paging?.totalCount }" (click)="openAirlineDialog(airline)">
                                 <td>{{ airline.name }}</td>
                                 <td>
-                                    <button mat-icon-button>
+                                    <button mat-icon-button (click)="openDeleteDialog(airline);$event.stopPropagation()">
                                         <mat-icon class="text-danger">delete</mat-icon>
                                     </button>
                                 </td>

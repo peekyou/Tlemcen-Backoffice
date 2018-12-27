@@ -5,5 +5,7 @@ export class Flight {
     flightNumber?: string;
     aircraft?: string;
     airline?: Airline;
+    airportFrom?: string;
+    airportTo?: string;
     passengerCount?: number;
 }

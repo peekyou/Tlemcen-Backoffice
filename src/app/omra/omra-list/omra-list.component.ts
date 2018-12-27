@@ -46,7 +46,7 @@ export class OmraListComponent implements OnInit {
 
   newOmra() {
     let dialogRef = this.dialog.open(OmraDialogComponent, {
-      autoFocus: false,
+      autoFocus: true,
       width: '534px'
     });
 

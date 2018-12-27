@@ -32,8 +32,8 @@ export class OmraDialogComponent implements OnInit {
     this.saveSubscription = this.service.createOmra({
       name: this.form.value.name,
       customers: [],
-      airlines: [],
-      reservations: [],
+      flightBookings: [],
+      hotelsBooking: [],
       revenues: 0,
       status: 'En cours'
     })

@@ -14,6 +14,7 @@ import { PaymentService } from './payments/payment.service';
 import { UserService } from './management/user-management/user.service';
 import { FeeService } from './management/fees-management/fee.service';
 import { DocumentService } from './management/documents-management/document.service';
+import { CustomersTravelService } from './components/customers/customer-travel/customers-travel.service';
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
@@ -35,6 +36,7 @@ export const APP_PROVIDERS = [
     UserService,
     FeeService,
     DocumentService,
+    CustomersTravelService,
     AuthGuard,
     PermissionGuard
 ];

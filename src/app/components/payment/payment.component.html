@@ -1,0 +1,22 @@
+<form [formGroup]="form">
+    <div *ngIf="customer">
+        <div class="row" *ngFor="let fee of fees">
+            <div class="col">{{ fee.name }}</div>
+            <div class="col">{{ fee.price }}€</div>
+        </div>
+        <div class="total row bold">
+            <div class="col">Total</div>
+            <div class="col">{{ calculateTotal() }}€</div>
+        </div>
+        <mat-form-field>
+            <input type='number' matInput min="0" placeholder="Accorder une remise" formControlName="discount">
+        </mat-form-field>
+        <div class="total row bold">
+            <div class="col">A PAYER</div>
+            <div class="col">{{ getAmountToPay() }}€</div>
+        </div>
+        <mat-form-field>
+            <input type='number' matInput min="0" [max]="calculateTotal()" placeholder="Montant payé" formControlName="amount">
+        </mat-form-field>
+    </div>
+</form>

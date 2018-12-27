@@ -10,6 +10,7 @@ export class LookupService {
     private knewAgency: Lookup[];
     private relationships: Lookup[];
     private professions: Lookup[];
+    private airports: Lookup[];
     private countries: Lookup[];
     private languages: Lookup[];
     private statesByCountry: any = {};
@@ -18,6 +19,16 @@ export class LookupService {
     
     constructor(private http: HttpClient) {
         // this.fetchCities('fr').subscribe(res => { });
+    }
+
+    fetchAirports(lang: string): Observable<Lookup[]> {
+        if (this.airports) {
+            return of(this.airports);
+        }
+        return this.http.get('/assets/lang/airports/' + lang + '.json')
+            .pipe(map((res: any[]) => {
+                return this.airports = res.map<Lookup>(l => new Lookup(l.iata, l.name));
+            }));
     }
 
     fetchProfessions(lang: string): Observable<Lookup[]> {

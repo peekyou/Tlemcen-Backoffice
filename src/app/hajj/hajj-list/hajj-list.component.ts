@@ -43,7 +43,7 @@ export class HajjListComponent implements OnInit {
 
   newHajj() {
     let dialogRef = this.dialog.open(HajjDialogComponent, {
-      autoFocus: false,
+      autoFocus: true,
       width: '534px'
     });
 

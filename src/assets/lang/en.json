@@ -37,7 +37,8 @@
         "GENDER_F": "Female",
         "GENDER_M": "Male",
         "ADDRESS": "Address",
-        "STATUS": "Status"
+        "STATUS": "Status",
+        "DATE": "Date"
     },
     "FORM": {
         "REQUIRED": "Required field",
@@ -60,6 +61,12 @@
     },
     "CUSTOMER": {
         "PICTURE": "Picture"
+    },
+    "AIRLINES": {
+        "AIRLINE": "Airline"
+    },
+    "HOTELS": {
+        "HOTEL": "Hotel"
     },
     "ERRORS": {
         "SERVER_ERROR": "An error occured",

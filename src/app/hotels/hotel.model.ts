@@ -12,9 +12,9 @@ export class Hotel {
     expanded?: boolean;
 }
 
-export class HotelRoom {
+export class RoomType {
     id?: string;
+    name?: string;
     number?: string;
-    bedsNumber?: number;
-    personsNumber?: number;
+    personNumber?: number;
 }

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material';
 
 import { PagingResponse } from '../../core/models/paging';
 import { Airline } from '../airline.model';
 import { AirlinesService } from '../airlines.service';
+import { AirlineDialogComponent } from '../airline-dialog/airline-dialog.component';
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-airline-list',
@@ -16,7 +19,7 @@ export class AirlineListComponent implements OnInit {
   itemsPerPage: number = 20;
   airlines: PagingResponse<Airline>;
 
-  constructor(private service: AirlinesService) {
+  constructor(private service: AirlinesService, private dialog: MatDialog) {
     this.getAirlines();
   }
 
@@ -38,6 +41,43 @@ export class AirlineListComponent implements OnInit {
     this.getAirlines();
   }
 
-  openAirlineDialog(){
+  openAirlineDialog(airline: Airline = null) {
+    let dialogRef = this.dialog.open(AirlineDialogComponent, {
+      autoFocus: true,
+      width: '534px',
+      data: {
+        airline: airline
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(newHotel => {
+      if (newHotel) {
+        this.currentPage = 1;
+        this.getAirlines();
+      }
+    });
+  }
+
+  openDeleteDialog(airline: Airline) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: airline.name }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.deleteAirline(airline.id)
+        .subscribe(
+          res => {
+            var index = this.airlines.data.indexOf(airline);
+            if (index > -1) {
+                this.airlines.data.splice(index, 1);
+                this.airlines.paging.totalCount--;
+            }
+          },
+          err => console.log(err)
+        );
+      }
+    });
   }
 }

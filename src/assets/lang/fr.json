@@ -37,7 +37,8 @@
         "GENDER_F": "Femme",
         "GENDER_M": "Homme",
         "ADDRESS": "Adresse",
-        "STATUS": "Statut"
+        "STATUS": "Statut",
+        "DATE": "Date"
     },
     "FORM": {
         "REQUIRED": "Champs obligatoire",
@@ -60,6 +61,12 @@
     },
     "CUSTOMER": {
         "PICTURE": "Photo"
+    },
+    "AIRLINES": {
+        "AIRLINE": "Compagnie"
+    },
+    "HOTELS": {
+        "HOTEL": "Hôtel"
     },
     "ERRORS": {
         "SERVER_ERROR": "Une erreur est survenue",

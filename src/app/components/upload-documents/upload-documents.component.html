@@ -1,0 +1,8 @@
+<div class="row" *ngIf="customer">
+	<div class="col-lg-4 col-12" *ngFor="let document of customer.documents; let i = index">
+		<label>{{ document.name }}</label>
+		<app-file-upload (fileChange)="uploadDocument($event, customer, document)" 
+			[(file)]="document.file" [enableCamera]="false" [simple]="true">
+		</app-file-upload>
+	</div>
+</div>

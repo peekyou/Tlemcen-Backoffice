@@ -1,0 +1,50 @@
+<h3 class="text-primary">{{ customers[customerIndex].firstname }} {{ customers[customerIndex].lastname }}</h3>
+<app-spinner [loader]="loader"></app-spinner>
+<mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Documents</mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>insert_drive_file</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <app-upload-documents [travel]="travel" [customer]="customers[customerIndex]"></app-upload-documents>
+      
+      <mat-action-row>
+        <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Services supplémentaires</mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>add_shopping_cart</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <app-travel-services [travel]="travel" [customer]="customers[customerIndex]" (onChange)="onTravelServicesChange($event)"></app-travel-services>        
+      
+      <mat-action-row>
+        <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
+        <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Paiment</mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>euro_symbol</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+  
+      <app-payment [travel]="travel" [fees]="fees" [customer]="customers[customerIndex]" (onChange)="onPaymentChange($event)"></app-payment>        
+  
+      <mat-action-row>
+        <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
+        <button mat-button class="btn btn-sm btn-info" (click)="validate()">Valider</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+</mat-accordion>

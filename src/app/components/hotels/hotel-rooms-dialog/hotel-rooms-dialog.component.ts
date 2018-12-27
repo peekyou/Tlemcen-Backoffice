@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
+import { Component, OnInit, Output, Input, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription, Observable } from 'rxjs';
@@ -30,15 +30,14 @@ export class HotelRoomsDialogComponent implements OnInit {
       if (data) {
         this.hotelReservation = data.hotelReservation;
       }
-      service.getHotels(null, null)
-        .subscribe(res => this.hotels = res.data);
+      service.getHotels(null, null).subscribe(res => this.hotels = res.data);
   }
 
   ngOnInit() {
     this.form = this.fb.group({
-    hotel: this.fb.control(null, (c) => this.customHotelValidator(c)),
-        roomsCount: this.fb.control(null, Validators.required),
-        roomsPersonCount: this.fb.array([]),
+      hotel: this.fb.control(null, (c) => this.customHotelValidator(c)),
+      roomsCount: this.fb.control(null, Validators.required),
+      roomsPersonCount: this.fb.array([]),
     });
 
     this.roomsCount.valueChanges.forEach(
@@ -68,10 +67,10 @@ export class HotelRoomsDialogComponent implements OnInit {
       reservation.rooms.push({
         hotel: reservation.hotel,
         id: new Date().getMilliseconds().toString(),
-        roomDetail: {
+        roomType: {
           id: new Date().getMilliseconds().toString(),
           number: (i + 1).toString(),
-          personsNumber: control.value
+          personNumber: control.value
         },
         customers: []
       });
@@ -96,15 +95,15 @@ export class HotelRoomsDialogComponent implements OnInit {
 
   private clearFormArray(formArray: FormArray) {
     while (formArray.length !== 0) {
-        formArray.removeAt(0)
+      formArray.removeAt(0)
     }
   }
 
   private customHotelValidator(control: AbstractControl): ValidationErrors {
     if (!this.hotelReservation) {
-  return Validators.required(control);
+      return Validators.required(control);
     }
-  return null;
+    return null;
   }
 
   get roomsCount() { return this.form.get('roomsCount'); }

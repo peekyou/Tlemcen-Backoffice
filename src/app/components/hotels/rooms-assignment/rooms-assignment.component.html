@@ -5,12 +5,12 @@
           Sauvegarder
         </button>
         <button mat-raised-button type="submit" class="btn btn-primary pull-left" (click)="generate()">
-            Générer automatiqument
+          Générer automatiqument
         </button>
       </div>
     </div>
     <div class="drag-wrapper row">
-      <div [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
+      <div *ngIf="customers" [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
         <div class="row">
           <h4 *ngIf="customersExpanded" class="col-9">{{ customers.length }} Personnes</h4>
           <button class="col-2" mat-icon-button (click)="customersExpanded = !customersExpanded">
@@ -27,22 +27,22 @@
         </div>
       </div>
       <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
-        <div *ngFor="let reservation of hotelReservations" class="card">
-            <div class="card-header card-header-warning">
-              <h4 class="card-title pull-left">{{ reservation.hotel.name }}</h4>
+        <div *ngFor="let booking of hotelBookings" class="card">
+            <div class="card-header card-header-hotel card-header-warning" (click)="booking.hotel.expanded = !booking.hotel.expanded">
+              <h4 class="card-title pull-left">{{ booking.hotel.name }}</h4>
               <div class="card-header-actions">
-                  <button mat-icon-button (click)="reservation.hotel.expanded = !reservation.hotel.expanded">
-                      <mat-icon *ngIf="reservation.hotel.expanded">expand_more</mat-icon>
-                      <mat-icon *ngIf="!reservation.hotel.expanded">chevron_right</mat-icon>
+                  <button mat-icon-button>
+                      <mat-icon *ngIf="booking.hotel.expanded">expand_more</mat-icon>
+                      <mat-icon *ngIf="!booking.hotel.expanded">chevron_right</mat-icon>
                   </button>
               </div>
             </div>
-            <div *ngIf="reservation.hotel.expanded" class="card-body">
+            <div *ngIf="booking.hotel.expanded" class="card-body">
               <div class="card-columns">
-                <div class="drag-container card" [attr.id]="reservation.id + '-' + room.id + '-' + room.roomDetail.personsNumber" 
-                  dragula="ROOMS" *ngFor="let room of reservation.rooms"
+                <div class="drag-container card" [attr.id]="booking.id + '-' + room.id + '-' + room.roomType.personNumber" 
+                  dragula="ROOMS" *ngFor="let room of booking.rooms"
                   [(dragulaModel)]="room.customers" style="min-height:100px; margin-bottom:11px;">
-                    Chambre {{ room.roomDetail.number }} ({{ room.roomDetail.personsNumber }} pers.)
+                    Chambre {{ room.roomType.number }} ({{ room.roomType.personNumber }} pers.)
                     <div *ngFor="let customer of room.customers" class="customer"
                          [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
                         {{ customer.firstname }} {{ customer.lastname }}

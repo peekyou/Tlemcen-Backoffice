@@ -21,6 +21,9 @@ export class FeeService {
     }
 
     getFeesByCategory(category): Observable<Fee[]> {
+        if (!category) {
+            return of([]);
+        }
         return this.http.get(this.resource + '/category/' + category);
     }
 

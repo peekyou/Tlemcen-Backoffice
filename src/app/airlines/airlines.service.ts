@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 import { Airline } from './airline.model';
 import { Flight } from './flight.model';
+import { FlightBooking } from './flight-booking.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
 
@@ -34,5 +35,12 @@ export class AirlinesService {
   
   deleteAirline(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);
+  }
+  
+  bookFlights(travelId: string, flightBookings: FlightBooking[]) : Observable<boolean> {
+    return this.http.post(this.resource + '/flights/book', {
+      travelId: travelId,
+      flightBookings: flightBookings
+    });
   }
 }

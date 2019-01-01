@@ -11,9 +11,11 @@ import { Hotel } from '../../hotels/hotel.model';
 import { HotelReservation } from '../../hotels/hotel-reservation.model';
 import { HotelRoomReservation } from '../../hotels/hotel-room-reservation.model';
 import { Airline } from '../../airlines/airline.model';
+import { FlightBooking } from '../../airlines/flight-booking.model';
 import { TravelType } from '../../travels/travel.model';
 import { SearchCustomerDialogComponent } from '../../components/customers/search-customer-dialog/search-customer-dialog.component';
 import { HotelRoomsDialogComponent } from '../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
+import { FlightBookingDialogComponent } from '../../components/airlines/flight-booking-dialog/flight-booking-dialog.component';
 import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
@@ -24,6 +26,8 @@ import { DeleteDialogComponent } from '../../components/common/delete-dialog/del
 export class HajjDetailComponent implements OnInit {
   moment;
   hajj: Hajj;
+  currentPage: number = 1;
+  itemsPerPage = 5;
 
   constructor(
     private service: HajjService, 
@@ -31,32 +35,38 @@ export class HajjDetailComponent implements OnInit {
     private dialog: MatDialog, 
     private router: Router,
     private route: ActivatedRoute) { 
-
-    this.moment = moment;
+      this.moment = moment;
   }
 
   ngOnInit() {
+    window.scroll(0,0);
+    
     this.route.params.subscribe(params => {
       if(params['id']) {
-        this.service.getHajj(params['id'])
-          .subscribe(
-            res => {
-              this.hajj = res
-              if (!this.hajj) {
-                this.router.navigate(['/hajj']);
-              }
-            });
+        this.loadHajj(params['id']);
       }
     });
   }
 
-  openAddCustomerDialog() {
+  loadHajj(hajjId: string) {
+    this.service.getHajj(hajjId, this.itemsPerPage)
+    .subscribe(
+      res => {
+        this.hajj = res
+        if (!this.hajj) {
+          this.router.navigate(['/hajj']);
+        }
+      });
+  }
+
+  openAddCustomerDialog(isGroup = false) {
     let dialogRef = this.dialog.open(SearchCustomerDialogComponent, {
         autoFocus: false,
         width: '534px',
         data: {
           title: 'Pèlerins Hajj ' + this.hajj.name,
-          travel: this.hajj
+          travel: this.hajj,
+          isGroup: isGroup
         }
     });
 
@@ -64,12 +74,18 @@ export class HajjDetailComponent implements OnInit {
     // });
 
     dialogRef.afterClosed().subscribe((customers: Customer[]) => {
+      if (customers && customers.length > 0) {
         this.travelService.validateTravelers(this.hajj.id, customers.map(a => a.id))
           .subscribe(res => {
             // dialogRef.componentInstance.onCustomersAdded.unsubscribe();
-            this.travelService.travelWithCustomers = { travel: this.hajj, customers: customers };
-            this.router.navigate(['./customers/add'], { relativeTo: this.route });
-          })
+            this.travelService.travelWithCustomers = { 
+              travel: this.hajj,
+              customers: customers,
+              isGroup: isGroup
+            };
+            this.router.navigate(['./customers'], { relativeTo: this.route });
+          });
+        }
     });
   }
 
@@ -79,16 +95,31 @@ export class HajjDetailComponent implements OnInit {
         width: '534px',
         data: {
           title: 'Hôtel Hajj ' + this.hajj.name,
-          hotelReservation: hotelReservation
+          hotelReservation: hotelReservation,
+          travelId: this.hajj.id
         }
     });
 
     dialogRef.afterClosed().subscribe((newReservation: HotelReservation) => {
-      if (newReservation && hotelReservation) {
-        hotelReservation.rooms = newReservation.rooms;
+      if (newReservation) {
+        this.service.getHotelBookings(this.hajj.id).subscribe(res => this.hajj.hotelBookings = res);
       }
-      else if (newReservation) {
-        this.hajj.hotelBookings.push(newReservation);
+    });
+  }
+
+  openFlightBookingDialog(flightBooking: FlightBooking = null) {
+    let dialogRef = this.dialog.open(FlightBookingDialogComponent, {
+        autoFocus: false,
+        width: '734px',
+        data: {
+          flightBooking: flightBooking,
+          travelId: this.hajj.id
+        }
+    });
+
+    dialogRef.afterClosed().subscribe((res: boolean) => {
+      if (res === true) {
+        this.service.getFlightBookings(this.hajj.id).subscribe(res => this.hajj.flightBookings = res);
       }
     });
   }
@@ -108,13 +139,23 @@ export class HajjDetailComponent implements OnInit {
         this.travelService.removeTravelers(this.hajj.id, [customer.id])
         .subscribe(
           res => {
-            var index = this.hajj.customers.indexOf(customer);
-            if (index > -1) {
-                this.hajj.customers.splice(index, 1);
-                // this.hajj.paging.totalCount--;
+            if (res === true) {
+              this.currentPage = 1;
+              this.loadHajj(this.hajj.id);
             }
           });
       }
     });
+  }
+
+  downloadTravelerContract(customer: Customer) {
+    this.travelService.downloadTravelerContract(this.hajj.id, customer.id)
+    .subscribe(res => {});
+  }
+
+  pageChanged(page) {
+    this.currentPage = page;
+    this.travelService.getTravelers(this.hajj.id, this.currentPage, this.itemsPerPage)
+      .subscribe(res => this.hajj.customers = res);
   }
 }

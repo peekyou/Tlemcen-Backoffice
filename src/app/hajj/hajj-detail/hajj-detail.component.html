@@ -3,16 +3,29 @@
         <h2 class="text-primary">Hajj {{hajj.name}}</h2>
         <div class="row">
             <div class="col-lg-12">
-                <div *ngIf="!hajj.customers || hajj.customers.length == 0" class="card card-block">
-                    <div class="card-body" (click)="openAddCustomerDialog()">
-                        <mat-icon>people</mat-icon>
-                        <div class="text-icon">Ajouter des pèlerins</div>
+                <div class="row" *ngIf="hajj.customers.paging.totalCount == 0">
+                    <div class="col">
+                        <div class="card card-block">
+                            <div class="card-body" (click)="openAddCustomerDialog()">
+                                <mat-icon>person_add</mat-icon>
+                                <div class="text-icon">Ajouter des pèlerins</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card card-block">
+                        <div class="card-body" (click)="openAddCustomerDialog(true)">
+                            <mat-icon>group_add</mat-icon>
+                            <div class="text-icon">Ajouter un groupe</div>
+                        </div>
                     </div>
                 </div>
-                <div *ngIf="hajj.customers && hajj.customers.length > 0">
+                </div>
+                <div *ngIf="hajj.customers.data && hajj.customers.data.length > 0">
                     <div class="action-buttons">
-                        <button class="btn btn-info" (click)="openAddCustomerDialog()">Ajouter des pèlerins</button>
-                        <button class="btn btn-info">Ajouter une famille</button>
+                        <button class="btn btn-info" (click)="openAddCustomerDialog()"><mat-icon>person_add</mat-icon>Ajouter des pèlerins</button>
+                        <button class="btn btn-info" (click)="openAddCustomerDialog(true)"><mat-icon>group_add</mat-icon>Ajouter un groupe</button>
+                        <button class="btn btn-primary"><mat-icon>picture_in_picture</mat-icon>Imprimer badges</button>
                     </div>
                     <div class="card">
                         <div class="card-header card-header-warning">
@@ -33,23 +46,36 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let customer of hajj.customers" [routerLink]="['/customers', customer.id]">
+                                    <tr *ngFor="let customer of hajj.customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hajj.customers?.paging?.totalCount }" [routerLink]="['customers', customer.id]">
                                     <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                                     <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
                                     <td>{{ customer.mobileNumber }}</td>
                                     <td *ngIf="customer.travelPayment">
                                         <span *ngIf="customer.travelPayment.status == 'P'" class="badge badge-success">Payé</span>
                                         <span *ngIf="customer.travelPayment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                                        <span *ngIf="customer.travelPayment.status == 'R'" class="badge badge-warning">A rembourser</span>
                                     </td>
                                     <td>
+                                        <button mat-icon-button matTooltip="Imprimer contrat" (click)="downloadTravelerContract(customer);$event.stopPropagation()">
+                                            <mat-icon class="text-primary">chrome_reader_mode</mat-icon>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Imprimer ticket">
+                                            <mat-icon class="text-seconary">receipt</mat-icon>
+                                        </button>
+                                        <button mat-icon-button matTooltip="Imprimer badge">
+                                            <mat-icon class="text-info">picture_in_picture</mat-icon>
+                                        </button>
                                         <button mat-icon-button matTooltip="Enlever du Hajj" (click)="openDeletePilgrimDialog(customer);$event.stopPropagation()">
-                                            <mat-icon>close</mat-icon>
+                                            <mat-icon class="text-danger">close</mat-icon>
                                         </button>
                                     </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <pagination-controls *ngIf="hajj.customers" (pageChange)="pageChanged($event)" 
+                            autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+                        </pagination-controls>
                     </div>
                 </div>
             </div>
@@ -65,8 +91,8 @@
 
                 <div *ngIf="hajj.hotelBookings && hajj.hotelBookings.length > 0">
                     <div class="action-buttons">
-                        <button class="btn btn-info" (click)="openRoomReservationDialog()">Ajouter un hôtel</button>
-                        <button class="btn btn-info" routerLink="rooms">Organiser les chambres</button>
+                        <button class="btn btn-info" (click)="openRoomReservationDialog()"><mat-icon>hotel</mat-icon>Ajouter un hôtel</button>
+                        <button class="btn btn-info" routerLink="rooms"><mat-icon>view_module</mat-icon>Organiser les chambres</button>
                     </div>
                     <div class="card">
                         <div class="card-header card-header-warning">
@@ -114,8 +140,8 @@
                 </div>
                 <div *ngIf="hajj.flightBookings && hajj.flightBookings.length > 0">
                     <div class="action-buttons">
-                        <button class="btn btn-info">Ajouter un vol</button>
-                        <button class="btn btn-info">Organiser les vols</button>
+                        <button class="btn btn-info" (click)="openFlightBookingDialog()"><mat-icon>flight</mat-icon>Ajouter un vol</button>
+                        <button class="btn btn-info"><mat-icon>view_module</mat-icon>Organiser les vols</button>
                     </div>
                     <div class="card">
                         <div class="card-header card-header-warning">
@@ -125,12 +151,16 @@
                             <table class="table table-hover">
                                 <thead class="text-warning">
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
+                                    <th>Départ</th>
+                                    <th>Arrivée</th>
                                     <th>Pèlerins</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let booking of hajj.flightBookings">
-                                    <td>{{ booking.flight?.airline?.name }}</td>
-                                    <td></td>
+                                        <td>{{ booking.flight?.airline?.name }}</td>
+                                        <td><span class="bold">{{ booking.departureDate | date:'dd/MM' }}</span> {{ booking.flight?.airportFrom }}</td>
+                                        <td><span class="bold">{{ booking.arrivalDate | date:'dd/MM' }}</span> {{ booking.flight?.airportTo }}</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject, Input, EventEmitter, Output } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, forkJoin } from 'rxjs';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Fee } from '../../management/fees-management/fee.model';
 import { FeeService } from '../../management/fees-management/fee.service';
-import { Customer } from '../../customers/customer.model';
+import { CustomerDetail } from '../../customers/customer-detail.model';
 import { CustomersService } from '../../customers/customers.service';
 import { Hotel, RoomType } from '../../hotels/hotel.model';
 import { HotelsService } from '../../hotels/hotels.service';
@@ -26,28 +26,24 @@ export class TravelServicesComponent implements OnInit {
   form: FormGroup;
   loading: boolean;
   fees: Fee[];
-  selectedFees: Fee[] = [];
-  hotelsAndFlightsFees: Fee[] = [];
-  hotelBookings: HotelReservation[] = [];
-  flightBookings: FlightBooking[] = [];
+  hotelFees: Fee[] = [];
+  flightFees: Fee[] = [];
   hotels: Hotel[];
-  airlines: Airline[];
-  airports: Lookup[];
-  filteredAirports: Observable<Lookup[]>;
-  filteredAirports2: Observable<Lookup[]>;
-  filteredAirports3: Observable<Lookup[]>;
-  filteredAirports4: Observable<Lookup[]>;
-  filteredAirports5: Observable<Lookup[]>;
-  filteredAirports6: Observable<Lookup[]>;
-  filteredAirports7: Observable<Lookup[]>;
-  filteredAirports8: Observable<Lookup[]>;
   roomTypes: RoomType[];
   loader: Subscription;
-  validateDate: Function;
   formData;
+  _customer: CustomerDetail = {};
 
-  @Input() customer: Customer;
-  @Input() travel;
+  @Input() 
+  set customer(customer: CustomerDetail) {
+    this._customer = customer;
+    this.reset();
+  }
+  get customer(): CustomerDetail {
+      return this._customer;
+  }
+
+  @Input() travelTypeId;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -57,223 +53,116 @@ export class TravelServicesComponent implements OnInit {
     private airlineService: AirlinesService,
     private customerService: CustomersService,
     private lookupService: LookupService) {
-
-      this.lookupService.fetchAirports('fr').subscribe(res => {
-        this.airports = res;
-      });
-
-      this.validateDate = validateDate;
-      hotelService.getHotels(null, null).subscribe(res => this.hotels = res.data);
-      hotelService.getRoomTypes(null, null).subscribe(res => this.roomTypes = res);
-      airlineService.getAirlines(null, null).subscribe(res => this.airlines = res.data);
   }
 
   ngOnInit() {
+    this.initForm();
+    
+    this.loader = forkJoin(
+      this.feeService.getFeesByCategory(this.travelTypeId),
+      this.hotelService.getHotels(null, null),
+      this.hotelService.getRoomTypes(null, null)
+    )
+    .subscribe(res => {
+      this.fees = res[0];
+      this.hotels = res[1].data;
+      this.roomTypes = res[2];
+
+      this.fees.forEach(f => f.isServiceFee = true);
+      this.populateCustomerFees();
+    })
+  }
+
+  initForm() {
     this.form = this.fb.group({
-      hotelMekka: this.fb.control(null),
-      hotelMekkaRoom: this.fb.control(null),
-      hotelMekkaRoomPrice: this.fb.control(null),
-      hotelMedina: this.fb.control(null),
-      hotelMedinaRoom: this.fb.control(null),
-      hotelMedinaRoomPrice: this.fb.control(null),
-
-
-      airlineOneWay1: this.fb.control(null),
-      flightOneWay1Departure: this.fb.control(null),
-      flightOneWay1Arrival: this.fb.control(null),
-      flightOneWay1Date: this.fb.control(null),
-      flightOneWay1Price: this.fb.control(null),
-
-      airlineOneWay2: this.fb.control(null),
-      flightOneWay2Departure: this.fb.control(null),
-      flightOneWay2Arrival: this.fb.control(null),
-      flightOneWay2Date: this.fb.control(null),
-      flightOneWay2Price: this.fb.control(null),
-      
-
-      airlineReturn1: this.fb.control(null),
-      flightReturn1Departure: this.fb.control(null),
-      flightReturn1Arrival: this.fb.control(null),
-      flightReturn1Date: this.fb.control(null),
-      flightReturn1Price: this.fb.control(null),
-
-      airlineReturn2: this.fb.control(null),
-      flightReturn2Departure: this.fb.control(null),
-      flightReturn2Arrival: this.fb.control(null),
-      flightReturn2Date: this.fb.control(null),
-      flightReturn2Price: this.fb.control(null),
+      hotelMekka: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 ? this.customer.hotelBookings[0].hotel.id : null),
+      hotelMekkaRoom: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 && this.customer.hotelBookings[0].rooms[0].roomType ? this.customer.hotelBookings[0].rooms[0].roomType.id : null),
+      hotelMekkaRoomPrice: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 ? this.customer.hotelBookings[0].rooms[0].price : null),
+      hotelMedina: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 ? this.customer.hotelBookings[1].hotel.id : null),
+      hotelMedinaRoom: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 && this.customer.hotelBookings[1].rooms[0].roomType ? this.customer.hotelBookings[1].rooms[0].roomType.id : null),
+      hotelMedinaRoomPrice: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 ? this.customer.hotelBookings[1].rooms[0].price : null),
     });
 
     this.form.valueChanges.subscribe(data => {
-      this.setHotelAndFlightsFees(data);
-      
-      this.onChange.emit({ 
-        fees: this.selectedFees.concat(this.hotelsAndFlightsFees),
-        hotelBookings: this.hotelBookings,
-        flightBookings: this.flightBookings
-      });
+      this.setHotelFees(data);
+      this.emitChanges();
     });
-    
-    if (this.travel) {
-      this.loader = this.feeService.getFeesByCategory(this.travel.travelTypeId)
-        .subscribe(res => {
-          this.fees = res;
-          this.fees.forEach(f => f.isServiceFee = true);
-        });
+  }
+
+  populateCustomerFees() {
+    if (this.customer && this.customer.additionalFeeIds) {
+      this.customer.additionalFeeIds.forEach(feeId => {
+        var fee = this.fees.find(f => f.id == feeId);
+        if (fee) {
+          fee.checked = true;
+        }
+      });
     }
-
-    this.filteredAirports = this.flightOneWay1Departure.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports2 = this.flightOneWay1Arrival.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports3 = this.flightOneWay2Departure.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports4 = this.flightOneWay2Arrival.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports5 = this.flightReturn1Departure.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports6 = this.flightReturn1Arrival.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports7 = this.flightReturn2Departure.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
-
-    this.filteredAirports8 = this.flightReturn2Arrival.valueChanges
-    .pipe(
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
-    );
+    
+    // For edit mode
+    this.setHotelFees(this.form.value);
+    this.emitChanges();
   }
 
   serviceChecked(event, fee) {
-    var index = this.selectedFees.indexOf(fee);
-    if (event.checked && index == -1) {
-      this.selectedFees.push(fee);
-    }
-    else {
-      this.selectedFees.splice(index, 1);
-    }
-
-    this.onChange.emit({ 
-      fees: this.selectedFees.concat(this.hotelsAndFlightsFees),
-      hotelBookings: this.hotelBookings,
-      flightBookings: this.flightBookings
-    });
+    this.emitChanges();
   }
 
-  setHotelAndFlightsFees(formData) {
-    this.hotelsAndFlightsFees = [];
-    this.hotelBookings = [];
-    this.flightBookings = [];
+  setHotelFees(formData) {
+    this.hotelFees = [];
+    this.customer.hotelBookings = [];
 
     this.buildHotelBooking(formData.hotelMekka, formData.hotelMekkaRoom, formData.hotelMekkaRoomPrice);
     this.buildHotelBooking(formData.hotelMedina, formData.hotelMedinaRoom, formData.hotelMedinaRoomPrice);
-
-    this.buildFlightBooking(formData.airlineOneWay1, formData.flightOneWay1Departure, formData.flightOneWay1Arrival, formData.flightOneWay1Price, formData.flightOneWay1Date, formData.flightOneWay1Date);
-    this.buildFlightBooking(formData.airlineOneWay2, formData.flightOneWay2Departure, formData.flightOneWay2Arrival, formData.flightOneWay2Price, formData.flightOneWay2Date, formData.flightOneWay2Date);
-    this.buildFlightBooking(formData.airlineReturn1, formData.flightReturn1Departure, formData.flightReturn1Arrival, formData.flightReturn1Price, formData.flightReturn1Date, formData.flightReturn1Date);
-    this.buildFlightBooking(formData.airlineReturn2, formData.flightReturn2Departure, formData.flightReturn2Arrival, formData.flightReturn2Price, formData.flightReturn2Date, formData.flightReturn2Date);
   }
 
-  buildHotelBooking(hotel, hotelRoom, price) {
-    if (hotel && hotelRoom) {
+  onFlightsChange(flights) {
+    this.customer.flightBookings = flights.flightBookings;
+    this.flightFees = flights.flightFees;
+    this.emitChanges();
+  }
+
+  emitChanges() {
+    var selectedFees = this.fees ? this.fees.filter(f => f.checked) : [];
+    this.onChange.emit({ 
+      fees: selectedFees.concat(this.hotelFees).concat(this.flightFees),
+      hotelBookings: this.customer.hotelBookings,
+      flightBookings: this.customer.flightBookings
+    });
+  }
+
+  buildHotelBooking(hotelId, roomTypeId, price) {
+    if (hotelId && roomTypeId) {
+      var hotel = this.hotels.find(x => x.id == hotelId);
+      var roomType = this.roomTypes.find(x => x.id == roomTypeId);
       var fee = price ? price : 0;
-      this.hotelsAndFlightsFees.push({ 
-        name: hotel.name + ' ' + hotelRoom.name,
+      this.hotelFees.push({ 
+        name: hotel.name + ' ' + roomType.name,
         price: fee
       });
 
-      this.hotelBookings.push({
-        hotel: { id: hotel.id },
+      this.customer.hotelBookings.push({
+        hotel: { id: hotelId },
         rooms: [{
           price: fee,
-          roomType: { id: hotelRoom.id },
+          roomType: { id: roomTypeId },
           customers: [{ id: this.customer.id }]
         }]
       });
     }
   }
 
-  buildFlightBooking(airline, departure, arrival, price, departureDate, arrivalDate) {
-    if (airline && departure && arrival) {
-      var fee = price ? price : 0;
-      this.hotelsAndFlightsFees.push({ 
-        name: airline.name,
-        price: fee
-      });
-
-      this.flightBookings.push({
-        price: fee,
-        departureDate: departureDate,
-        arrivalDate: arrivalDate,
-        flight: {
-          airline: { id: airline.id },
-          airportFrom: departure.id,
-          airportTo: arrival.id 
-        }
+  reset() {
+    if (this.form) {
+      this.form.reset();
+    }
+    if (this.fees) {
+      this.fees.forEach(f => {
+        f.checked = false;
       });
     }
-  }
-
-  displayFn(val: Lookup) {
-    return val ? val.name : val;
   }
   
   get hotelMekka() { return this.form.get('hotelMekka'); }
   get hotelMedina() { return this.form.get('hotelMedina'); }
-  get airlineOneWay1() { return this.form.get('airlineOneWay1'); }
-  get airlineOneWay2() { return this.form.get('airlineOneWay2'); }
-  get airlineReturn1() { return this.form.get('airlineReturn1'); }
-  get airlineReturn2() { return this.form.get('airlineReturn2'); }
-
-  get flightOneWay1Departure() { return this.form.get('flightOneWay1Departure'); }
-  get flightOneWay1Arrival() { return this.form.get('flightOneWay1Arrival'); }
-  get flightOneWay2Departure() { return this.form.get('flightOneWay2Departure'); }
-  get flightOneWay2Arrival() { return this.form.get('flightOneWay2Arrival'); }
-  get flightReturn1Departure() { return this.form.get('flightReturn1Departure'); }
-  get flightReturn1Arrival() { return this.form.get('flightReturn1Arrival'); }
-  get flightReturn2Departure() { return this.form.get('flightReturn2Departure'); }
-  get flightReturn2Arrival() { return this.form.get('flightReturn2Arrival'); }
 }

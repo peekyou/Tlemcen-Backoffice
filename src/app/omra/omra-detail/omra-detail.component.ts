@@ -59,15 +59,7 @@ export class OmraDetailComponent implements OnInit {
         }
     });
 
-    const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
-      if (!this.omra.customers) {
-        this.omra.customers = [];
-      }
-      this.omra.customers = this.omra.customers.concat(customers);
-    });
-
     dialogRef.afterClosed().subscribe(customer => {
-        dialogRef.componentInstance.onCustomersAdded.unsubscribe();
     });
   }
 

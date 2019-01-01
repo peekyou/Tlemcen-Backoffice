@@ -8,7 +8,7 @@ export class HotelReservation {
     rooms?: HotelRoomReservation[];
 
     constructor() {
-		  this.rooms = [];
+        this.rooms = [];
     }
 
     static getAvailableSpace(reservation: HotelReservation): number {

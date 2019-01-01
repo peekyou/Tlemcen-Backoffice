@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class HttpService {
     protected headers: any;
-    protected apiHost: string;
+    public apiHost: string;
 
     constructor(private http: HttpClient) {
         this.headers = {
@@ -25,6 +25,15 @@ export class HttpService {
     get(resource: string): Observable<any> {
         return this.http.get(this.apiHost + resource, { headers: this.headers })
             .pipe(catchError(this.handleError));
+    }
+
+    getFile(resource: string): Observable<any> {
+        return this.http.get(this.apiHost + resource, { 
+                headers: this.headers,
+                observe: 'response', 
+                responseType: 'blob' 
+            })
+            .pipe(map(r => r.body, catchError(this.handleError)));
     }
 
     post(resource: string, data: any): Observable<any> {

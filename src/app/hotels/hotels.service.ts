@@ -11,13 +11,6 @@ import { AuthHttpService } from '../core/services/auth-http.service';
 export class HotelsService {
   resource = 'hotels';
 
-  // hotels: Hotel[] = [
-  //   { id: '1', name: 'Jabal Omar Hyatt Regency', roomsCount: 111, phone: '+9667777777', address: {} },
-  //   { id: '2', name: 'Sheraton Makkah Jabal Al Kaaba Hotel', roomsCount: 54, phone: '+96632243', address: {} },
-  //   { id: '3', name: 'Hilton Makkah Convention Hotel', roomsCount: 64, phone: '+96621345', address: {} },
-  //   { id: '4', name: 'Swissotel Al Maqam Makkah', roomsCount: 67, phone: '+966765321', address: {} },
-  // ];
-
   constructor(private http: AuthHttpService) { }
 
   getHotels(page: number, count: number): Observable<PagingResponse<Hotel>> {
@@ -40,10 +33,11 @@ export class HotelsService {
     return this.http.delete(this.resource + '/' + id);
   }
 
-  saveHotelBooking(reservation: HotelReservation) : Observable<HotelReservation> {
-    reservation.id = new Date().getMilliseconds().toString();
-    reservation.hotel.expanded = true;
-    return of(reservation);
+  saveHotelBooking(travelId: string, reservation: HotelReservation) : Observable<HotelReservation> {
+    return this.http.post(this.resource + '/rooms', {
+      travelId: travelId,
+      hotelBooking: reservation
+    });
   }
 
   createRoomsBooking(reservations: HotelRoomReservation[]) : Observable<HotelRoomReservation[]> {

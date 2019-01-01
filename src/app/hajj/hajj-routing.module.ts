@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: '', component: HajjListComponent },
   { path: ':id', component: HajjDetailComponent },
   { path: ':id/rooms', component: HajjRoomsPlanComponent },
-  { path: ':id/customers/add', component: HajjAddCustomersComponent }
+  { path: ':id/customers', component: HajjAddCustomersComponent },
+  { path: ':id/customers/:customerId', component: HajjAddCustomersComponent }
 ];
 
 @NgModule({

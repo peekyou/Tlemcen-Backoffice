@@ -36,6 +36,11 @@ export class AuthHttpService extends HttpService {
             .pipe(catchError(this.showToaster(this.toasterService)));
     }
 
+    getFile(resource: string): Observable<any> {
+        this.addAuthHeader();
+        return super.getFile(resource);
+    }
+
     post(resource: string, data: any): Observable<any> {
         this.addAuthHeader();
         return super.post(resource, data)

@@ -3,16 +3,28 @@
         <h2 class="text-primary">Omra {{ omra.name }}</h2>
         <div class="row">
             <div class="col-lg-12">
-                <div *ngIf="!omra.customers || omra.customers.length == 0" class="card card-block">
-                    <div class="card-body" (click)="openAddCustomerDialog()">
-                        <mat-icon>people</mat-icon>
-                        <div class="text-icon">Ajouter des pèlerins</div>
+                <div class="row" *ngIf="!omra.customers || omra.customers.length == 0">
+                    <div class="col">
+                        <div class="card card-block">
+                            <div class="card-body" (click)="openAddCustomerDialog()">
+                                <mat-icon>person_add</mat-icon>
+                                <div class="text-icon">Ajouter des pèlerins</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card card-block">
+                            <div class="card-body" (click)="openAddCustomerDialog()">
+                                <mat-icon>group_add</mat-icon>
+                                <div class="text-icon">Ajouter un groupe</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div *ngIf="omra.customers && omra.customers.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openAddCustomerDialog()"><mat-icon>person_add</mat-icon>Ajouter des pèlerins</button>
-                        <button class="btn btn-info"><mat-icon>group_add</mat-icon>Ajouter une famille</button>
+                        <button class="btn btn-info"><mat-icon>group_add</mat-icon>Ajouter un groupe</button>
                         <button class="btn btn-primary"><mat-icon>picture_in_picture</mat-icon>Imprimer badges</button>
                     </div>
                     <div class="card">
@@ -77,7 +89,7 @@
                 
                 <div *ngIf="omra.hotelBookings && omra.hotelBookings.length > 0">
                     <div class="action-buttons">
-                        <button class="btn btn-info" (click)="openRoomReservationDialog()"><mat-icon>group_add</mat-icon>Ajouter un hôtel</button>
+                        <button class="btn btn-info" (click)="openRoomReservationDialog()"><mat-icon>hotel</mat-icon>Ajouter un hôtel</button>
                         <button class="btn btn-info" routerLink="rooms"><mat-icon>view_module</mat-icon>Organiser les chambres</button>
                     </div>
                     <div class="card">
@@ -114,23 +126,29 @@
                         <div class="text-icon">Ajouter des vols</div>
                     </div>
                 </div>
-                <div *ngIf="omra.flightBookings && omra.flightBookings.length > 0" class="card">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title">Vols</h4>
+                <div *ngIf="omra.flightBookings && omra.flightBookings.length > 0">
+                    <div class="action-buttons">
+                        <button class="btn btn-info"><mat-icon>flight</mat-icon>Ajouter un vol</button>
+                        <button class="btn btn-info"><mat-icon>view_module</mat-icon>Organiser les vols</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>Nom</th>
-                                <th>Pèlerins</th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let flight of omra.flightBookings" [routerLink]="['/flightBookings', flight.id]">
-                                  <td>{{ flight.name }}</td>
-                                  <td>{{ flight.passengerCount }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h4 class="card-title">Vols</h4>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover">
+                                <thead class="text-warning">
+                                    <th>Nom</th>
+                                    <th>Pèlerins</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let flight of omra.flightBookings" [routerLink]="['/flightBookings', flight.id]">
+                                    <td>{{ flight.name }}</td>
+                                    <td>{{ flight.passengerCount }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

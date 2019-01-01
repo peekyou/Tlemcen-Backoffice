@@ -3,6 +3,9 @@ export class AppFile {
     name?: string;
     size?: number;
     createdDate?: Date;
-    src?: string;
-    data?: string;
+    src?: string | ArrayBuffer;
+    data?: any;
+    
+    constructor() {
+    }
 }

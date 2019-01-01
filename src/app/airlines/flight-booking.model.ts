@@ -9,5 +9,6 @@ export class FlightBooking {
     price?: number;
     departureDate?: Date;
     arrivalDate?: Date;
-    customer? : Customer;
+    customers? : Customer[];
+    displayOrder?: number;
 }

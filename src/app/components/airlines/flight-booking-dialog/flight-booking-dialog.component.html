@@ -1,0 +1,9 @@
+<div mat-dialog-title>Ajouter un vol</div>
+<div mat-dialog-content>
+  <app-flight-booking (onChange)="onFlightsChange($event)" [dialog]="true"></app-flight-booking>
+  <div class="pull-right">
+    <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="save()"
+          [disabled]="!flightBookings || flightBookings.length == 0">{{ 'COMMON.SAVE' | translate }}</button>
+    <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+  </div>
+</div>

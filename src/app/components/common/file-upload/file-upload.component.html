@@ -31,10 +31,10 @@
         <div class="col attachment-content" *ngFor="let f of files || [file]">
             <div *ngIf="f">
                 <div class="attachment-thumb">
-                    <img height="75" width="125" [src]="f.src" (load)="fileLoad()">
+                    <img height="75" width="125" [src]="f.src | safe" (load)="fileLoad()">
                 </div>
                 <dl>
-                    <i class="fa fa-trash" (click)="delete(f)"></i>
+                    <!-- <i class="fa fa-trash" (click)="delete(f)"></i> -->
                 </dl>
             </div>
         </div>

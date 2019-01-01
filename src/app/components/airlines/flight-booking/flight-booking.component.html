@@ -1,0 +1,171 @@
+<div [formGroup]="form" *ngIf="airports && airlines">
+  <div class="row col bold">Vols aller</div>
+  <div class="row col">Vol 1</div>
+  <div class="row">
+    <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineOneWay1">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let option of airlines" [value]="option.id">
+          {{ option.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay1.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport départ" autoClose [control]="flightOneWay1Departure"
+        formControlName="flightOneWay1Departure" [matAutocomplete]="autoFlightOneWay1Departure">
+      <mat-autocomplete #autoFlightOneWay1Departure="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports | async" [value]="option">
+          {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay1.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport arrivée" autoClose [control]="flightOneWay1Arrival"
+        formControlName="flightOneWay1Arrival" [matAutocomplete]="autoflightOneWay1Arrival">
+      <mat-autocomplete #autoflightOneWay1Arrival="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports2 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay1.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-2': !dialog}">
+      <input matInput [matDatepicker]="flightOneWay1Date" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightOneWay1Date">
+      <mat-datepicker-toggle matSuffix [for]="flightOneWay1Date"></mat-datepicker-toggle>
+      <mat-datepicker #flightOneWay1Date></mat-datepicker>
+      <mat-error *ngIf="flightOneWay1Date.errors?.required && (flightOneWay1Date.dirty ||flightOneWay1Date.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay1.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-1': !dialog}">
+        <input type='number' matInput min="0" placeholder="Prix" formControlName="flightOneWay1Price">
+    </mat-form-field>
+  </div>
+
+  <div class="row col">Vol 2</div>
+  <div class="row">
+    <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineOneWay2">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let option of airlines" [value]="option.id">
+          {{ option.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay2.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport départ" autoClose [control]="flightOneWay2Departure"
+        formControlName="flightOneWay2Departure" [matAutocomplete]="autoFlightOneWay2Departure">
+      <mat-autocomplete #autoFlightOneWay2Departure="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports3 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay2.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport arrivée" autoClose [control]="flightOneWay2Arrival"
+        formControlName="flightOneWay2Arrival" [matAutocomplete]="autoFlightOneWay2Arrival">
+      <mat-autocomplete #autoFlightOneWay2Arrival="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports4 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay2.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-2': !dialog}">
+      <input matInput [matDatepicker]="flightOneWay2Date" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightOneWay2Date">
+      <mat-datepicker-toggle matSuffix [for]="flightOneWay2Date"></mat-datepicker-toggle>
+      <mat-datepicker #flightOneWay2Date></mat-datepicker>
+      <mat-error *ngIf="flightOneWay2Date.errors?.required && (flightOneWay2Date.dirty ||flightOneWay2Date.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineOneWay2.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-1': !dialog}">
+        <input type='number' matInput min="0" placeholder="Prix" formControlName="flightOneWay2Price">
+    </mat-form-field>
+  </div>
+
+  <div class="row col bold">Vols retour</div>
+  <div class="row col">Vol 1</div>
+  <div class="row">
+    <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineReturn1">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let option of airlines" [value]="option.id">
+          {{ option.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn1.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport départ" autoClose [control]="flightReturn1Departure"
+        formControlName="flightReturn1Departure" [matAutocomplete]="autoFlightReturn1Departure">
+      <mat-autocomplete #autoFlightReturn1Departure="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports5 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn1.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport arrivée" autoClose [control]="flightReturn1Arrival"
+        formControlName="flightReturn1Arrival" [matAutocomplete]="autoFlightReturn1Arrival">
+      <mat-autocomplete #autoFlightReturn1Arrival="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports6 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn1.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-2': !dialog}">
+      <input matInput [matDatepicker]="flightReturn1Date" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightReturn1Date">
+      <mat-datepicker-toggle matSuffix [for]="flightReturn1Date"></mat-datepicker-toggle>
+      <mat-datepicker #flightReturn1Date></mat-datepicker>
+      <mat-error *ngIf="flightReturn1Date.errors?.required && (flightReturn1Date.dirty ||flightReturn1Date.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn1.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-1': !dialog}">
+        <input type='number' matInput min="0" placeholder="Prix" formControlName="flightReturn1Price">
+    </mat-form-field>
+  </div>
+
+  <div class="row col">Vol 2</div>
+  <div class="row">
+    <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineReturn2">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let option of airlines" [value]="option.id">
+          {{ option.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn2.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport départ" autoClose [control]="flightReturn2Departure"
+        formControlName="flightReturn2Departure" [matAutocomplete]="autoFlightReturn2Departure">
+      <mat-autocomplete #autoFlightReturn2Departure="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports7 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn2.value" [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
+      <input matInput placeholder="Aéroport arrivée" autoClose [control]="flightReturn2Arrival"
+        formControlName="flightReturn2Arrival" [matAutocomplete]="autoFlightReturn2Arrival">
+      <mat-autocomplete #autoFlightReturn2Arrival="matAutocomplete" [displayWith]="displayFn.bind(this)">
+        <mat-option *ngFor="let option of filteredAirports8 | async" [value]="option">
+            {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn2.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-2': !dialog}">
+      <input matInput [matDatepicker]="flightReturn2Date" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightReturn2Date">
+      <mat-datepicker-toggle matSuffix [for]="flightReturn2Date"></mat-datepicker-toggle>
+      <mat-datepicker #flightReturn2Date></mat-datepicker>
+      <mat-error *ngIf="flightReturn2Date.errors?.required && (flightReturn2Date.dirty ||flightReturn2Date.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="airlineReturn2.value" [ngClass]="{'col-12 col-md-3': dialog, 'col-12 col-md-1': !dialog}">
+        <input type='number' matInput min="0" placeholder="Prix" formControlName="flightReturn2Price">
+    </mat-form-field>
+  </div>
+</div>

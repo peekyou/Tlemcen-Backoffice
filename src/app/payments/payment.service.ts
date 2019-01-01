@@ -16,8 +16,8 @@ export class PaymentService {
 
   constructor(private http: AuthHttpService) { }
   
-  getPayments(page: number = null, count: number = null, searchTerm: string = ''): Observable<PagingResponse<Payment>> {
-    return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count+ '&searchTerm=' + searchTerm);
+  getPayments(page: number = null, count: number = null): Observable<PagingResponse<Payment>> {
+    return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
   }
 
   getPayment(id): Observable<Payment> {

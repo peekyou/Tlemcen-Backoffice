@@ -27,6 +27,9 @@ export class FileUploadComponent {
 
   set file(value: AppFile) {
       this._file = value;
+      if (value && value.data) {
+        this.createImageFromBlob(value.data);
+    }
   }
 
   constructor(private http: HttpClient) { }
@@ -96,5 +99,11 @@ export class FileUploadComponent {
 
     openCamera() {
         this.onOpenCamera.emit(true);
+    }
+
+    createImageFromBlob(image: Blob) {
+        if (image && !this._file.src) {
+            this._file.src = URL.createObjectURL(image)
+        }
     }
 }

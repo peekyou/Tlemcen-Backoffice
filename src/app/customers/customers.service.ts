@@ -32,4 +32,12 @@ export class CustomersService {
     file.data = file.src;
     return this.http.post(this.resource + '/document?customerId=' + customerId + '&documentTypeId=' + documentTypeId, file);
   }
+  
+  getCustomerDocument(customerId: string, documentTypeId: string): Observable<any> {
+    return this.http.getFile(this.resource + '/' + customerId + '/document/' + documentTypeId);
+  }
+
+  // getCustomerDocument(customerId: string, documentTypeId: string): string {
+  //   return this.http.apiHost + this.resource + '/' + customerId + '/document/' + documentTypeId;
+  // }
 }

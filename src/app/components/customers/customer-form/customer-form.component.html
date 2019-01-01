@@ -86,13 +86,6 @@
                 </mat-autocomplete>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <mat-select placeholder="Lien de parenté" formControlName="relationship">
-                    <mat-option *ngFor="let option of relationships" [value]="option">
-                        {{ option.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field class="full-width">
                 <mat-select placeholder="A connu l'agence" formControlName="howKnewAgency">
                     <mat-option *ngFor="let option of knewAgency" [value]="option">
                         {{ option.name }}

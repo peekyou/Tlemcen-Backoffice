@@ -7,6 +7,8 @@ export class HotelRoomReservation {
     hotel?: Hotel;
     roomType?: RoomType;
     customers?: Customer[];
+    isValidated?: boolean;
+    displayOrder?: number;
 
     static getAvailableSpace(reservation: HotelRoomReservation): number {
         if (reservation && reservation.roomType) {

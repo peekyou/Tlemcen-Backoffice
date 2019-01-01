@@ -19,12 +19,13 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let payment of payments.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: payments?.paging?.totalCount }" [routerLink]="['/customers', payment.customer.id]">
-                                        <td>{{ payment.date | date:'dd/MM/yyyy' }}</td>
+                                        <td>{{ payment.createdDate | date:'dd/MM/yyyy' }}</td>
                                         <td>{{ payment.amountPaid }} €</td>
                                         <td><span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span></td>
                                         <td>
                                           <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
                                           <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                                          <span *ngIf="payment.status == 'R'" class="badge badge-warning">A rembourser</span>
                                         </td>
                                         <td>{{ payment.fees - payment.amountPaid - payment.discount }} €</td>
                                     </tr>

@@ -16,10 +16,6 @@
         <button mat-icon-button *ngIf="customersChecked.length > 0" matTooltip="Ajouter" (click)="addExisting()">
             <mat-icon>add</mat-icon>
         </button>
-        <!--<mat-divider [vertical]="true" *ngIf="customersChecked.length > 0"></mat-divider>
-        <button mat-icon-button (click)="newCustomer()" >
-            <mat-icon>create</mat-icon>
-        </button> -->
     </div>
     <app-spinner [loader]="loader"></app-spinner>
     <table class="table table-hover"  *ngIf="loader.closed && customers && customers.data && customers.data.length > 0">
@@ -27,7 +23,7 @@
             <th></th>
             <th>{{ 'COMMON.NAME' | translate }}</th>
             <th>{{ 'COMMON.PHONE' | translate }}</th>
-            <th></th>
+            <th *ngIf="!data.isGroup"></th>
         </thead>
         <tbody>
             <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }"
@@ -35,7 +31,7 @@
                 <td><mat-checkbox (change)="customerChecked($event, customer)"></mat-checkbox></td>
                 <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                 <td>{{ customer.mobileNumber }}</td>
-                <td>
+                <td *ngIf="!data.isGroup">
                     <button class="dummy" mat-icon-button>
                         <mat-icon>add</mat-icon>
                     </button>

@@ -1,5 +1,6 @@
 <div class="row" *ngIf="customer">
-	<div class="col-lg-4 col-12" *ngFor="let document of customer.documents; let i = index">
+	<app-spinner [loader]="loader"></app-spinner>
+	<div class="col-lg-4 col-12 document-card" *ngFor="let document of documentsConfigured; let i = index">
 		<label>{{ document.name }}</label>
 		<app-file-upload (fileChange)="uploadDocument($event, customer, document)" 
 			[(file)]="document.file" [enableCamera]="false" [simple]="true">

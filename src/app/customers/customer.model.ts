@@ -13,17 +13,16 @@ export class Customer {
     birthDate?: Date;
     mobileNumber?: string;
     phoneNumber?: string;
-    profession?: Lookup;
+    profession?: string;
     address?: Address;
-    relationship?: Lookup;
-    nationalityCode?: Lookup;
+    relationship?: string;
+    nationalityCode?: string;
     passportNumber?: string;
     passportExpiryDate?: Date;
-    birthCountryCode?: Lookup;
-    howKnewAgency?: Lookup;
+    birthCountryCode?: string;
+    howKnewAgency?: string;
     picture?: AppFile;
-    documents?: AppDocument[]; 
-    payments?: Payment[];
+    documents?: CustomerDocument[];
     travelPayment?: Payment;
     
     // UI properties
@@ -31,9 +30,14 @@ export class Customer {
 
     constructor() {
         this.address = {};
+        this.travelPayment = {};
         this.picture = {};
 		this.documents = [];
-		this.payments = [];
     }
 }
 
+export class CustomerDocument {
+    id: string;
+    documentTypeId: string;
+    config: AppDocument;
+}

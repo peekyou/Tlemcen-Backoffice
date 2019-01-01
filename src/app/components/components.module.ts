@@ -22,12 +22,15 @@ import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.comp
 import { SpinnerComponent } from './common/spinner/spinner.component';
 import { TravelServicesComponent } from './travel-services/travel-services.component';
 import { CustomerTravelComponent } from './customers/customer-travel/customer-travel.component';
+import { FlightBookingComponent } from './airlines/flight-booking/flight-booking.component';
+import { FlightBookingDialogComponent } from './airlines/flight-booking-dialog/flight-booking-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
   SearchCustomerDialogComponent,
   HotelRoomsDialogComponent,
   DeleteDialogComponent,
+  FlightBookingDialogComponent,
 ];
 
 @NgModule({
@@ -52,6 +55,7 @@ const MODALS = [
     PaymentComponent,
     TravelServicesComponent,
     CustomerTravelComponent,
+    FlightBookingComponent,
     ...MODALS,
   ],
   exports: [

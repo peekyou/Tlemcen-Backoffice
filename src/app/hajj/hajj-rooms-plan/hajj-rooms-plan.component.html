@@ -2,7 +2,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <app-rooms-assignment [customers]="hajj.customers" [hotelReservations]="hajj.reservations"></app-rooms-assignment>
+                <app-spinner [loader]="loader"></app-spinner>
+                <app-rooms-assignment *ngIf="hajj" [hotelBookings]="hajj.hotelBookings" [travelId]="hajj.id"></app-rooms-assignment>
             </div>
         </div>
     </div>

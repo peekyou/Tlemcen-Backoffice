@@ -2,37 +2,35 @@
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div>
-			<h4 *ngIf="hotelReservation">{{ hotelReservation.hotel.name }}</h4>
-			<mat-form-field *ngIf="!hotelReservation">
+			<h4 *ngIf="hotelBooking">{{ hotelBooking.hotel.name }}</h4>
+			<mat-form-field *ngIf="!hotelBooking">
 					<mat-select placeholder="Sélectionez un hôtel" formControlName="hotel">
 							<mat-option *ngFor="let h of hotels" [value]="h">
 									{{ h.name }}
 							</mat-option>
 					</mat-select>
 			</mat-form-field>
-
-      <mat-form-field class="full-width">
-          <input type='number' matInput min="0" placeholder="Nombre de chambres" formControlName="roomsCount">
-      </mat-form-field>
-      <div formArrayName="roomsPersonCount">
-		<table class="table table-bordered">
-			<thead>
-				<th>No</th>
-				<th>Nombre de personnes</th>
-			</thead>
-			<tbody>
-				<tr *ngFor="let roomPersonCount of roomsPersonCount.controls; let i = index">
-					<td>#{{ i + 1 }} </td>
-					<td>
-						<mat-form-field>
-							<input type='number' matInput min="0" placeholder="Nombre de personnes" formControlName="{{i}}">
-						</mat-form-field>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-      </div>
-    </div>
+			<div *ngIf="hotel.value || hotelBooking">
+				<div formArrayName="rooms" *ngFor="let room of rooms.controls; let i = index">
+					<div [formGroupName]="i" class="row">
+						<div class="col-12 col-md-4">
+							<input formControlName="roomType" type="hidden">
+							<span class="mat-form-field-infix">Chambre {{ form.controls.rooms.controls[i].controls.roomType.value.name }}</span>
+						</div>
+						<div class="col-6 col-md-4">
+							<mat-form-field>
+								<input matInput type="number" min="0" formControlName="roomCount" placeholder="Nombre de chambres">
+							</mat-form-field>
+						</div>
+						<div *ngIf="form.controls.rooms.controls[i].controls.roomCount.value > 0" class="col-6 col-md-4">
+							<mat-form-field>
+								<input matInput type="number" min="0" formControlName="roomPrice" placeholder="Prix/pers.">
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
     <div class="pull-right">
       <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="save()"
               [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>

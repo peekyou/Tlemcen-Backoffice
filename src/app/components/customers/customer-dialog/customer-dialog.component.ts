@@ -21,26 +21,10 @@ export class CustomerDialogComponent implements OnInit {
   }
 
   onSubmit(customer) {
-    // if (this.showDocuments) {
-    //   let dialogRef = this.dialog.open(UploadDocumentsDialogComponent, {
-    //     autoFocus: false,
-    //     width: '534px',
-    //     data: {
-    //       customers: [customer],
-    //       travelType: this.data.travelType
-    //     }
-    //   });
-  
-    //   dialogRef.afterClosed().subscribe(customers => {
-    //     this.close(customers);
-    //   });
-    // }
-    // else {
-    //   this.close(customer)
-    // }
+      this.close(customer)
   }
 
-  close(customers = null): void {
-      this.dialogRef.close(customers);
+  close(customer = null): void {
+      this.dialogRef.close(customer);
   }
 }

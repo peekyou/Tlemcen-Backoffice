@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 
@@ -21,7 +21,6 @@ export class SearchCustomerDialogComponent implements OnInit {
   customers: PagingResponse<Customer>;
   customersChecked: Customer[] = [];
   searchTerm: string = '';
-
   // @Output() onCustomersAdded: EventEmitter<Customer[]> = new EventEmitter();
   
   constructor(
@@ -68,10 +67,12 @@ export class SearchCustomerDialogComponent implements OnInit {
         width: '534px'
     });
 
-    dialogRef.afterClosed().subscribe(customers => {
-      if (customers && customers.length > 0) {
+    dialogRef.afterClosed().subscribe(customer => {
+      if (customer) {
+        this.customers.data.unshift(customer);
+        this.customers.paging.totalCount++;
         // this.onCustomersAdded.emit(customers);
-        this.close(customers);
+        // this.close(customer);
       }
     });
   }

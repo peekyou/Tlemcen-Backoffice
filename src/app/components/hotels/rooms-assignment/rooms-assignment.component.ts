@@ -3,6 +3,7 @@ import { DndDropEvent } from "ngx-drag-drop";
 import { DragulaService } from 'ng2-dragula';
 
 import { Customer } from '../../../customers/customer.model';
+import { TravelService } from '../../../travels/travel.service';
 import { HotelReservation } from '../../../hotels/hotel-reservation.model';
 import { groupByArray, removeFromArrayByProperty, removeFromArray } from '../../../core/helpers/utils';
 
@@ -12,11 +13,13 @@ import { groupByArray, removeFromArrayByProperty, removeFromArray } from '../../
   styleUrls: ['./rooms-assignment.component.scss']
 })
 export class RoomsAssignmentComponent implements OnInit {
-  @Input() customers: Customer[];
-  @Input() hotelReservations: HotelReservation[];
+  @Input() hotelBookings: HotelReservation[];
+  @Input() travelId: string;
+
+  customers: Customer[];
   customersExpanded: boolean = true;
 
-  constructor(private dragulaService: DragulaService) { 
+  constructor(private dragulaService: DragulaService, private travelService: TravelService) { 
     if (!dragulaService.find('ROOMS')) {
       dragulaService.createGroup('ROOMS', {
         accepts: (el, target, source, sibling) => {
@@ -27,6 +30,12 @@ export class RoomsAssignmentComponent implements OnInit {
   } 
 
   ngOnInit() {
+    this.travelService.getTravelersWithoutHotelBooking(this.travelId)
+    .subscribe(customers => this.customers = customers);
+
+    this.hotelBookings.forEach(x => {
+      x.hotel.expanded = true;
+    })
   }
 
   save() {
@@ -45,8 +54,8 @@ export class RoomsAssignmentComponent implements OnInit {
       }
     }
 
-    men = men.sort((a,b) => a.birthDate.getTime() - b.birthDate.getTime());
-    women = women.sort((a,b) => a.birthDate.getTime() - b.birthDate.getTime());
+    men = men.sort((a,b) => new Date(a.birthDate).getTime() - new Date(b.birthDate).getTime());
+    women = women.sort((a,b) => new Date(a.birthDate).getTime() - new Date(b.birthDate).getTime());
 
     var menByLastName: any[] = groupByArray(men, 'lastname');
     var womenByLastName: any[] = groupByArray(women, 'lastname');
@@ -72,7 +81,7 @@ export class RoomsAssignmentComponent implements OnInit {
       var reservationId = parts[0];
       var roomId = parts[1];
       var limit = parseInt(parts[2]);
-      var reservation = this.hotelReservations.find(x => x.id == reservationId);
+      var reservation = this.hotelBookings.find(x => x.id == reservationId);
       if (reservation && reservation.rooms && reservation.rooms.length > 0) {
         var room = reservation.rooms.find(x => x.id == roomId);
         if (room && room.customers) {
@@ -84,14 +93,14 @@ export class RoomsAssignmentComponent implements OnInit {
   }
 
   private assignGroup(group) {
-	var remainingGroups = [];
+	  var remainingGroups = [];
 	  
     while (group.length > 0) {
       var peopleToAssign = group.shift();
 		  var isPlaced = false;
 			
-      for (let i = 0; !isPlaced && this.hotelReservations && i < this.hotelReservations.length; i++) {
-        var hotel = this.hotelReservations[i];
+      for (let i = 0; !isPlaced && this.hotelBookings && i < this.hotelBookings.length; i++) {
+        var hotel = this.hotelBookings[i];
         for (let j = 0; !isPlaced && hotel.rooms && j < hotel.rooms.length; j++) {
           var room = hotel.rooms[j];
           
@@ -131,8 +140,8 @@ export class RoomsAssignmentComponent implements OnInit {
 	  group.values.forEach(customer => {
 		
 		var isPlaced = false;
-		for (let i = 0; !isPlaced && this.hotelReservations && i < this.hotelReservations.length; i++) {
-          var hotel = this.hotelReservations[i];
+		for (let i = 0; !isPlaced && this.hotelBookings && i < this.hotelBookings.length; i++) {
+          var hotel = this.hotelBookings[i];
           for (let j = 0; !isPlaced && hotel.rooms && j < hotel.rooms.length; j++) {
 	        var room = hotel.rooms[j];
 			

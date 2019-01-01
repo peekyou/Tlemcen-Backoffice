@@ -9,6 +9,7 @@ import { DndModule } from 'ngx-drag-drop';
 
 import { AppMaterialModules } from './material.module';
 import { DirectivesModule } from '../directives';
+import { PipesModule } from '../pipes';
 
 const IMPORTS = [
     CommonModule,
@@ -20,7 +21,8 @@ const IMPORTS = [
     NgxPaginationModule,
     DndModule,
     AppMaterialModules,
-    DirectivesModule
+    DirectivesModule,
+    PipesModule
 ];
 
 const DECLARATIONS = [

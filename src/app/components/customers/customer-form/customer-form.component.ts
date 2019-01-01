@@ -30,7 +30,6 @@ export class CustomerFormComponent implements OnInit {
     professions: Lookup[] = [];
     countries: Lookup[] = [];
     nationalities: Lookup[] = [];
-    relationships: Lookup[] = [];
     knewAgency: Lookup[] = [];
 
     @Input() customer: Customer = new Customer();
@@ -54,9 +53,6 @@ export class CustomerFormComponent implements OnInit {
         this.lookupService.fetchCities('fr').subscribe(res => {
             this.cities = res;
         });
-        this.lookupService.fetchRelationships('fr').subscribe(res => {
-            this.relationships = res;
-        });
         this.lookupService.fetchKnewAgency('fr').subscribe(res => {
             this.knewAgency = res;
         });
@@ -78,7 +74,6 @@ export class CustomerFormComponent implements OnInit {
             cityZipCode: this.fb.control(null),
             passportNumber: this.fb.control(this.customer.passportNumber),
             passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
-            relationship: this.fb.control(this.customer.relationship),
             howKnewAgency: this.fb.control(this.customer.howKnewAgency),
         });
 
@@ -134,7 +129,6 @@ export class CustomerFormComponent implements OnInit {
         newCustomer.passportNumber = this.form.value.passportNumber;
         newCustomer.passportExpiryDate = this.form.value.passportExpiryDate;
         newCustomer.nationalityCode = this.form.value.nationality ? this.form.value.nationality.id : null;
-        newCustomer.relationship = this.form.value.relationship ? this.form.value.relationship.name : null;
         newCustomer.profession = this.form.value.profession ? this.form.value.profession.name : null;
 		var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
 		newCustomer.address.city = cityZipCode[0];

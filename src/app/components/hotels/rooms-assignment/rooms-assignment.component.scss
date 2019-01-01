@@ -30,3 +30,12 @@
     border-radius: 6px;
     font-size: 14px;
 }
+
+.card-header-hotel {
+    cursor: pointer;
+    padding: 5px !important;
+    
+    button {
+        margin-right: 10px;
+    }
+}

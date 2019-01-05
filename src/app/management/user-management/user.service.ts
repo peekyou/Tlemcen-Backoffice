@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { User, Permission } from './user.model';
+import { User, Role, Permission } from './user.model';
 import { PagingResponse } from '../../core/models/paging';
 import { AuthHttpService } from '../../core/services/auth-http.service';
 
@@ -9,25 +9,25 @@ import { AuthHttpService } from '../../core/services/auth-http.service';
 export class UserService {
     resource = 'users';
 
-    users: User[] = [
-        { id: '2', email: 'jeremie.paas@gmail.com', firstname: 'Jeremie', lastname: 'Paas', status: 'admin', username: 'jeremie', password: 'admin', permissions: [] },
-        { id: '3', email: 'test@gmail.com', firstname: 'Test', lastname: 'Test', status: 'admin', username: 'test', password: 'admin', permissions: [] },
-      ];
-
     constructor(private http: AuthHttpService) { }
 
     getUsers(page: number, count: number): Observable<PagingResponse<User>> {
         return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
     }
 
-    getPermissions(): Observable<Permission[]> {
-        return of([]);
+    createUser(user: User): Observable<User> {
+        return this.http.post(this.resource, user);
     }
 
-    saveUser(user: User): Observable<User> {
-        if (!user.id) {
-            user.id = new Date().getMilliseconds().toString();
-        }
-        return of(user);
+    updateUser(user: User): Observable<User> {
+        return this.http.put(this.resource + '/' + user.id, user);
+    }
+
+    deleteUser(id: string) : Observable<boolean> {
+        return this.http.delete(this.resource + '/' + id);
+    }
+
+    getRoles(): Observable<Role[]> {
+        return this.http.get('roles');
     }
 }

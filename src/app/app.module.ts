@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { DragulaModule } from 'ng2-dragula';
+import { StarRatingModule } from 'angular-star-rating';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -44,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
     DragulaModule.forRoot(),
+    StarRatingModule.forRoot(),
     BrowserAnimationsModule,
     ComponentsModule,
     RouterModule,

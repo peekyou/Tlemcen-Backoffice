@@ -14,11 +14,15 @@
                       <table class="table table-hover">
                           <thead class="text-warning">
                               <th>Nom</th>
+                              <th>Téléphone</th>
+                              <th>Email</th>
                               <th></th>
                           </thead>
                           <tbody>
                               <tr *ngFor="let airline of airlines.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: airlines?.paging?.totalCount }" (click)="openAirlineDialog(airline)">
                                 <td>{{ airline.name }}</td>
+                                <td>{{ airline.contactPhoneNumber }}</td>
+                                <td>{{ airline.contactEmail }}</td>
                                 <td>
                                     <button mat-icon-button (click)="openDeleteDialog(airline);$event.stopPropagation()">
                                         <mat-icon class="text-danger">delete</mat-icon>

@@ -24,6 +24,10 @@ export class CustomersService {
     return this.http.post(this.resource, customer);
   }
 
+  updateCustomer(customer: Customer): Observable<Customer> {
+    return this.http.put(this.resource + '/' + customer.id, customer);
+  }
+
   deleteCustomer(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);
   }
@@ -34,7 +38,7 @@ export class CustomersService {
   }
   
   getCustomerDocument(customerId: string, documentTypeId: string): Observable<any> {
-    return this.http.getFile(this.resource + '/' + customerId + '/document/' + documentTypeId);
+    return this.http.download(this.resource + '/' + customerId + '/document/' + documentTypeId);
   }
 
   // getCustomerDocument(customerId: string, documentTypeId: string): string {

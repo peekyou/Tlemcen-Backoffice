@@ -11,6 +11,8 @@ export class Travel {
     name?: string;
     unitPrice?: number;
     revenues?: number;
+    startDate?: Date;
+    endDate?: Date;
 
     fees?: Fee[];
     hotelBookings?: HotelReservation[]

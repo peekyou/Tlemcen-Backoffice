@@ -11,6 +11,26 @@
 					</mat-select>
 			</mat-form-field>
 			<div *ngIf="hotel.value || hotelBooking">
+				<div class="row">
+					<mat-form-field class="col-12 col-md-6">
+						<input matInput [matDatepicker]="fromDate" maxlength="10" (keypress)="validateDate($event)"
+							placeholder="Du" formControlName="fromDate">
+						<mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+						<mat-datepicker #fromDate></mat-datepicker>
+						<mat-error *ngIf="fromDate.errors?.required && (fromDate.dirty ||fromDate.touched)">
+								{{ 'FORM.INVALID_DATE' | translate }}
+						</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col-12 col-md-6">
+						<input matInput [matDatepicker]="toDate" maxlength="10" (keypress)="validateDate($event)"
+							placeholder="Au" formControlName="toDate">
+						<mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+						<mat-datepicker #toDate></mat-datepicker>
+						<mat-error *ngIf="toDate.errors?.required && (toDate.dirty ||toDate.touched)">
+								{{ 'FORM.INVALID_DATE' | translate }}
+						</mat-error>
+					</mat-form-field>
+				</div>
 				<div formArrayName="rooms" *ngFor="let room of rooms.controls; let i = index">
 					<div [formGroupName]="i" class="row">
 						<div class="col-12 col-md-4">
@@ -22,11 +42,11 @@
 								<input matInput type="number" min="0" formControlName="roomCount" placeholder="Nombre de chambres">
 							</mat-form-field>
 						</div>
-						<div *ngIf="form.controls.rooms.controls[i].controls.roomCount.value > 0" class="col-6 col-md-4">
+						<!-- <div *ngIf="form.controls.rooms.controls[i].controls.roomCount.value > 0" class="col-6 col-md-4">
 							<mat-form-field>
 								<input matInput type="number" min="0" formControlName="roomPrice" placeholder="Prix/pers.">
 							</mat-form-field>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>

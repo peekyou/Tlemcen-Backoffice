@@ -8,6 +8,7 @@ import { Hotel, RoomType } from '../../../hotels/hotel.model';
 import { HotelReservation } from '../../../hotels/hotel-reservation.model';
 import { HotelRoomReservation } from '../../../hotels/hotel-room-reservation.model';
 import { HotelsService } from '../../../hotels/hotels.service';
+import { validateDate } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-hotel-rooms-dialog',
@@ -22,6 +23,7 @@ export class HotelRoomsDialogComponent implements OnInit {
   hotels: Hotel[];
   roomTypes: RoomType[];
   travelId: string;
+  validateDate: Function;
 
   constructor(
     private service: HotelsService,
@@ -29,6 +31,7 @@ export class HotelRoomsDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<HotelRoomsDialogComponent>,
     private dialog: MatDialog) {
+      this.validateDate = validateDate;
       if (data) {
         this.hotelBooking = data.hotelReservation;
         this.travelId = data.travelId;
@@ -40,6 +43,8 @@ export class HotelRoomsDialogComponent implements OnInit {
     var roomsControl = this.fb.array([]); 
     this.form = this.fb.group({
       hotel: this.fb.control(null, (c) => this.customHotelValidator(c)),
+      fromDate: this.fb.control(null, Validators.required),
+      toDate: this.fb.control(null, Validators.required),
       rooms: roomsControl,
     });
 
@@ -70,6 +75,8 @@ export class HotelRoomsDialogComponent implements OnInit {
       var roomCount: number = control.value.roomCount;
       for (var i = 0; i < roomCount; i++) {
         reservation.rooms.push({
+          fromDate: this.form.value.fromDate,
+          toDate: this.form.value.toDate,
           roomType: {
             id: control.value.roomType.id
           },

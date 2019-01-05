@@ -3,19 +3,19 @@ import { Subscription, Observable, forkJoin } from 'rxjs';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { Fee } from '../../management/fees-management/fee.model';
-import { FeeService } from '../../management/fees-management/fee.service';
-import { CustomerDetail } from '../../customers/customer-detail.model';
-import { CustomersService } from '../../customers/customers.service';
-import { Hotel, RoomType } from '../../hotels/hotel.model';
-import { HotelsService } from '../../hotels/hotels.service';
-import { AirlinesService } from '../../airlines/airlines.service';
-import { HotelReservation } from '../../hotels/hotel-reservation.model';
-import { FlightBooking } from '../../airlines/flight-booking.model';
-import { Airline } from '../../airlines/airline.model';
-import { validateDate, filterLookup } from '../../core/helpers/utils';
-import { Lookup } from '../../core/models/lookup.model';
-import { LookupService } from '../../core/services/lookup.service';
+import { Fee } from '../../../management/fees-management/fee.model';
+import { FeeService } from '../../../management/fees-management/fee.service';
+import { CustomerDetail } from '../../../customers/customer-detail.model';
+import { CustomersService } from '../../../customers/customers.service';
+import { Hotel, RoomType } from '../../../hotels/hotel.model';
+import { HotelsService } from '../../../hotels/hotels.service';
+import { AirlinesService } from '../../../airlines/airlines.service';
+import { HotelReservation } from '../../../hotels/hotel-reservation.model';
+import { FlightBooking } from '../../../airlines/flight-booking.model';
+import { Airline } from '../../../airlines/airline.model';
+import { validateDate, filterLookup } from '../../../core/helpers/utils';
+import { Lookup } from '../../../core/models/lookup.model';
+import { LookupService } from '../../../core/services/lookup.service';
 
 @Component({
   selector: 'app-travel-services',
@@ -90,9 +90,9 @@ export class TravelServicesComponent implements OnInit {
   }
 
   populateCustomerFees() {
-    if (this.customer && this.customer.additionalFeeIds) {
-      this.customer.additionalFeeIds.forEach(feeId => {
-        var fee = this.fees.find(f => f.id == feeId);
+    if (this.customer && this.customer.additionalFees) {
+      this.customer.additionalFees.forEach(fee => {
+        var fee = this.fees.find(f => f.id == fee.id);
         if (fee) {
           fee.checked = true;
         }

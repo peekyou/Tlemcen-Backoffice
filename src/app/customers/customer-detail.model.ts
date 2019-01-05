@@ -2,10 +2,11 @@ import { Customer } from './customer.model';
 import { HotelReservation } from '../hotels/hotel-reservation.model';
 import { FlightBooking } from '../airlines/flight-booking.model';
 import { Payment } from '../payments/payment.model';
+import { Fee } from '../management/fees-management/fee.model';
 
 export class CustomerDetail extends Customer {
     payments?: Payment[];
-    additionalFeeIds?: string[];
+    additionalFees?: Fee[];
     hotelBookings?: HotelReservation[];
     flightBookings?: FlightBooking[];
 
@@ -14,6 +15,6 @@ export class CustomerDetail extends Customer {
         this.payments = [];
         this.hotelBookings = [];
         this.flightBookings = [];
-        this.additionalFeeIds = [];
+        this.additionalFees = [];
     }
 }

@@ -16,6 +16,7 @@ export class AirlineDialogComponent implements OnInit {
     loader: Subscription;
     loading = false;
     airline: Airline = new Airline();
+    isEdit = false;
 
     constructor(
       private service: AirlinesService,
@@ -25,6 +26,7 @@ export class AirlineDialogComponent implements OnInit {
       private dialog: MatDialog) {
           if (data && data.airline) {
             this.airline = data.airline;
+            this.isEdit = true;
           }
     }
 
@@ -42,13 +44,11 @@ export class AirlineDialogComponent implements OnInit {
 
     save() {
       this.loading = true;
-      var airline = new Airline();
-      airline.name = this.form.value.name;
-      airline.contactEmail = this.form.value.email;
-      airline.contactPhoneNumber = this.form.value.phone;
+      this.airline.name = this.form.value.name;
+      this.airline.contactEmail = this.form.value.email;
+      this.airline.contactPhoneNumber = this.form.value.phone;
       
-      this.loader = this.service
-          .createAirline(airline)
+      this.loader = this.saveAirline()
           .subscribe(
               res => {
                   this.loading = false;
@@ -56,6 +56,10 @@ export class AirlineDialogComponent implements OnInit {
               },
               err => this.loading = false
           );
+    }
+
+    saveAirline(): Observable<Airline> {
+        return this.isEdit ? this.service.updateAirline(this.airline) : this.service.createAirline(this.airline);
     }
 
     private customEmailValidator(control: AbstractControl): ValidationErrors {

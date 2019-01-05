@@ -29,7 +29,8 @@
             "styles": [
               "src/styles.scss",
               "node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
-              "src/assets/scss/material-dashboard.scss"
+              "src/assets/scss/material-dashboard.scss",
+              "node_modules/css-star-rating/scss/star-rating.scss"
             ],
             "scripts": [          
               // "node_modules/jquery/dist/jquery.js",

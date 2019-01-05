@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { RequestArgs } from "@angular/http/src/interfaces";
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { saveAs } from 'file-saver';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -27,13 +28,21 @@ export class HttpService {
             .pipe(catchError(this.handleError));
     }
 
-    getFile(resource: string): Observable<any> {
+    download(resource: string): Observable<any> {
         return this.http.get(this.apiHost + resource, { 
                 headers: this.headers,
                 observe: 'response', 
                 responseType: 'blob' 
             })
-            .pipe(map(r => r.body, catchError(this.handleError)));
+            .pipe(map(res => {
+                var fileName: string = null;
+                var contentDisposition = res.headers.get('Content-Disposition');
+                if (contentDisposition) {
+                    fileName = contentDisposition.split('=')[1];
+                    console.log(fileName)
+                }
+                return saveAs(res.body, fileName);
+            }, catchError(this.handleError)));
     }
 
     post(resource: string, data: any): Observable<any> {

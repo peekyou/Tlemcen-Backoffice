@@ -101,6 +101,17 @@ app-login, app-set-password, app-forget-password {
   }
 }
 
+.ro-star-rating {
+    .rating {
+        justify-content: start;
+        margin-bottom: 0;
+    }
+
+    .rating.disabled .star-container .star {
+        opacity: 1;
+    }
+}
+
 /* in-flight clone */
 .gu-mirror {
     position: fixed !important;

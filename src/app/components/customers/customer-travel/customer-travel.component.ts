@@ -84,15 +84,15 @@ export class CustomerTravelComponent implements OnInit {
 
   validate() {
     this.loading = true;
-    var additionalFeeIds = [];
+    var additionalFee = [];
     this.fees.forEach(f => {
       if (f.isServiceFee) {
-        additionalFeeIds.push(f.id);
+        additionalFee.push(f);
       }
     });
 
     var customer = this.customers[this.customerIndex];
-    customer.additionalFeeIds = additionalFeeIds;
+    customer.additionalFees = additionalFee;
     if (this.selectedRelationship) {
       customer.relationship = this.selectedRelationship.name;
     }

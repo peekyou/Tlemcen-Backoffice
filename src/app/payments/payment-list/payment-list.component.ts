@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material';
 
 import { PagingResponse } from '../../core/models/paging';
 import { Payment } from '../payment.model';
 import { PaymentService } from '../payment.service';
+import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component';
 
 @Component({
   selector: 'app-payment-list',
@@ -16,7 +18,7 @@ export class PaymentListComponent implements OnInit {
   itemsPerPage: number = 20;
   payments: PagingResponse<Payment>;
 
-  constructor(private service: PaymentService) {
+  constructor(private service: PaymentService, private dialog: MatDialog) {
     this.getPayments();
   }
 
@@ -36,5 +38,15 @@ export class PaymentListComponent implements OnInit {
   pageChanged(page) {
     this.currentPage = page;
     this.getPayments();
+  }
+
+  openPaymentDialog(payment: Payment) {
+    let dialogRef = this.dialog.open(PaymentDialogComponent, {
+      autoFocus: true,
+      width: '534px',
+      data: {
+        payment
+      }
+    });
   }
 }

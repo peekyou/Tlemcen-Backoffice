@@ -4,6 +4,30 @@
     <mat-form-field class="full-width">
       <input formControlName="name" matInput placeholder="{{ 'COMMON.NAME' | translate }}" required>
     </mat-form-field>
+    <div class="row">
+      <mat-form-field class="full-width col">
+        <input matInput [matDatepicker]="startDate" maxlength="10" (keypress)="validateDate($event)"
+          placeholder="Date de début" formControlName="startDate" required>
+        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+        <mat-datepicker #startDate></mat-datepicker>
+        <mat-error *ngIf="startDate.errors?.required && (startDate.dirty ||startDate.touched)">
+            {{ 'FORM.INVALID_DATE' | translate }}
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field class="full-width col">
+        <input matInput [matDatepicker]="endDate" maxlength="10" (keypress)="validateDate($event)"
+          placeholder="Date de fin" formControlName="endDate" required>
+        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+        <mat-datepicker #endDate></mat-datepicker>
+        <mat-error *ngIf="endDate.errors?.required && (endDate.dirty ||endDate.touched)">
+            {{ 'FORM.INVALID_DATE' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-form-field class="full-width">
+        <input formControlName="price" type="number" matInput placeholder="Prix en €" required>
+    </mat-form-field>
     <div class="pull-buttons-right">
       <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
         loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"

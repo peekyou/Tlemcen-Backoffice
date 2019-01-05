@@ -4,6 +4,7 @@ import { TranslationService } from './core/services/translation.service';
 import { LookupService } from './core/services/lookup.service';
 import { ToasterService } from './core/services/toaster.service';
 import { AuthService } from './auth/auth.service';
+import { DashboardService } from './dashboard/dashboard.service';
 import { CustomersService } from './customers/customers.service';
 import { HajjService } from './hajj/hajj.service';
 import { OmraService } from './omra/omra.service';
@@ -26,6 +27,7 @@ export const APP_PROVIDERS = [
     LookupService,
     ToasterService,
     AuthService,
+    DashboardService,
     CustomersService,
     HajjService,
     OmraService,

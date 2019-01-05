@@ -32,6 +32,7 @@ export class PaymentComponent implements OnInit {
       return this._customer;
   }
 
+  @Input() readOnly = false;
   @Input() fees: Fee[];
   @Input() travel: Travel;
   @Output() onChange: EventEmitter<any> = new EventEmitter();

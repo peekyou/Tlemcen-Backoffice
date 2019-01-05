@@ -11,4 +11,5 @@ export class FlightBooking {
     arrivalDate?: Date;
     customers? : Customer[];
     displayOrder?: number;
+    travelerCount?: number;
 }

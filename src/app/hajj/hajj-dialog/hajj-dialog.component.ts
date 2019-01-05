@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, Validators,  FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { validateDate } from '../../core/helpers/utils';
 
 import { HajjService } from '../hajj.service';
 
@@ -14,16 +15,20 @@ export class HajjDialogComponent implements OnInit {
   loading: boolean;
   form: FormGroup;
   saveSubscription: Subscription;
+  validateDate: Function;
 
   constructor(
     private fb: FormBuilder,
     private service: HajjService,
     public dialogRef: MatDialogRef<HajjDialogComponent>,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog) { 
+      this.validateDate = validateDate;
+    }
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: this.fb.control(new Date().getFullYear(), Validators.required),
+      startDate: this.fb.control(null, Validators.required),
+      endDate: this.fb.control(null, Validators.required),
       price: this.fb.control(null, Validators.required),
     });
   }
@@ -31,9 +36,11 @@ export class HajjDialogComponent implements OnInit {
   save() {
     this.loading = true;
     this.saveSubscription = this.service.createHajj({
-      name: this.form.value.name,
+      name: 'Hajj ' + this.form.value.startDate.year(),
+      startDate: this.form.value.startDate,
+      endDate: this.form.value.endDate,
       unitPrice: this.form.value.price,
-      status: 'En cours'
+      status: new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours'
     })
     .subscribe(
       res => {

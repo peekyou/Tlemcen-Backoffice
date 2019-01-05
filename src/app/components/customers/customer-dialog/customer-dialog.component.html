@@ -1,5 +1,10 @@
 <div mat-dialog-title>Nouveau client</div>
 <div mat-dialog-content>
-  <app-customer-form (onSave)="onSubmit($event)" (onCancel)="close()">
+  <app-customer-form (onSave)="onSubmit($event)" [submitSubscription]="saveSubscription" (onCancel)="close()">
   </app-customer-form>
 </div>
+<!-- <mat-dialog-actions align="end">
+    <button mat-raised-button type="submit" class="btn btn-info" 
+    >{{ 'COMMON.SAVE' | translate }}</button>
+    <button mat-raised-button mat-dialog-close class="btn btn-secondary">{{ 'COMMON.CANCEL' | translate }}</button>
+</mat-dialog-actions> -->

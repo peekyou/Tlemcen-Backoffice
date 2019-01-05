@@ -32,6 +32,10 @@ export class AirlinesService {
   createAirline(airline: Airline) : Observable<Airline> {
     return this.http.post(this.resource, airline);
   }
+
+  updateAirline(airline: Airline) : Observable<Airline> {
+    return this.http.put(this.resource + '/' + airline.id, airline);
+  }
   
   deleteAirline(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);

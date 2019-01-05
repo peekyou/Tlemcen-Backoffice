@@ -18,7 +18,7 @@
                                     <th>Reste à payer</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let payment of payments.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: payments?.paging?.totalCount }" [routerLink]="['/customers', payment.customer.id]">
+                                    <tr *ngFor="let payment of payments.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: payments?.paging?.totalCount }" (click)="openPaymentDialog(payment)">
                                         <td>{{ payment.createdDate | date:'dd/MM/yyyy' }}</td>
                                         <td>{{ payment.amountPaid }} €</td>
                                         <td><span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span></td>
@@ -27,7 +27,7 @@
                                           <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
                                           <span *ngIf="payment.status == 'R'" class="badge badge-warning">A rembourser</span>
                                         </td>
-                                        <td>{{ payment.fees - payment.amountPaid - payment.discount }} €</td>
+                                        <td>{{ payment.amount - payment.amountPaid - payment.discount }} €</td>
                                     </tr>
                                 </tbody>
                             </table>

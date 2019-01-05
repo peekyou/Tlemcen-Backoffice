@@ -6,6 +6,7 @@ import { PagingResponse } from '../../../core/models/paging';
 import { User } from '../user.model';
 import { UserService } from '../user.service';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
+import { DeleteDialogComponent } from '../../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-user-list',
@@ -49,9 +50,34 @@ export class UserListComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe((res: User) => {
-      this.currentPage = 1;
-      this.getUsers();
+    dialogRef.afterClosed().subscribe((user: User) => {
+      if (user) {
+        this.currentPage = 1;
+        this.getUsers();
+      }
+    });
+  }
+
+  openDeleteDialog(user: User) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: user.username }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.deleteUser(user.id)
+        .subscribe(
+          res => {
+            var index = this.users.data.indexOf(user);
+            if (index > -1) {
+                this.users.data.splice(index, 1);
+                this.users.paging.totalCount--;
+            }
+          },
+          err => console.log(err)
+        );
+      }
     });
   }
 }

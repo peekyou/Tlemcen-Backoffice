@@ -2,13 +2,12 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators, AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, forkJoin } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 
 import { LookupService } from '../../../core/services/lookup.service';
 import { Lookup } from '../../../core/models/lookup.model';
 import { Customer } from '../../../customers/customer.model';
-import { CustomersService } from '../../../customers/customers.service';
 import { validateDate, filterLookup } from '../../../core/helpers/utils';
 
 @Component({
@@ -19,8 +18,6 @@ import { validateDate, filterLookup } from '../../../core/helpers/utils';
 export class CustomerFormComponent implements OnInit {
     validateDate: Function;
     form: FormGroup;
-    loader: Subscription;
-    loading = false
     showCamera = false;
     filteredCities: Observable<Lookup[]>;
     filteredProfessions: Observable<Lookup[]>;
@@ -33,89 +30,42 @@ export class CustomerFormComponent implements OnInit {
     knewAgency: Lookup[] = [];
 
     @Input() customer: Customer = new Customer();
+    @Input() submitSubscription;
     @Output() onSave: EventEmitter<any> = new EventEmitter();
     @Output() onCancel: EventEmitter<any> = new EventEmitter();
 
     constructor(
         private fb: FormBuilder,
         private lookupService: LookupService,
-        private service: CustomersService,
         private router: Router) {
 
         this.validateDate = validateDate;
-        this.lookupService.fetchCountries('fr').subscribe(res => {
-            this.countries = res;
-            this.nationalities = res;
-        });
-        this.lookupService.fetchProfessions('fr').subscribe(res => {
-            this.professions = res;
-        });
-        this.lookupService.fetchCities('fr').subscribe(res => {
-            this.cities = res;
-        });
-        this.lookupService.fetchKnewAgency('fr').subscribe(res => {
-            this.knewAgency = res;
-        });
     }
 
     ngOnInit() {
-        this.form = this.fb.group({
-            gender: this.fb.control(this.customer.gender ? this.customer.firstname : 'M', Validators.required),
-            firstname: this.fb.control(this.customer.firstname, Validators.required),
-            lastname: this.fb.control(this.customer.lastname, Validators.required),
-            birthDate: this.fb.control(this.customer.birthDate, Validators.required),
-            mobile: this.fb.control(this.customer.mobileNumber),
-            phone: this.fb.control(this.customer.phoneNumber),
-            email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
-            birthCountry: this.fb.control(this.customer.birthCountryCode),
-            nationality: this.fb.control(this.customer.nationalityCode),
-            profession: this.fb.control(this.customer.profession),
-            address1: this.fb.control(this.customer.address.addressLine1),
-            cityZipCode: this.fb.control(null),
-            passportNumber: this.fb.control(this.customer.passportNumber),
-            passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
-            howKnewAgency: this.fb.control(this.customer.howKnewAgency),
+        this.initForm();
+        
+        forkJoin(
+            this.lookupService.fetchCountries('fr'),
+            this.lookupService.fetchProfessions('fr'),
+            this.lookupService.fetchCities('fr'),
+            this.lookupService.fetchKnewAgency('fr')
+        )
+        .subscribe(res => {
+            this.countries = res[0];
+            this.nationalities = res[0];
+            this.professions = res[1];
+            this.cities = res[2];
+            this.knewAgency = res[3];
+            this.patchLookups();
         });
-
-        this.filteredNationalities = this.nationality.valueChanges
-            .pipe(
-                startWith(''),
-                debounceTime(200),
-                distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? filterLookup(option, this.nationalities) : [])
-            );
-
-        this.filteredCountries = this.birthCountry.valueChanges
-            .pipe(
-                startWith(''),
-                debounceTime(200),
-                distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? filterLookup(option, this.countries) : [])
-            );
-
-        this.filteredProfessions = this.profession.valueChanges
-            .pipe(
-                startWith(''),
-                debounceTime(200),
-                distinctUntilChanged(),
-                map(option => option && option.length >= 2 ? filterLookup(option, this.professions) : [])
-            );
-
-        this.filteredCities = this.cityZipCode.valueChanges
-            .pipe(
-                startWith(''),
-                debounceTime(200),
-                distinctUntilChanged(),
-                map(option => option && option.length >= 3 ? filterLookup(option, this.cities) : [])
-            );
     }
 
     cancel() {
         this.onCancel.emit(this.customer);
     }
 
-    saveUser() {
-        this.loading = true;
+    save() {
         var newCustomer = new Customer();
         newCustomer.gender = this.form.value.gender;
         newCustomer.firstname = this.form.value.firstname;
@@ -130,19 +80,12 @@ export class CustomerFormComponent implements OnInit {
         newCustomer.passportExpiryDate = this.form.value.passportExpiryDate;
         newCustomer.nationalityCode = this.form.value.nationality ? this.form.value.nationality.id : null;
         newCustomer.profession = this.form.value.profession ? this.form.value.profession.name : null;
-		var cityZipCode = this.getCityZipCode(this.form.value.cityZipCode);
-		newCustomer.address.city = cityZipCode[0];
-		newCustomer.address.zipCode = cityZipCode[1];
+		var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
+		newCustomer.address.city = cityPostalCode[0];
+		newCustomer.address.postalCode = cityPostalCode[1];
 		newCustomer.address.addressLine1 = this.form.value.address1;
+		newCustomer.address.country.id = 'FR';
         
-        this.loader = this.service
-            .createCustomer(newCustomer)
-            .subscribe(
-                res => {
-                    this.loading = false;
-                },
-                err => this.loading = false
-            );
 		this.onSave.emit(newCustomer);
     }
 
@@ -170,7 +113,72 @@ export class CustomerFormComponent implements OnInit {
     }
 
     displayFn(val: Lookup) {
+        if (typeof val === 'string') {
+            var l = this.nationalities ? this.nationalities.find(a => a.id == val) : null;
+            return l ? l.name : val;
+        }
         return val ? val.name : val;
+    }
+
+    private initForm() {
+        this.form = this.fb.group({
+            gender: this.fb.control(this.customer.gender ? this.customer.gender : 'M', Validators.required),
+            firstname: this.fb.control(this.customer.firstname, Validators.required),
+            lastname: this.fb.control(this.customer.lastname, Validators.required),
+            birthDate: this.fb.control(this.customer.birthDate, Validators.required),
+            mobile: this.fb.control(this.customer.mobileNumber),
+            phone: this.fb.control(this.customer.phoneNumber),
+            email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
+            birthCountry: this.fb.control(this.customer.birthCountryCode),
+            nationality: this.fb.control(this.customer.nationalityCode),
+            profession: this.fb.control(this.customer.profession),
+            address1: this.fb.control(this.customer.address.addressLine1),
+            cityPostalCode: this.fb.control(null),
+            passportNumber: this.fb.control(this.customer.passportNumber),
+            passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
+            howKnewAgency: this.fb.control(null),
+        });
+
+        this.filteredNationalities = this.nationality.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? filterLookup(option, this.nationalities) : [])
+            );
+
+        this.filteredCountries = this.birthCountry.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? filterLookup(option, this.countries) : [])
+            );
+
+        this.filteredProfessions = this.profession.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? filterLookup(option, this.professions) : [])
+            );
+
+        this.filteredCities = this.cityPostalCode.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 3 ? filterLookup(option, this.cities) : [])
+            );
+    }
+
+    private patchLookups() {
+        if (this.customer && this.customer.howKnewAgency) {
+            var knewAgency = this.knewAgency.find(a => a.name == this.customer.howKnewAgency);
+            this.form.patchValue({
+                howKnewAgency: knewAgency.id
+            });
+        }
     }
 
     private customEmailValidator(control: AbstractControl): ValidationErrors {
@@ -180,17 +188,17 @@ export class CustomerFormComponent implements OnInit {
         return Validators.email(control);
     }
 
-    private getCityZipCode(value: Lookup) {
+    private getcityPostalCode(value: Lookup) {
         var city = null;
-        var zipCode = null;
+        var postalCode = null;
         if (value && value.id) {
             city = value.id;
-            zipCode = value.name.split(' - ')[0];
+            postalCode = value.name.split(' - ')[0];
         }
-        return [city, zipCode];
+        return [city, postalCode];
     }
   
-    get cityZipCode() { return this.form.get('cityZipCode'); }
+    get cityPostalCode() { return this.form.get('cityPostalCode'); }
     get birthCountry() { return this.form.get('birthCountry'); }
     get nationality() { return this.form.get('nationality'); }
     get profession() { return this.form.get('profession'); }

@@ -2,53 +2,53 @@
   <div mat-dialog-content>
     <form [formGroup]="form" (ngSubmit)="form.valid && submit()">
       <div class="row">
-          <div class="col">
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.USERNAME' | translate }}" formControlName="username" [readonly]="isEdit" required>
-            </mat-form-field>
-            <mat-form-field class="full-width" *ngIf="isEdit">
-                <input matInput type="password" placeholder="{{ 'COMMON.PASSWORD' | translate }}" formControlName="password" [required]="!isEdit" />
-            </mat-form-field>
-            <mat-form-field class="full-width" *ngIf="isEdit">
-                <input matInput type='password' placeholder="{{ 'COMMON.PASSWORD_CONFIRMATION' | translate }}" formControlName="passwordConfirmation" [required]="!isEdit" >
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.FIRSTNAME' | translate }}" formControlName="firstname" required>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.LASTNAME' | translate }}" formControlName="lastname" required>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email" required>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.STATUS' | translate }}" formControlName="status">
-            </mat-form-field>
-            <div class="row invalid-field" *ngIf="form.errors">{{ form.errors?.passwords | json }}</div>
-          </div>
-          <div class="col">
-            <label>Permissions</label>
-            <div formArrayName="permissions">
-                <div class="form-check" *ngFor="let permission of permissions; let i = index">
-                    <label class="form-check-label" formGroupName="{{i}}">
-                    <mat-checkbox (change)="onPermissionChange(permission, $event.target.checked)" formControlName="{{permission.id}}"></mat-checkbox>
-                        {{permission.resourceKey}}
-                    </label>
-                </div>
+        <mat-form-field class="col">
+            <input matInput placeholder="{{ 'COMMON.USERNAME' | translate }}" formControlName="username" [readonly]="isEdit" required>
+        </mat-form-field>
+        <mat-form-field class="col">
+            <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email" required>
+        </mat-form-field>
+      </div>
+      <div class="row" *ngIf="isEdit">
+        <mat-form-field class="col">
+            <input matInput type="password" placeholder="{{ 'COMMON.PASSWORD' | translate }}" formControlName="password" [required]="!isEdit" />
+        </mat-form-field>
+        <mat-form-field class="col">
+            <input matInput type='password' placeholder="{{ 'COMMON.PASSWORD_CONFIRMATION' | translate }}" formControlName="passwordConfirmation" [required]="!isEdit" >
+        </mat-form-field>
+      </div>
+      <div class="row invalid-field" *ngIf="form.errors">{{ form.errors?.passwords | json }}</div>
+      <div class="row">
+        <mat-form-field class="col">
+            <input matInput placeholder="{{ 'COMMON.FIRSTNAME' | translate }}" formControlName="firstname" required>
+        </mat-form-field>
+        <mat-form-field class="col">
+            <input matInput placeholder="{{ 'COMMON.LASTNAME' | translate }}" formControlName="lastname" required>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <mat-form-field class="col">
+            <input matInput placeholder="Position" formControlName="position">
+        </mat-form-field>
+    </div>
+    <div class="row col">
+        <label>Permissions</label>
+    </div>
+    <div class="row" formArrayName="permissions">
+        <div  class="col-md-4 col-12" *ngFor="let role of roles; let i = index">
+            <div formGroupName="{{i}}">
+                <mat-checkbox (change)="onRoleChange(role, $event.checked)" formControlName="{{role.id}}">
+                    {{role.name}}
+                </mat-checkbox>
             </div>
-          </div>
-      </div>
-      
-      <div class="pull-buttons-right">
-          <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
-              loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
-              [subscription]="saveSubscription">
-          </app-submit-button>
-          <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
-          
-          <button *ngIf="isEdit" type="button" (click)="openDeleteModal()" class="btn btn-danger">
-              {{ 'COMMON.DELETE' | translate }}
-          </button>
-      </div>
+        </div>
+    </div>
+    <div class="pull-buttons-right">
+        <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+            loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+            [subscription]="saveSubscription">
+        </app-submit-button>
+        <button mat-raised-button type="button" class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
   </form>
 </div>

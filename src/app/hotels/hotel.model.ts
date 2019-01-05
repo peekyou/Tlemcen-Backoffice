@@ -7,7 +7,7 @@ export class Hotel {
     roomsCount?: number;
     contactEmail?: string;
     contactPhoneNumber?: string;
-    category?: string;
+    category?: number;
     address?: Address;
     expanded?: boolean;
 }

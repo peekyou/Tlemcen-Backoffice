@@ -14,17 +14,22 @@
                     <table class="table table-hover">
                         <thead class="text-warning">
                             <th>Nom</th>
-                            <th>Chambres</th>
+                            <th>Catégorie</th>
                             <th>Téléphone</th>
-                            <th>Adresse</th>
+                            <!-- <th>Adresse</th> -->
                             <th></th>
                         </thead>
                         <tbody>
                             <tr *ngFor="let hotel of hotels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hotels?.paging?.totalCount }" (click)="openHotelDialog(hotel)">
                             <td>{{ hotel.name }}</td>
-                            <td>{{ hotel.roomsCount }}</td>
+                            <td>
+                                <star-rating-control class="ro-star-rating" *ngIf="hotel.category" staticColor="ok" 
+                                    starType="svg" size="medium" [disabled]="true" 
+                                    [numOfStars]="hotel.category" [rating]="hotel.category">
+                                </star-rating-control>
+                            </td>
                             <td>{{ hotel.contactPhoneNumber }}</td>
-                            <td></td>
+                            <!-- <td></td> -->
                             <td>
                                 <button mat-icon-button (click)="openDeleteDialog(hotel);$event.stopPropagation()">
                                     <mat-icon class="text-danger">delete</mat-icon>

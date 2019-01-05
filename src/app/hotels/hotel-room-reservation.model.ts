@@ -9,6 +9,8 @@ export class HotelRoomReservation {
     customers?: Customer[];
     isValidated?: boolean;
     displayOrder?: number;
+    fromDate?: Date;
+    toDate?: Date;
 
     static getAvailableSpace(reservation: HotelRoomReservation): number {
         if (reservation && reservation.roomType) {

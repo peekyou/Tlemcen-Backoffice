@@ -5,7 +5,7 @@
                 <div *ngIf="!isEditing" class="card card-profile">
                     <div class="card-body">
                         <div class="card-avatar">
-                            <img class="img" src="../assets/img/faces/marc.jpg" />
+                            <img class="img" src="../assets/images/faces/marc.jpg" />
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">{{ customer.firstname }} {{ customer.lastname }}</h4>
@@ -46,12 +46,12 @@
                                     <b>Nationalité :</b> {{ customer.nationality }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Comment connu l'agence :</b> {{ customer.howKnewAgency }}
+                                    <b>Connu l'agence par :</b> {{ customer.howKnewAgency }}
                                 </div>
                             </div>
                             <div class="row" *ngIf="customer.address">
                                 <div class="col-12">
-                                    <b>Addresse :</b> {{ customer.address.addressLine1 }} {{ customer.address.zipCode }} {{ customer.address.city }}
+                                    <b>Addresse :</b> {{ customer.address.addressLine1 }} {{ customer.address.postalCode }} {{ customer.address.city }}
                                 </div>
                             </div>
                         </div>

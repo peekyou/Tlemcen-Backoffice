@@ -28,6 +28,10 @@ export class HotelsService {
   createHotel(hotel: Hotel) : Observable<Hotel> {
     return this.http.post(this.resource, hotel);
   }
+
+  updateHotel(hotel: Hotel) : Observable<Hotel> {
+    return this.http.put(this.resource + '/' + hotel.id, hotel);
+  }
   
   deleteHotel(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);

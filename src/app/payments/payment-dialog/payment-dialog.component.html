@@ -1,0 +1,10 @@
+<!-- <mat-dialog-title>Nouvelle Omra</mat-dialog-title> -->
+<mat-dialog-content>
+  <app-spinner [loader]="loader"></app-spinner>
+  <app-payment *ngIf="customerTravel" [fees]="fees" [customer]="customerTravel.customer" 
+    [travel]="customerTravel.travel" [readOnly]="true">
+  </app-payment>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="btn btn-secondary" (click)="close()">{{ 'COMMON.CLOSE' | translate }}</button>
+</mat-dialog-actions>

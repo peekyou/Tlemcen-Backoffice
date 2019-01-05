@@ -77,6 +77,10 @@ export class TravelService {
   }
   
   downloadTravelerContract(travelId: string, travelerId: string): Observable<CustomerTravel> {
-    return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '/contract');
+    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/contract');
+  }
+  
+  downloadAirlineFile(travelId: string, airlineId: string): Observable<CustomerTravel> {
+    return this.http.download(this.resource + '/' + travelId + '/airlines/' + airlineId + '/file');
   }
 }

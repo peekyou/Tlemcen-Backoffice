@@ -1,0 +1,19 @@
+.hotel-category {
+    display: inline-flex;
+    
+    label {
+        color: rgba(0,0,0,.54);
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .hotel-category {
+        margin-top: 21px;
+    }
+}
+@media (max-width: 767px) {
+    .hotel-category {
+        margin-top: 10px;
+    }
+}

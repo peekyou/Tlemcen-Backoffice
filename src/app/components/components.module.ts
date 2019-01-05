@@ -20,10 +20,11 @@ import { SubmitButtonComponent } from './common/submit-button/submit-button.comp
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
 import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
 import { SpinnerComponent } from './common/spinner/spinner.component';
-import { TravelServicesComponent } from './travel-services/travel-services.component';
+import { TravelServicesComponent } from './travels/travel-services/travel-services.component';
 import { CustomerTravelComponent } from './customers/customer-travel/customer-travel.component';
 import { FlightBookingComponent } from './airlines/flight-booking/flight-booking.component';
 import { FlightBookingDialogComponent } from './airlines/flight-booking-dialog/flight-booking-dialog.component';
+import { TravelDetailComponent } from './travels/travel-detail/travel-detail.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -56,6 +57,7 @@ const MODALS = [
     TravelServicesComponent,
     CustomerTravelComponent,
     FlightBookingComponent,
+    TravelDetailComponent,
     ...MODALS,
   ],
   exports: [
@@ -72,6 +74,8 @@ const MODALS = [
     PaymentComponent,
     TravelServicesComponent,
     CustomerTravelComponent,
+    FlightBookingComponent,
+    TravelDetailComponent,
     ...MODALS
   ],
   entryComponents: MODALS

@@ -1,4 +1,7 @@
-<div mat-dialog-title>Nouvelle compagnie</div>
+<div mat-dialog-title>
+    <span *ngIf="!isEdit">Nouvelle compagnie</span>
+    <span *ngIf="isEdit">{{ airline.name }}</span>
+</div>
 <div mat-dialog-content>
     <form [formGroup]="form">
       <div>
@@ -18,7 +21,7 @@
           <div class="pull-right">
             <button mat-raised-button type="submit" class="btn btn-info" (click)="save()"
                     [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
-             <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+             <button mat-raised-button type="button" class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
           </div>
       </form>
 </div>

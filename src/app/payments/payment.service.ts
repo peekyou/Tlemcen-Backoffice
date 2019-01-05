@@ -9,11 +9,6 @@ import { PagingResponse } from '../core/models/paging';
 export class PaymentService {
   resource = 'payments';
 
-  // payments: Payment[] = [
-  //   { id: '1', status: 'P', amountPaid: 1252, fees:1252, discount: 0, date: new Date(2018, 1, 2), payment: { id: '1', gender: 'M', firstname: 'Pierre', lastname: 'Paul', birthDate: new Date(1977, 1, 2), mobileNumber: '0665491705', email: 'pierre.paul@mail.fr' }},
-  //   { id: '2', status: 'I', amountPaid: 1000, fees:1252, discount: 0, date: new Date(2018, 1, 2), payment: { id: '2', gender: 'M', firstname: 'Hamim', lastname: 'Ahmed', birthDate: new Date(1952, 1, 2), mobileNumber: '0667777777', email: 'hamim.ahmed@mail.fr' }},
-  // ];
-
   constructor(private http: AuthHttpService) { }
   
   getPayments(page: number = null, count: number = null): Observable<PagingResponse<Payment>> {

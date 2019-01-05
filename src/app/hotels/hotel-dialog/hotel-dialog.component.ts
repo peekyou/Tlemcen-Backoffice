@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { Hotel } from '../hotel.model';
 import { HotelsService } from '../hotels.service';
@@ -16,6 +16,7 @@ export class HotelDialogComponent implements OnInit {
     loader: Subscription;
     loading = false;
     hotel: Hotel = new Hotel();
+    isEdit = false;
 
     constructor(
       private service: HotelsService,
@@ -25,12 +26,14 @@ export class HotelDialogComponent implements OnInit {
       private dialog: MatDialog) {
           if (data && data.hotel) {
             this.hotel = data.hotel;
+            this.isEdit = true;
           }
     }
 
     ngOnInit() {
         this.form = this.fb.group({
             name: this.fb.control(this.hotel.name, Validators.required),
+            category: this.fb.control(this.hotel.category || ''),
             phone: this.fb.control(this.hotel.contactPhoneNumber),
             email: this.fb.control(this.hotel.contactEmail, (c) => this.customEmailValidator(c)),
             roomsCount: this.fb.control(this.hotel.roomsCount)
@@ -43,14 +46,13 @@ export class HotelDialogComponent implements OnInit {
 
     saveHotel() {
       this.loading = true;
-      var hotel = new Hotel();
-      hotel.name = this.form.value.name;
-      hotel.roomsCount = this.form.value.roomsCount;
-      hotel.contactEmail = this.form.value.email;
-      hotel.contactPhoneNumber = this.form.value.phone;
+      this.hotel.name = this.form.value.name;
+      this.hotel.category = this.form.value.category;
+      this.hotel.roomsCount = this.form.value.roomsCount;
+      this.hotel.contactEmail = this.form.value.email;
+      this.hotel.contactPhoneNumber = this.form.value.phone;
       
-      this.loader = this.service
-          .createHotel(hotel)
+      this.loader = this.save()
           .subscribe(
               res => {
                   this.loading = false;
@@ -58,6 +60,10 @@ export class HotelDialogComponent implements OnInit {
               },
               err => this.loading = false
           );
+    }
+
+    private save() : Observable<Hotel> {
+        return this.isEdit ? this.service.updateHotel(this.hotel) : this.service.createHotel(this.hotel);
     }
 
     private customEmailValidator(control: AbstractControl): ValidationErrors {

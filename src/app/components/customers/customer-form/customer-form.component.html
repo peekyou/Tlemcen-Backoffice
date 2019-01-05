@@ -41,7 +41,7 @@
             <mat-form-field class="full-width">
                 <input matInput placeholder="Pays de naissance"
                     autoClose [control]="birthCountry" formControlName="birthCountry" [matAutocomplete]="autoBirthCountry">
-                <mat-autocomplete #autoBirthCountry="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #autoBirthCountry="matAutocomplete" [displayWith]="displayFn.bind(this)">
                     <mat-option *ngFor="let option of filteredCountries | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
@@ -61,7 +61,7 @@
             <mat-form-field class="full-width">
                 <input matInput placeholder="Nationalité"
                     autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="autoNationality">
-                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn.bind(this)">
                     <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
@@ -70,16 +70,19 @@
             <mat-form-field class="full-width">
                 <input matInput placeholder="Profession"
                     autoClose [control]="profession" formControlName="profession" [matAutocomplete]="autoProfession">
-                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn.bind(this)">
                     <mat-option *ngFor="let option of filteredProfessions | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
             <mat-form-field class="full-width">
+                <input matInput placeholder="{{ 'COMMON.STREET' | translate }}" formControlName="address1">
+            </mat-form-field>
+            <mat-form-field class="full-width">
                 <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}"
-                    autoClose [control]="cityZipCode" formControlName="cityZipCode" [matAutocomplete]="autoCity">
-                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn">
+                    autoClose [control]="cityPostalCode" formControlName="cityPostalCode" [matAutocomplete]="autoCity">
+                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn.bind(this)">
                     <mat-option *ngFor="let option of filteredCities | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
@@ -87,7 +90,7 @@
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-select placeholder="A connu l'agence" formControlName="howKnewAgency">
-                    <mat-option *ngFor="let option of knewAgency" [value]="option">
+                    <mat-option *ngFor="let option of knewAgency" [value]="option.id">
                         {{ option.name }}
                     </mat-option>
                 </mat-select>
@@ -96,8 +99,10 @@
     </div>
     </div>
     <div class="pull-right">
-      <button mat-raised-button type="submit" class="btn btn-info" (click)="saveUser()"
-              [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
+        <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+            loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+            [subscription]="submitSubscription" (click)="save()">
+        </app-submit-button>
        <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
 </form>

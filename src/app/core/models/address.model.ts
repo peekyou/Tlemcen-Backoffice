@@ -5,7 +5,11 @@ export class Address {
     state?: string;
     city?: string;
     area?: string;
-    zipCode?: string;
+    postalCode?: string;
     addressLine1?: string;
     addressLine2?: string;
+
+    constructor() {
+        this.country = {};
+    }
 }

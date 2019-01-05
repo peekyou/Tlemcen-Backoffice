@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
+import * as moment from 'moment';
+
+import { Dashboard } from './dashboard.model';
+import { DashboardService } from './dashboard.service';
+import { SearchFilter } from '../core/models/search-filter.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,144 +12,165 @@ import * as Chartist from 'chartist';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  Math;
+  model: Dashboard = new Dashboard();
+  activeTab = 1;
 
-  constructor() { }
-  startAnimationForLineChart(chart){
-      let seq: any, delays: any, durations: any;
-      seq = 0;
-      delays = 80;
-      durations = 500;
+  month = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
-      chart.on('draw', function(data) {
-        if(data.type === 'line' || data.type === 'area') {
-          data.element.animate({
-            d: {
-              begin: 600,
-              dur: 700,
-              from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-              to: data.path.clone().stringify(),
-              easing: Chartist.Svg.Easing.easeOutQuint
-            }
-          });
-        } else if(data.type === 'point') {
-              seq++;
-              data.element.animate({
-                opacity: {
-                  begin: seq * delays,
-                  dur: durations,
-                  from: 0,
-                  to: 1,
-                  easing: 'ease'
-                }
-              });
-          }
-      });
-
-      seq = 0;
+  dailyRevenuesChart = {
+    labels: [],
+    series: []
   };
-  startAnimationForBarChart(chart){
-      let seq2: any, delays2: any, durations2: any;
 
-      seq2 = 0;
-      delays2 = 80;
-      durations2 = 500;
-      chart.on('draw', function(data) {
-        if(data.type === 'bar'){
-            seq2++;
+  monthlyCustomerChart = {
+    labels: [],
+    series: []
+  };
+
+  constructor(private service: DashboardService) {
+    this.Math = Math;
+  }
+
+  ngOnInit() {
+    var startDay = moment().startOf('day').toDate();
+    var endDay = moment().endOf('day').toDate();
+    var lastYear = moment().subtract(1,'year').startOf('day').toDate();
+    var lastWeek = moment().subtract(1,'week').startOf('day').toDate();
+
+    this.service.getCustomerCount(new SearchFilter(startDay, endDay))
+      .subscribe(res => this.model.customerCount = res);
+
+    this.service.getRevenuesAmount(new SearchFilter(lastYear, endDay))
+      .subscribe(res => this.model.revenues = res);
+      
+    this.service.getIncompletePaymentsCount()
+      .subscribe(res => this.model.incompletePaymentsCount = res);
+    
+    this.service.getDailyRevenues(new SearchFilter(lastWeek, endDay))
+      .subscribe(res => {
+        this.model.dailyRevenues = res;
+        var maxValue = 0;
+        var ratio = 1000;
+        var serie = [];
+        for (var i = 0; i < res.length; i++) {
+          var x = res[i];
+          this.dailyRevenuesChart.labels.push(moment(x.date).format('dd'));
+          serie.push(x.revenues / ratio);
+          maxValue = Math.max(maxValue, x.revenues / ratio);
+        }
+        this.model.dayVariation = (serie[serie.length -1] - serie[serie.length -2]) / serie[serie.length -2];
+        this.dailyRevenuesChart.series.push(serie);
+
+        var optionsDailySalesChart: any = {
+          lineSmooth: Chartist.Interpolation.cardinal({
+              tension: 0
+          }),
+          low: 0,
+          high: maxValue + 50,
+          chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
+        };
+        var dailySalesChart = new Chartist.Line('#dailySalesChart', this.dailyRevenuesChart, optionsDailySalesChart);
+        this.startAnimationForLineChart(dailySalesChart);
+      });
+      
+    this.service.getMonthlyCustomerCount(null)
+      .subscribe(res => {
+        this.model.monthlyCustomerCount = res;
+        var serie = [];
+        var maxValue = 0;
+        res.forEach(x => {
+          this.monthlyCustomerChart.labels.push(this.month[x.monthOfYear - 1]);
+          serie.push(x.customerCount);
+          maxValue = Math.max(maxValue, x.customerCount);
+        });
+        this.monthlyCustomerChart.series.push(serie);
+        
+        var optionswebsiteViewsChart = {
+            axisX: {
+                showGrid: false
+            },
+            low: 0,
+            high: maxValue + 10,
+            chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
+        };
+        var responsiveOptions: any[] = [
+          ['screen and (max-width: 640px)', {
+            seriesBarDistance: 5,
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value[0];
+              }
+            }
+          }]
+        ];
+        var websiteViewsChart = new Chartist.Bar('#websiteViewsChart', this.monthlyCustomerChart, optionswebsiteViewsChart, responsiveOptions);
+        this.startAnimationForBarChart(websiteViewsChart);
+      });
+      
+    this.service.getFlightsOnArrival()
+      .subscribe(res => this.model.flightsOnArrival = res);
+      
+    this.service.getFlightsOnDeparture()
+      .subscribe(res => this.model.flightsOnDeparture = res);
+      
+    this.service.getHotelBookings()
+      .subscribe(res => this.model.hotelBookings = res);
+  }
+
+  startAnimationForLineChart(chart){
+    let seq: any, delays: any, durations: any;
+    seq = 0;
+    delays = 80;
+    durations = 500;
+
+    chart.on('draw', function(data) {
+      if(data.type === 'line' || data.type === 'area') {
+        data.element.animate({
+          d: {
+            begin: 600,
+            dur: 700,
+            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+            to: data.path.clone().stringify(),
+            easing: Chartist.Svg.Easing.easeOutQuint
+          }
+        });
+      } else if(data.type === 'point') {
+            seq++;
             data.element.animate({
               opacity: {
-                begin: seq2 * delays2,
-                dur: durations2,
+                begin: seq * delays,
+                dur: durations,
                 from: 0,
                 to: 1,
                 easing: 'ease'
               }
             });
         }
-      });
+    });
+    seq = 0;
+};
 
-      seq2 = 0;
-  };
-  ngOnInit() {
-      /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+startAnimationForBarChart(chart){
+    let seq2: any, delays2: any, durations2: any;
+    seq2 = 0;
+    delays2 = 80;
+    durations2 = 500;
 
-      const dataDailySalesChart: any = {
-          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-          series: [
-              [12, 17, 7, 17, 23, 18, 38]
-          ]
-      };
-
-     const optionsDailySalesChart: any = {
-          lineSmooth: Chartist.Interpolation.cardinal({
-              tension: 0
-          }),
-          low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
-      }
-
-      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
-
-      this.startAnimationForLineChart(dailySalesChart);
-
-
-      /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
-
-      const dataCompletedTasksChart: any = {
-          labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
-          series: [
-              [230, 750, 450, 300, 280, 240, 200, 190]
-          ]
-      };
-
-     const optionsCompletedTasksChart: any = {
-          lineSmooth: Chartist.Interpolation.cardinal({
-              tension: 0
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: { top: 0, right: 0, bottom: 0, left: 0}
-      }
-
-      var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
-
-      // start animation for the Completed Tasks Chart - Line Chart
-      this.startAnimationForLineChart(completedTasksChart);
-
-
-
-      /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
-
-      var datawebsiteViewsChart = {
-        labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-        series: [
-          [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
-        ]
-      };
-      var optionswebsiteViewsChart = {
-          axisX: {
-              showGrid: false
-          },
-          low: 0,
-          high: 1000,
-          chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
-      };
-      var responsiveOptions: any[] = [
-        ['screen and (max-width: 640px)', {
-          seriesBarDistance: 5,
-          axisX: {
-            labelInterpolationFnc: function (value) {
-              return value[0];
+    chart.on('draw', function(data) {
+      if(data.type === 'bar'){
+          seq2++;
+          data.element.animate({
+            opacity: {
+              begin: seq2 * delays2,
+              dur: durations2,
+              from: 0,
+              to: 1,
+              easing: 'ease'
             }
-          }
-        }]
-      ];
-      var websiteViewsChart = new Chartist.Bar('#websiteViewsChart', datawebsiteViewsChart, optionswebsiteViewsChart, responsiveOptions);
-
-      //start animation for the Emails Subscription Chart
-      this.startAnimationForBarChart(websiteViewsChart);
-  }
-
+          });
+      }
+    });
+    seq2 = 0;
+  };
 }

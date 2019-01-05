@@ -18,6 +18,7 @@ import { CustomerDetail } from '../../../customers/customer-detail.model';
   styleUrls: ['./flight-booking.component.scss']
 })
 export class FlightBookingComponent implements OnInit {
+  loader: Subscription;
   form: FormGroup;
   flightFees: Fee[] = [];
   airlines: Airline[];
@@ -72,7 +73,7 @@ export class FlightBookingComponent implements OnInit {
     this.initForm();
     this.initAutocompletes();
 
-    forkJoin(
+    this.loader = forkJoin(
       this.airlineService.getAirlines(null, null),
       this.lookupService.fetchAirports('fr')
     )
@@ -125,7 +126,6 @@ export class FlightBookingComponent implements OnInit {
     });
 
     this.form.valueChanges.subscribe(data => {
-      console.log(data)
       this.setFlightsFees(data);
       this.emitChanges();
     });

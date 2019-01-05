@@ -19,7 +19,7 @@
             <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
         </div>
 
-        <mat-form-field>
+        <mat-form-field *ngIf="!readOnly">
             <input type='number' matInput min="0" placeholder="Accorder une remise" formControlName="discount">
         </mat-form-field>
 
@@ -31,7 +31,7 @@
             <div class="col">A REMBOURSER</div>
             <div class="col">{{ getAmountToRefund() }}€</div>
         </div>
-        <mat-form-field>
+        <mat-form-field *ngIf="!readOnly">
             <input type='number' matInput min="0" [max]="calculateTotal()" placeholder="Paiement en €" formControlName="amount">
         </mat-form-field>
     </div>

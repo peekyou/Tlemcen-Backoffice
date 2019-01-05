@@ -7,9 +7,10 @@ import { OmraDetailComponent } from './omra-detail/omra-detail.component';
 import { OmraListComponent } from './omra-list/omra-list.component';
 import { OmraRoomsPlanComponent } from './omra-rooms-plan/omra-rooms-plan.component';
 import { OmraDialogComponent } from './omra-dialog/omra-dialog.component';
+import { OmraAddCustomersComponent } from './omra-add-customers/omra-add-customers.component';
 
 @NgModule({
-  declarations: [OmraDetailComponent, OmraListComponent, OmraRoomsPlanComponent, OmraDialogComponent],
+  declarations: [OmraDetailComponent, OmraListComponent, OmraRoomsPlanComponent, OmraDialogComponent, OmraAddCustomersComponent],
   imports: [
     SharedModule,
     ComponentsModule,

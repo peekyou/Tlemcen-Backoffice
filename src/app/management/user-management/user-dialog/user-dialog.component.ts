@@ -1,11 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { UserService } from '../user.service';
-import { User, Permission } from '../user.model';
-import { ToasterService } from '../../../core/services/toaster.service';
+import { User, Role, Permission } from '../user.model';
 
 @Component({
   selector: 'app-user-dialog',
@@ -13,16 +12,15 @@ import { ToasterService } from '../../../core/services/toaster.service';
   styleUrls: ['./user-dialog.component.scss']
 })
 export class UserDialogComponent implements OnInit {
-  user: User;
+  user: User = new User();
   form: FormGroup;
-  permissions: Permission[];
-  isEdit: boolean;
+  roles: Role[];
+  isEdit: boolean = false;
   saveSubscription: Subscription;
 
   constructor(
     private service: UserService,
     private fb: FormBuilder,
-    public toasterService: ToasterService,
     public dialogRef: MatDialogRef<UserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog) {
@@ -30,9 +28,6 @@ export class UserDialogComponent implements OnInit {
       if (data && data.user) {
         this.user = data.user;
         this.isEdit = true;
-      }
-      else {
-        this.user = new User();
       }
     }
 
@@ -44,12 +39,12 @@ export class UserDialogComponent implements OnInit {
       firstname: [this.user.firstname, Validators.required],
       lastname: [this.user.lastname, Validators.required],
       email: [this.user.email, Validators.email],
-      status: [this.user.status],
+      position: [this.user.position],
       permissions: this.fb.array([]),
       userPermissions: this.fb.array([])
     }, { validator: this.areEqual('password', 'passwordConfirmation') });
 
-    this.getPermissions(<FormArray>this.form.controls.permissions);
+    this.getRoles(<FormArray>this.form.controls.permissions);
   }
 
   areEqual(field1: string, field2: string) {
@@ -65,12 +60,12 @@ export class UserDialogComponent implements OnInit {
     }
   }
 
-  getPermissions(formArray: FormArray) {
+  getRoles(formArray: FormArray) {
     this.service
-      .getPermissions()
+      .getRoles()
       .subscribe(p => {
-          this.permissions = p;
-          this.permissions.forEach(permission => {
+          this.roles = p;
+          this.roles.forEach(permission => {
               let fg = new FormGroup({});
               fg.addControl(permission.id, new FormControl(false))
               formArray.push(fg);
@@ -84,59 +79,57 @@ export class UserDialogComponent implements OnInit {
 
   setPermissionsControls(permisionsControl: FormArray, userPermissionsControl: FormArray) {
     if (permisionsControl && userPermissionsControl) {
-        this.user.permissions.forEach(permission => {
+        this.user.roles.forEach(role => {
             var c = permisionsControl.controls.find((x: FormGroup) => {
-                return x.get(permission) != null;
+                return x.get(role.id) != null;
             });
             if (c) {
-                c.get(permission).patchValue(true);
+                c.get(role.id).patchValue(true);
             }
-            userPermissionsControl.push(new FormControl(permission));
+            userPermissionsControl.push(new FormControl(role.id));
         });
     }
   }
 
-  onPermissionChange(permission: Permission, isChecked: boolean) {
+  onRoleChange(role: Role, isChecked: boolean) {
     const userPermissions = <FormArray>this.form.controls.userPermissions;
 
     if (isChecked) {
-        userPermissions.push(new FormControl(permission.id));
+        userPermissions.push(new FormControl(role.id));
     } else {
-        let index = userPermissions.controls.findIndex(x => x.value == permission.id)
+        let index = userPermissions.controls.findIndex(x => x.value == role.id)
         userPermissions.removeAt(index);
     }
 }
 
 submit() {
-  let user: User = {
-    id: this.user.id,
-    username: this.form.value.username,
-    password: this.form.value.password,
-    firstname: this.form.value.firstname,
-    email: this.form.value.email,
-    lastname: this.form.value.lastname,
-    status: this.form.value.status,
-    permissions: this.form.value.userPermissions
-  };
+  var roles: Role[] = [];
+  this.form.value.userPermissions.forEach(roleId => {
+    roles.push({ id: roleId })
+  });
 
-  this.saveSubscription = this.service
-    .saveUser(user)
+  this.user.username = this.form.value.username,
+  this.user.password = this.form.value.password,
+  this.user.firstname = this.form.value.firstname,
+  this.user.email = this.form.value.email,
+  this.user.lastname = this.form.value.lastname,
+  this.user.position = this.form.value.position,
+  this.user.roles = roles
+
+  this.saveSubscription = this.save()
     .subscribe(
       res => { 
           this.dialogRef.close(res);
       },
-      err => {
-          var error = err.error && err.error.errorCode ? err.error.errorCode : true;
-          this.toasterService.showToaster(error, false);
-          console.log(err); 
-      }
+      err => console.log(err)
     );
+  }
+
+  save(): Observable<User> {
+    return this.isEdit ? this.service.updateUser(this.user) : this.service.createUser(this.user);
   }
 
   cancel() {
     this.dialogRef.close();
-  }
-
-  openDeleteModal() {
   }
 }

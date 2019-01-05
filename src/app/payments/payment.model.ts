@@ -1,3 +1,5 @@
+import { Customer } from '../customers/customer.model';
+
 export class Payment {
     id?: string;
     status?: string;
@@ -5,6 +7,8 @@ export class Payment {
     amount?: number;
     amountPaid?: number;
     discount?: number;
+    customer?: Customer;
+    travelId?: string;
 
     constructor() {
         this.amount = 0;

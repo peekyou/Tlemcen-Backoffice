@@ -29,7 +29,7 @@ export class Customer {
     hovered?: boolean;
 
     constructor() {
-        this.address = {};
+        this.address = new Address();
         this.travelPayment = {};
         this.picture = {};
 		this.documents = [];

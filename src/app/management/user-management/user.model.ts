@@ -6,15 +6,21 @@ export class User {
     lastname?: string;
     email?: string;
     lastLogin?: Date;
-    status?: string;
-    permissions: string[];
+    position?: string;
+    roles: Role[];
 
     constructor() {
-        this.permissions = [];
+        this.roles = [];
     }
+}
+
+export class Role {
+    id: string;
+    name?: string;
+    permissions?: Permission[];
 }
 
 export class Permission {
     id: string;
-    resourceKey: string;
+    name: string;
 }

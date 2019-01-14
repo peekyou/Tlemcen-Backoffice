@@ -5,7 +5,10 @@
   </div>
 </div>
 <br>
-<div class="row">
+<div class="row col">
+  <mat-checkbox [(ngModel)]="takeHotelsSeparately" (change)="emitChanges()">Prendre hôtels séparément ?</mat-checkbox>
+</div>
+<div class="row" *ngIf="takeHotelsSeparately">
   <div class="col">
     <form [formGroup]="form">
       <div class="bold">Chambres d'hôtel</div>
@@ -14,7 +17,7 @@
           <mat-form-field class="col-12 col-md-4">
             <mat-select placeholder="Hôtel La Mecque" formControlName="hotelMekka">
               <mat-option></mat-option>
-              <mat-option *ngFor="let h of hotels" [value]="h.id">
+              <mat-option *ngFor="let h of hotelsMekka" [value]="h.id">
                 {{ h.name }}
               </mat-option>
             </mat-select>
@@ -35,7 +38,7 @@
           <mat-form-field class="col-12 col-md-4">
             <mat-select placeholder="Hôtel Médine" formControlName="hotelMedina">
               <mat-option></mat-option>
-              <mat-option *ngFor="let h of hotels" [value]="h.id">
+              <mat-option *ngFor="let h of hotelsMedina" [value]="h.id">
                 {{ h.name }}
               </mat-option>
             </mat-select>
@@ -56,10 +59,13 @@
   </div>
 </div>
 <br>
-<div class="row">
+<div class="row col">
+  <mat-checkbox [(ngModel)]="takeFlightsSeparately" (change)="emitChanges()">Prendre vols séparément ?</mat-checkbox>
+</div>
+<div class="row" *ngIf="takeFlightsSeparately">
   <div class="col">
     <div *ngIf="travelTypeId == 2 || travelTypeId == 3">
-        <app-flight-booking [customer]="customer" (onChange)="onFlightsChange($event)"></app-flight-booking>
+        <app-flight-booking [customer]="customer" [isGroup]="isGroup" (onChange)="onFlightsChange($event)"></app-flight-booking>
       </div>
   </div>
 </div>

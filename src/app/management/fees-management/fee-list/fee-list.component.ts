@@ -27,9 +27,6 @@ export class FeeListComponent implements OnInit {
   feesCurrentPage: number = 1;
   itemsPerPage: number = 20;
   additionalFees: PagingResponse<Fee>;
-  travels: PagingResponse<Travel>;
-  flights: PagingResponse<Flight>;
-  hotels: PagingResponse<Hotel>;
 
   constructor(
     private dialog: MatDialog,
@@ -41,30 +38,6 @@ export class FeeListComponent implements OnInit {
     }
 
   ngOnInit() {
-  }
-
-  getTravels() {
-    this.loader = this.travelService.getAllTravels(this.travelsCurrentPage, this.itemsPerPage)
-    .subscribe(
-      res => this.travels = res,
-      err => console.log(err)
-    );
-  }
-
-  getHotels() {
-    this.loader = this.hotelService.getHotels(this.hotelsCurrentPage, this.itemsPerPage)
-    .subscribe(
-      res => this.hotels = res,
-      err => console.log(err)
-    );
-  }
-
-  getFlights() {
-    this.loader = this.airlineService.getAirlines(this.hotelsCurrentPage, this.itemsPerPage)
-    .subscribe(
-      res => this.hotels = res,
-      err => console.log(err)
-    );
   }
 
   getFees() {
@@ -92,6 +65,10 @@ export class FeeListComponent implements OnInit {
         this.getFees();
       }
     });
+  }
+
+  updateFee(fee: Fee) {
+    this.feeService.updateFee(fee).subscribe(res => {});
   }
 
   displayCategories(fee: Fee) {

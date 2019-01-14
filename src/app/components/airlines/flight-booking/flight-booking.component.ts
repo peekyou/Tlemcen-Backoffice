@@ -39,7 +39,7 @@ export class FlightBookingComponent implements OnInit {
   @Input() 
   set customer(customer: CustomerDetail) {
     this._customer = customer;
-    if (this.form) {
+    if (this.form && !this.isGroup) {
       this.form.reset();
     }  
   }
@@ -48,6 +48,7 @@ export class FlightBookingComponent implements OnInit {
   }
 
   @Input() dialog: boolean = false;
+  @Input() isGroup = false;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
 
   // @Input() 

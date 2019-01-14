@@ -2,8 +2,8 @@
   <div>
     <div class="picture">
       <label>{{ 'CUSTOMER.PICTURE' | translate }}</label>
-      <app-file-upload [onFileUpload]="addPicture" (onOpenCamera)="showCamera=true"></app-file-upload>
-      <img *ngIf="customer.picture && customer.picture.src" [src]="customer.picture.src" />
+      <app-file-upload [imageWidth]="116" [imageHeight]="150" [(file)]="customer.picture" (onOpenCamera)="showCamera=true"></app-file-upload>
+      <!-- <img *ngIf="customer.picture && customer.picture.src" [src]="customer.picture.src" /> -->
     </div>
     <mat-radio-group formControlName="gender">
         <mat-radio-button style="margin-bottom: 11px" value="M">{{ 'COMMON.GENDER_M' | translate }}</mat-radio-button>
@@ -27,10 +27,10 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input type='number' matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile">
+                <input matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile">
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input type='number' matInput placeholder="Téléphone fixe" formControlName="phone">
+                <input matInput placeholder="Téléphone fixe" formControlName="phone">
             </mat-form-field>
             <mat-form-field class="full-width">
                 <input matInput placeholder="{{ 'COMMON.EMAIL' | translate }}" formControlName="email">
@@ -39,10 +39,28 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
+                <input matInput placeholder="Profession"
+                    autoClose [control]="profession" formControlName="profession" [matAutocomplete]="autoProfession">
+                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredProfessions | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="full-width">
                 <input matInput placeholder="Pays de naissance"
                     autoClose [control]="birthCountry" formControlName="birthCountry" [matAutocomplete]="autoBirthCountry">
                 <mat-autocomplete #autoBirthCountry="matAutocomplete" [displayWith]="displayFn.bind(this)">
                     <mat-option *ngFor="let option of filteredCountries | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Nationalité"
+                    autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="autoNationality">
+                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-autocomplete>
@@ -59,19 +77,10 @@
                 <mat-datepicker #pickerPassport></mat-datepicker>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input matInput placeholder="Nationalité"
-                    autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="autoNationality">
-                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                    <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
-                        {{ option.name }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Profession"
-                    autoClose [control]="profession" formControlName="profession" [matAutocomplete]="autoProfession">
-                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                    <mat-option *ngFor="let option of filteredProfessions | async" [value]="option">
+                <input matInput placeholder="Pays de délivrance du passeport"
+                    autoClose [control]="passportIssuingCountry" formControlName="passportIssuingCountry" [matAutocomplete]="passportIssuingCountry">
+                <mat-autocomplete #passportIssuingCountry="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredPassportCountries | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-autocomplete>
@@ -82,7 +91,7 @@
             <mat-form-field class="full-width">
                 <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}"
                     autoClose [control]="cityPostalCode" formControlName="cityPostalCode" [matAutocomplete]="autoCity">
-                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredCities | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
@@ -90,10 +99,16 @@
             </mat-form-field>
             <mat-form-field class="full-width">
                 <mat-select placeholder="A connu l'agence" formControlName="howKnewAgency">
-                    <mat-option *ngFor="let option of knewAgency" [value]="option.id">
+                    <mat-option *ngFor="let option of knewAgency" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-select>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Groupe sanguin" formControlName="bloodGroup">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <textarea rows="3" matInput placeholder="Informations médicales" formControlName="medicalInfo"></textarea>
             </mat-form-field>
         </div>
     </div>

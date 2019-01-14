@@ -13,8 +13,8 @@ export class PermissionGuard implements CanActivate, CanActivateChild {
     constructor(private auth: AuthService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        var permission: string = route && route.data["permission"] ? route.data["permission"] : null;
-        if (this.auth.hasPermission(permission)) {
+        var permissions: string[] = route && route.data["permissions"] ? route.data["permissions"] : null;
+        if (this.auth.hasAnyPermission(permissions)) {
             return true;
         }
         this.router.navigate(['/']);

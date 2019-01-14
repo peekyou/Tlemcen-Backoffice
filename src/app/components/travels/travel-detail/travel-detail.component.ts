@@ -26,7 +26,9 @@ export class TravelDetailComponent implements OnInit {
   moment;
   travel: Travel;
   currentPage: number = 1;
-  itemsPerPage = 20;
+  itemsPerPage = 10;
+  generatingAirlinesFiles = false;
+  generatingBadges = false;
 
   constructor(
     private hajjService: HajjService, 
@@ -148,14 +150,75 @@ export class TravelDetailComponent implements OnInit {
     });
   }
 
+  openDeleteHotelBooking(booking: HotelReservation) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: booking.hotel.name + ' ainsi que toutes les chambres' }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.removeHotelBooking(this.travel.id, booking)
+        .subscribe(
+          res => {
+            if (res === true) {
+              this.loadTravel(this.travel.id);
+            }
+          });
+      }
+    });
+  }
+
+  openDeleteFlightBooking(booking: FlightBooking) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: booking.flight.airline.name + ' ' + booking.flight.airportFrom + ' -> ' + booking.flight.airportTo }
+    });
+    
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.removeFlightBooking(this.travel.id, booking)
+        .subscribe(
+          res => {
+            if (res === true) {
+              this.loadTravel(this.travel.id);
+            }
+          });
+      }
+    });
+  }
+
   downloadTravelerContract(customer: Customer) {
     this.service.downloadTravelerContract(this.travel.id, customer.id)
     .subscribe(res => {});
   }
 
-  downloadAirlinesFile() {
-    this.service.downloadAirlineFile(this.travel.id, '2')
+  downloadPaymentReceipt(customer: Customer) {
+    this.service.downloadPaymentReceipt(this.travel.id, customer.id)
     .subscribe(res => {});
+  }
+
+  downloadTravelerBadge(customer: Customer) {
+    this.service.downloadTravelerBadge(this.travel.id, customer.id)
+    .subscribe(res => {});
+  }
+
+  downloadAllBadges() {
+    this.generatingBadges = true;
+    this.service.downloadAllBadges(this.travel.id)
+    .subscribe(
+      res => this.generatingBadges = false,
+      err => this.generatingBadges = false
+    );
+  }
+
+  downloadAirlinesFile() {
+    this.generatingAirlinesFiles = true;
+    this.service.downloadAirlineFile(this.travel.id, '2')
+    .subscribe(
+      res => this.generatingAirlinesFiles = false,
+      err => this.generatingAirlinesFiles = false
+    );
   }
 
   pageChanged(page) {

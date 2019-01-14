@@ -12,64 +12,50 @@ import { AuthService } from '../../auth/auth.service';
 
 @Injectable()
 export class AuthHttpService extends HttpService {
-    protected notFoundMessage = '';
-    protected errorMessage = '';
 
     constructor(
         http: HttpClient,
-        private translation: TranslationService,
-        private toasterService: ToasterService,
+        translation: TranslationService,
+        toasterService: ToasterService,
         private authenticationService: AuthService
     ) {
-        super(http);
-
-        this.translation
-        .getMultiple(['ERRORS.SERVER_ERROR', 'ERRORS.NOT_FOUND'], x => {
-            this.errorMessage = x['ERRORS.SERVER_ERROR'];
-            this.notFoundMessage = x['ERRORS.NOT_FOUND'];
-        }); 
+        super(http, translation, toasterService);
     }
 
     get(resource: string): Observable<any> {
         this.addAuthHeader();
-        return super.get(resource)
-            .pipe(catchError(this.showToaster(this.toasterService)));
+        return super.get(resource);
     }
 
+    getFile(resource: string): Observable<any> {
+        this.addAuthHeader();
+        return super.getFile(resource);
+    }
+    
     download(resource: string): Observable<any> {
         this.addAuthHeader();
-        return super.download(resource);
+        return super.download(resource)
+            .pipe(catchError(this.showToaster(this.toasterService)));
     }
 
     post(resource: string, data: any): Observable<any> {
         this.addAuthHeader();
-        return super.post(resource, data)
-            .pipe(catchError(this.showToaster(this.toasterService)));
+        return super.post(resource, data);
     }
 
     put(resource: string, data: any): Observable<any> {
         this.addAuthHeader();
-        return super.put(resource, data)
-            .pipe(catchError(this.showToaster(this.toasterService)));
+        return super.put(resource, data);
     }
 
     delete(resource: string, data?: any): Observable<any> {
         this.addAuthHeader();
-        return super.delete(resource, data)
-        .pipe(catchError(this.showToaster(this.toasterService)));
+        return super.delete(resource, data);
     }
 
     private addAuthHeader() {
         if (this.authenticationService.isAuthenticated()) {
             this.headers['Authorization'] = 'Bearer ' + this.authenticationService.token;
         }
-    }
-
-    protected showToaster<T> (toasterService) {
-        return (error: any): Observable<T> => {
-            var message = error.status == 404 ? this.notFoundMessage : this.errorMessage;
-            toasterService.showToaster(message, false);
-            return throwError(error);
-        };
     }
 }

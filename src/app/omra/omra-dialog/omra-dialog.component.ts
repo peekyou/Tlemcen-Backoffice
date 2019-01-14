@@ -36,8 +36,13 @@ export class OmraDialogComponent implements OnInit {
 
   save() {
     this.loading = true;
+    var name: string = this.form.value.name;
+    if (name.toLowerCase().indexOf('omra') === -1) {
+      name = 'Omra ' + name;
+    }
+    
     this.saveSubscription = this.service.createOmra({
-      name: this.form.value.name,
+      name: name,
       startDate: this.form.value.startDate,
       endDate: this.form.value.endDate,
       unitPrice: this.form.value.price,

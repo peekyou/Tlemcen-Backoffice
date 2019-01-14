@@ -11,6 +11,8 @@ export class FileUploadComponent {
   _file: AppFile;
   loading: boolean = false;
 
+  @Input() imageWidth = 125;
+  @Input() imageHeight = 75;
   @Input() simple: boolean = false;
   @Input() enableCamera: boolean = true;
   @Input() browseLabel: string;

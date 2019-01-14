@@ -1,5 +1,6 @@
 export class Lookup {
     name?: string;
+    nameFr?: string;
     id?: string;
     parentId?: string;
 

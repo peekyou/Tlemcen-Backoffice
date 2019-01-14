@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
 
+import { PrintDocumentsDialogComponent } from '../../travels/print-documents-dialog/print-documents-dialog.component';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { AppDocument } from '../../../management/documents-management/document.model';
 import { DocumentService } from '../../../management/documents-management/document.service';
 import { CustomerDetail } from '../../../customers/customer-detail.model';
@@ -40,6 +42,7 @@ export class CustomerTravelComponent implements OnInit {
   @Input() customerTravel: CustomerTravel = new CustomerTravel();
 
   constructor(
+    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private lookupService: LookupService,
@@ -52,6 +55,9 @@ export class CustomerTravelComponent implements OnInit {
     // Relationship only for a group
     if (!this.isGroup) {
       this.step = 1;
+    }
+    else {
+      this.groupId = guid();
     }
 
     this.lookupService.fetchRelationships('fr').subscribe(res => {
@@ -97,10 +103,6 @@ export class CustomerTravelComponent implements OnInit {
       customer.relationship = this.selectedRelationship.name;
     }
 
-    if (this.isGroup) {
-      this.groupId = guid();
-    }
-
     this.saveTraveler({
       customer: customer,
       travel: this.travel,
@@ -109,21 +111,63 @@ export class CustomerTravelComponent implements OnInit {
     .subscribe(
       res => {
         this.loading = false;
-        if (this.customers.length -1 > this.customerIndex) {
-          this.selectedRelationship = null;
-          this.customerIndex++;
-          this.step = 0;
-          window.scroll(0,0);
-        }
-        else {
-          this.router.navigate(['../'], { relativeTo: this.route });
-        }
+        this.openPrintDocumentsDialog();
       },
       err => this.loading = false);
   }
 
   saveTraveler(customerTravel: CustomerTravel): Observable<boolean> {
     return this.isEdit ? this.travelService.updateTraveler(customerTravel) : this.travelService.addTravelers(customerTravel);
+  }
+
+  openConfirmationDialog() {
+    var customer = this.customers[this.customerIndex];
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        autoFocus: false,
+        width: '534px',
+        data: {
+          text: "Valider l'inscription de " + customer.firstname + " " + customer.lastname + " dans " + this.travel.name + " ?"
+        }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === true) {
+        this.validate();
+      }
+    });
+  }
+
+  openPrintDocumentsDialog() {
+    var customerTravel = this.isEdit ? this.customerTravel : { travel: this.travel, customer: this.customers[this.customerIndex] };
+    let dialogRef = this.dialog.open(PrintDocumentsDialogComponent, {
+        autoFocus: false,
+        width: '534px',
+        data: {
+          customerTravel: customerTravel
+        }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      this.gotoNext();
+    });
+  }
+
+  gotoNext() {
+    if (this.customers.length -1 > this.customerIndex) {
+      this.selectedRelationship = null;
+      this.customerIndex++;
+      this.step = 0;
+      window.scroll(0,0);
+
+      // Set the same hotels and flights by default if it's a group
+      if (this.isGroup) {
+        this.customers[this.customerIndex].hotelBookings = this.customers[this.customerIndex - 1].hotelBookings;
+        this.customers[this.customerIndex].flightBookings = this.customers[this.customerIndex - 1].flightBookings;
+      }
+    }
+    else {
+      this.router.navigate(['../'], { relativeTo: this.route });
+    }
   }
 
   onTravelServicesChange(feesAndBookings) {

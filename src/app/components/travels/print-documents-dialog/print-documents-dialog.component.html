@@ -1,0 +1,22 @@
+<div mat-dialog-title>Imprimer documents</div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-info" (click)="printContract()"><mat-icon>chrome_reader_mode</mat-icon>Imprimer contrat</button>        
+    </div>
+    <div class="col">
+      <button class="btn btn-info" (click)="printPaymentReceipt()"><mat-icon>receipt</mat-icon>Imprimer reçu</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-info" (click)="printTravelerBadge()"><mat-icon>picture_in_picture</mat-icon>Imprimer badge</button>
+    </div>
+    <div class="col">
+      <button class="btn btn-info" (click)="printInhumationAuthorization()"><mat-icon>airline_seat_flat</mat-icon>Autorisation d'inhumation</button>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button class="btn btn-secondary" (click)="close()">{{ 'COMMON.CLOSE' | translate }}</button>
+</mat-dialog-actions>

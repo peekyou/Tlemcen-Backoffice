@@ -39,6 +39,12 @@ a {
     margin-right: -15px !important;
 }
 
+.card-block.disabled {
+    background-color: #ccc;
+    pointer-events: none;
+    cursor: default;
+}
+
 .table-hover {
     cursor: pointer;
 }
@@ -74,8 +80,24 @@ a {
     line-height: 27px;
 }
 
+.sticky-top {
+    z-index: 1000 !important;
+}
+
 .mat-simple-snackbar-action {
     color: #fff !important;
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 36px !important;
+}
+
+.mat-tab-header {
+    margin-bottom: 25px !important;
+}
+.mat-tab-label {
+    padding: 0 17px !important;
+    min-width: auto !important;
 }
 
 app-login, app-set-password, app-forget-password {
@@ -139,3 +161,37 @@ app-login, app-set-password, app-forget-password {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
     filter: alpha(opacity=20);
   }
+
+
+// Multi select control  
+.multi-form-control {
+    background: none;
+    width: 100%;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+}
+
+.multi-form-control-sm {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.2rem !important;
+}
+
+.dropdown-menu {
+    font-size: 12px;
+    
+    .dropdown-item {
+        padding: 0.5rem .7rem !important;
+    }
+
+    .check-control-uncheck {
+        border-bottom: 1px solid #ccc;
+    }
+
+    input {
+        vertical-align: middle;
+    }     
+}

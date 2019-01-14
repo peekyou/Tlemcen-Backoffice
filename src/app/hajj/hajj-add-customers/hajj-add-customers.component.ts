@@ -49,6 +49,7 @@ export class HajjAddCustomersComponent implements OnInit {
             this.customers = this.travelService.travelWithCustomers.customers;
             this.hajj = this.travelService.travelWithCustomers.travel;
             this.isGroup = this.travelService.travelWithCustomers.isGroup;
+            this.travelService.travelWithCustomers = null;
           }
           else {
               this.router.navigate(['../../'], { relativeTo: this.route });

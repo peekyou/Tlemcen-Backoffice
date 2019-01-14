@@ -23,6 +23,7 @@ export class CustomerFormComponent implements OnInit {
     filteredProfessions: Observable<Lookup[]>;
     filteredCountries: Observable<Lookup[]>;
     filteredNationalities: Observable<Lookup[]>;
+    filteredPassportCountries: Observable<Lookup[]>;
     cities: Lookup[] = [];
     professions: Lookup[] = [];
     countries: Lookup[] = [];
@@ -44,7 +45,6 @@ export class CustomerFormComponent implements OnInit {
 
     ngOnInit() {
         this.initForm();
-        
         forkJoin(
             this.lookupService.fetchCountries('fr'),
             this.lookupService.fetchProfessions('fr'),
@@ -66,39 +66,29 @@ export class CustomerFormComponent implements OnInit {
     }
 
     save() {
-        var newCustomer = new Customer();
-        newCustomer.gender = this.form.value.gender;
-        newCustomer.firstname = this.form.value.firstname;
-        newCustomer.lastname = this.form.value.lastname;
-        newCustomer.email = this.form.value.email;
-        newCustomer.mobileNumber = this.form.value.mobile;
-        newCustomer.phoneNumber = this.form.value.phone;
-        newCustomer.birthDate = this.form.value.birthDate;
-        newCustomer.birthCountryCode = this.form.value.birthCountry ? this.form.value.birthCountry.id : null;
-        newCustomer.howKnewAgency = this.form.value.howKnewAgency ? this.form.value.howKnewAgency.name : null;
-        newCustomer.passportNumber = this.form.value.passportNumber;
-        newCustomer.passportExpiryDate = this.form.value.passportExpiryDate;
-        newCustomer.nationalityCode = this.form.value.nationality ? this.form.value.nationality.id : null;
-        newCustomer.profession = this.form.value.profession ? this.form.value.profession.name : null;
+        this.customer.gender = this.form.value.gender;
+        this.customer.firstname = this.form.value.firstname;
+        this.customer.lastname = this.form.value.lastname;
+        this.customer.email = this.form.value.email;
+        this.customer.mobileNumber = this.form.value.mobile;
+        this.customer.phoneNumber = this.form.value.phone;
+        this.customer.birthDate = this.form.value.birthDate;
+        this.customer.birthCountry = this.form.value.birthCountry;
+        this.customer.howKnewAgency = this.form.value.howKnewAgency ? this.form.value.howKnewAgency.name : null;
+        this.customer.passportNumber = this.form.value.passportNumber;
+        this.customer.passportExpiryDate = this.form.value.passportExpiryDate;
+        this.customer.passportIssuingCountry = this.form.value.passportIssuingCountry;
+        this.customer.nationality = this.form.value.nationality;
+        this.customer.profession = this.form.value.profession ? this.form.value.profession.name : null;
+        this.customer.bloodGroup = this.form.value.bloodGroup;
+        this.customer.medicalInfo = this.form.value.medicalInfo;
 		var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
-		newCustomer.address.city = cityPostalCode[0];
-		newCustomer.address.postalCode = cityPostalCode[1];
-		newCustomer.address.addressLine1 = this.form.value.address1;
-		newCustomer.address.country.id = 'FR';
+		this.customer.address.city = cityPostalCode[0];
+		this.customer.address.postalCode = cityPostalCode[1];
+		this.customer.address.addressLine1 = this.form.value.address1;
+		this.customer.address.country.id = 'FR';
         
-		this.onSave.emit(newCustomer);
-    }
-
-    addPicture = (file, customer: Customer) => {
-    // this.service
-    //     .uploadFile(file, page.id)
-    //     .subscribe(
-    //         r => {
-    //             file.id = r;
-    //             page.pictures.push(file);
-    //         },
-    //         err => { console.log(err); }
-    //     );
+		this.onSave.emit(this.customer);
     }
 
     setCustomerPicture(picture: WebcamImage) {
@@ -114,13 +104,17 @@ export class CustomerFormComponent implements OnInit {
 
     displayFn(val: Lookup) {
         if (typeof val === 'string') {
-            var l = this.nationalities ? this.nationalities.find(a => a.id == val) : null;
-            return l ? l.name : val;
+            return val;
         }
         return val ? val.name : val;
     }
 
     private initForm() {
+        // If src is empty set picture to null to remove the empty image from file upload component
+        if (this.customer.picture && !this.customer.picture.src) {
+            this.customer.picture = null;
+        }
+
         this.form = this.fb.group({
             gender: this.fb.control(this.customer.gender ? this.customer.gender : 'M', Validators.required),
             firstname: this.fb.control(this.customer.firstname, Validators.required),
@@ -129,14 +123,17 @@ export class CustomerFormComponent implements OnInit {
             mobile: this.fb.control(this.customer.mobileNumber),
             phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
-            birthCountry: this.fb.control(this.customer.birthCountryCode),
-            nationality: this.fb.control(this.customer.nationalityCode),
+            birthCountry: this.fb.control(this.customer.birthCountry ? this.customer.birthCountry.id : null),
+            nationality: this.fb.control(this.customer.nationality ? this.customer.nationality.id : null),
             profession: this.fb.control(this.customer.profession),
-            address1: this.fb.control(this.customer.address.addressLine1),
-            cityPostalCode: this.fb.control(null),
+            address1: this.fb.control(this.customer.address ? this.customer.address.addressLine1 : null),
+            cityPostalCode: this.fb.control(this.customer.address && this.customer.address.city && this.customer.address.postalCode ? this.customer.address.postalCode + ' - ' + this.customer.address.city : null),
             passportNumber: this.fb.control(this.customer.passportNumber),
             passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
+            passportIssuingCountry: this.fb.control(this.customer.passportIssuingCountry ? this.customer.passportIssuingCountry.id : null),
             howKnewAgency: this.fb.control(null),
+            bloodGroup: this.fb.control(this.customer.bloodGroup),
+            medicalInfo: this.fb.control(this.customer.medicalInfo),
         });
 
         this.filteredNationalities = this.nationality.valueChanges
@@ -148,6 +145,14 @@ export class CustomerFormComponent implements OnInit {
             );
 
         this.filteredCountries = this.birthCountry.valueChanges
+            .pipe(
+                startWith(''),
+                debounceTime(200),
+                distinctUntilChanged(),
+                map(option => option && option.length >= 2 ? filterLookup(option, this.countries) : [])
+            );
+
+        this.filteredPassportCountries = this.passportIssuingCountry.valueChanges
             .pipe(
                 startWith(''),
                 debounceTime(200),
@@ -176,7 +181,25 @@ export class CustomerFormComponent implements OnInit {
         if (this.customer && this.customer.howKnewAgency) {
             var knewAgency = this.knewAgency.find(a => a.name == this.customer.howKnewAgency);
             this.form.patchValue({
-                howKnewAgency: knewAgency.id
+                howKnewAgency: knewAgency
+            });
+        }
+        if (this.customer && this.customer.birthCountry) {
+            var country = this.countries.find(a => a.id == this.customer.birthCountry.id);
+            this.form.patchValue({
+                birthCountry: country
+            });
+        }
+        if (this.customer && this.customer.nationality) {
+            var country = this.countries.find(a => a.id == this.customer.nationality.id);
+            this.form.patchValue({
+                nationality: country
+            });
+        }
+        if (this.customer && this.customer.passportIssuingCountry) {
+            var country = this.countries.find(a => a.id == this.customer.passportIssuingCountry.id);
+            this.form.patchValue({
+                passportIssuingCountry: country
             });
         }
     }
@@ -192,8 +215,8 @@ export class CustomerFormComponent implements OnInit {
         var city = null;
         var postalCode = null;
         if (value && value.id) {
-            city = value.id;
-            postalCode = value.name.split(' - ')[0];
+            postalCode = value.id.split(' - ')[0];
+            city = value.id.split(' - ')[1];
         }
         return [city, postalCode];
     }
@@ -205,4 +228,5 @@ export class CustomerFormComponent implements OnInit {
     get email() { return this.form.get('email'); }
     get birthDate() { return this.form.get('birthDate'); }
     get passportExpiryDate() { return this.form.get('passportExpiryDate'); }
+    get passportIssuingCountry() { return this.form.get('passportIssuingCountry'); }
 }

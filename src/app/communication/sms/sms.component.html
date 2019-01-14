@@ -1,0 +1,39 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <h4 class="bold">Votre quota SMS : {{smsPack?.quota}}</h4>
+    <button mat-raised-button class="btn btn-info" (click)="openSmsPackModal()">Acheter des SMS</button>
+
+    <form [formGroup]="topLevelForm" class="form" (ngSubmit)="topLevelForm.valid && openModal()" novalidate>
+      <div class="row">
+        <div class="col-12 col-lg-4">
+          <div class="card">
+            <h6 class="card-header">{{ 'SMS.CREATE_NEW' | translate }}</h6>                
+            <div class="card-body">
+              <app-sms-info [topLevelForm]="topLevelForm"></app-sms-info>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-8">
+          <div class="card">
+            <h6 class="card-header">{{ 'CAMPAIGNS.TARGET' | translate }}</h6>                
+            <div class="card-body">
+              <app-sms-filter [topLevelForm]="topLevelForm">
+              </app-sms-filter>
+              <div>
+                <app-submit-button value="{{ 'SMS.SEND_BUTTON' | translate }}" 
+                  loadingValue="{{ 'COMMON.SAVING' | translate }}" buttonClass="btn btn-info"
+                  [form]="topLevelForm" [subscription]="submitSubscription">
+                </app-submit-button>   
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col">
+        <app-sms-list [reload]="reload"></app-sms-list>
+      </div>
+    </div>
+  </div>
+</div>

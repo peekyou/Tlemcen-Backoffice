@@ -1,0 +1,29 @@
+<app-spinner [loader]="loader"></app-spinner>
+<div *ngIf="loader.closed && promotions && promotions.paging.itemsCount > 0" class="table-responsive">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>{{ 'PROMOTIONS.HISTORY' | translate }}</th>
+                <th class="w-50">{{ 'PROMOTIONS.MESSAGE' | translate }}</th>
+                <th class="text-align-center">{{ 'PROMOTIONS.TOTAL_RECIPIENTS' | translate }}</th>
+                <th class="text-align-center">{{ 'PROMOTIONS.TOTAL_RECEIVED' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let promotion of promotions.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: promotions?.paging?.totalCount }">
+                <th class="promotion-name" scope="row">
+                    {{promotion?.name}}<br />
+                    <small>{{ 'PROMOTIONS.SENT_ON' | translate }} <b>{{promotion?.createdDate | date:'dd-MM-yyyy'}}</b></small><br />
+                    <small>{{ 'PROMOTIONS.VALID_UNTIL' | translate }} <b>{{promotion?.toDate | date:'dd-MM-yyyy'}}</b></small>
+                </th>
+                <td class="promotion-details">{{promotion?.details}}</td>
+                <td class="text-align-center cyan bold">{{promotion?.nbRecipients}}</td>
+                <td class="text-align-center cyan bold">{{promotion?.nbSmsSent}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<pagination-controls *ngIf="promotions && promotions.paging.itemsCount > 0" (pageChange)="pageChanged($event)" 
+    autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+</pagination-controls>

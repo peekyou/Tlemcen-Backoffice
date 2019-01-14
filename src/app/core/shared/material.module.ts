@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
     MatButtonModule,
+    MatButtonToggleModule,
     MatIconModule,
     MatAutocompleteModule,
     MatInputModule,
@@ -18,6 +19,7 @@ import {
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
+    MatTabsModule,
     MAT_DATE_LOCALE,
     MAT_DATE_FORMATS,
     MAT_NATIVE_DATE_FORMATS,
@@ -30,6 +32,7 @@ import { MomentDateAdapter, MOMENT_DATE_FORMATS } from '../helpers/date.adapter'
 @NgModule({
     exports: [
         MatButtonModule,
+        MatButtonToggleModule,
         MatIconModule,
         MatAutocompleteModule,
         MatInputModule,
@@ -47,6 +50,7 @@ import { MomentDateAdapter, MOMENT_DATE_FORMATS } from '../helpers/date.adapter'
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatExpansionModule,
+        MatTabsModule,
     ],
     declarations: [],
     providers: [

@@ -68,8 +68,8 @@ export class LookupService {
         return this.http.get('/assets/lang/cities/' + countryCode + '.json')
             .pipe(map((res: any[]) => {
                 return this.citiesByCountry[countryCode] = res.map<Lookup>(c => {
-                    var id = c.id ? c.id : c.name;
                     var name = c.zipcode ? c.zipcode + ' - ' + c.name : c.name;
+                    var id = c.id ? c.id : name;
                     return new Lookup(id, name, c.parent);
                 });
             }));

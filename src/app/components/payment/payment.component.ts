@@ -20,6 +20,7 @@ export class PaymentComponent implements OnInit {
   loader: Subscription;
   isEdit = false;
   _customer: CustomerDetail = {};
+  _fees: Fee[] = [];
   
   @Input() 
   set customer(customer: CustomerDetail) {
@@ -32,8 +33,18 @@ export class PaymentComponent implements OnInit {
       return this._customer;
   }
 
+  @Input() 
+  set fees(fees: Fee[]) {
+    this._fees = fees;
+    if (this.form) {
+      this.emitChanges();
+    }  
+  }
+  get fees(): Fee[] {
+      return this._fees;
+  }
+
   @Input() readOnly = false;
-  @Input() fees: Fee[];
   @Input() travel: Travel;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
 
@@ -49,13 +60,9 @@ export class PaymentComponent implements OnInit {
       this.sumCustomerPayments();
     }
     
-    if (!this.fees) {
-      this.fees = [];
-    }
-
     if (this.travel) {
-      this.fees.unshift({
-        name: this.travel.travelTypeId == TravelType.Hajj ? 'Hajj ' + this.travel.name : this.travel.name,
+      this._fees.unshift({
+        name: this.travel.travelTypeId == TravelType.Hajj ? this.travel.name : this.travel.name,
         price: this.travel.unitPrice,
         isServiceFee: false,
         isMandatoryFee: true
@@ -107,7 +114,7 @@ export class PaymentComponent implements OnInit {
   }
 
   calculateTotal() {
-    var total = this.fees.reduce(function(a, b){
+    var total = this._fees.reduce(function(a, b){
       return a + b.price;
     }, 0);
 

@@ -5,12 +5,17 @@ import { Customer } from './customer.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
 import { AppFile } from '../core/models/file.model';
+import { Lookup } from '../core/models/lookup.model';
 
 @Injectable()
 export class CustomersService {
   resource = 'customers';
 
   constructor(private http: AuthHttpService) { }
+
+  getCustomersCount(): Observable<number> {
+    return this.http.get(this.resource + '/count');
+  }
 
   getCustomers(page: number = null, count: number = null, searchTerm: string = ''): Observable<PagingResponse<Customer>> {
     return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count+ '&searchTerm=' + searchTerm);
@@ -38,10 +43,14 @@ export class CustomersService {
   }
   
   getCustomerDocument(customerId: string, documentTypeId: string): Observable<any> {
-    return this.http.download(this.resource + '/' + customerId + '/document/' + documentTypeId);
+    return this.http.getFile(this.resource + '/' + customerId + '/document/' + documentTypeId);
   }
 
   // getCustomerDocument(customerId: string, documentTypeId: string): string {
   //   return this.http.apiHost + this.resource + '/' + customerId + '/document/' + documentTypeId;
   // }
+
+  getCustomerCities(): Observable<Lookup[]> {
+    return this.http.get(this.resource + '/cities');
+  }
 }

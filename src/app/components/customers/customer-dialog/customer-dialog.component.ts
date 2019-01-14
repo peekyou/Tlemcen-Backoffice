@@ -27,8 +27,8 @@ export class CustomerDialogComponent implements OnInit {
     this.saveSubscription = this.service
       .createCustomer(customer)
       .subscribe(
-          res => {
-              this.close(customer)
+          newCustomer => {
+              this.close(newCustomer)
           },
           err => console.log(err)
       );

@@ -8,6 +8,7 @@ export class HotelRoomReservation {
     roomType?: RoomType;
     customers?: Customer[];
     isValidated?: boolean;
+    isSeparateBooking?: boolean;
     displayOrder?: number;
     fromDate?: Date;
     toDate?: Date;

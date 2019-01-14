@@ -1,0 +1,99 @@
+<div class="row">
+    <div class="col-12 col-lg-7">
+        <form [formGroup]="form" class="form" (ngSubmit)="form.valid" novalidate>
+            <!-- <label for="travels">Voyages</label>
+            <ss-multiselect-dropdown formControlName="travels"
+                [options]="travels" [texts]="multiSelectTextsTravels" [settings]="multiSelectSettings">
+            </ss-multiselect-dropdown> -->
+            <mat-form-field>
+                <mat-select placeholder="Voyage" formControlName="travel">
+                    <mat-option *ngFor="let option of travels" [value]="option.id">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-checkbox formControlName="customerGenderMale" style="margin-bottom: 11px" value="M">
+                {{ 'COMMON.GENDER_M' | translate }}
+            </mat-checkbox>
+            <mat-checkbox formControlName="customerGenderFemale" style="margin-left: 15px" value="F">
+                {{ 'COMMON.GENDER_F' | translate }}
+            </mat-checkbox>
+            <div class="form-group">
+                <label for="location">{{ 'COMMON.ADDRESS' | translate }}</label>
+                <ss-multiselect-dropdown formControlName="location"
+                    [options]="locations" [texts]="multiSelectTexts" [settings]="multiSelectSettings">
+                </ss-multiselect-dropdown>
+            </div>
+            <div class="row">
+                <mat-form-field class="col-6">
+                    <input type="number" step="1" min="0" max="130" matInput 
+                    placeholder="{{ 'COMMON.AGE' | translate }}" formControlName="customerAgeFrom">
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <input type="number" step="1" min="0" max="130" matInput 
+                    placeholder="{{ 'COMMON.TO' | translate }}" formControlName="customerAgeTo">
+                </mat-form-field>
+            </div>
+            <mat-form-field class="full-width">
+                <input matInput [matDatepicker]="customerSince" maxlength="10" (keypress)="validateDate($event)"
+                    placeholder="{{ 'CAMPAIGNS.REGISTERED_SINCE' | translate }}" formControlName="customerSince">
+                <mat-datepicker-toggle matSuffix [for]="customerSince"></mat-datepicker-toggle>
+                <mat-datepicker #customerSince></mat-datepicker>
+                <mat-error *ngIf="customerSince.errors?.required && (customerSince.dirty ||customerSince.touched)">
+                    {{ 'FORM.INVALID_DATE' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <!-- <div class="row">
+                <mat-form-field class="col-6">
+                    <input type="number" min="0" matInput 
+                        placeholder="Montant dépensé" formControlName="purchaseAmountMin">
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <input type="number" min="0"  matInput 
+                        placeholder="{{ 'COMMON.TO' | translate }}" formControlName="purchaseAmountMax">
+                </mat-form-field>
+            </div> -->
+            <mat-form-field>
+                <mat-select placeholder="{{ 'CAMPAIGNS.RECEIVED' | translate }}" formControlName="receivedPromotion">
+                    <mat-option *ngFor="let option of promotions" [value]="option.id">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="{{ 'CAMPAIGNS.NOT_RECEIVED' | translate }}" formControlName="didntReceivePromotion">
+                    <mat-option *ngFor="let option of promotions" [value]="option.id">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="col col-lg-5">
+        <div class="campaign-result">
+            <app-circle-progress *ngIf="totalNbCustomers != null && nbRecipients != null" 
+                subtitle="{{ 'CAMPAIGNS.RECIPIENTS' | translate }}"
+                [title]="nbRecipients" 
+                backgroundColor="#0cb3c2"
+                backgroundOpacity=1
+                backgroundStroke="#000000"
+                backgroundPadding="10"
+                radius=60
+                space=-7
+                maxPercent=100
+                unitsColor="#ffffff"
+                outerStrokeWidth=7
+                outerStrokeColor="#ffffff"
+                innerStrokeColor="#88d2df"
+                innerStrokeWidth=7
+                titleColor="#ffffff"
+                titleFontSize="35"
+                subtitleColor="#ffffff"
+                subtitleFontSize=15
+                animationDuration=500 
+                [showUnits]=false
+                [percent]="(nbRecipients / totalNbCustomers) * 100">
+            </app-circle-progress>
+        </div>
+    </div>
+</div>

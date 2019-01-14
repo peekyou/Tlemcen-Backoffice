@@ -1,202 +1,205 @@
 <div class="main-content">
   <div class="container-fluid">
-      <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                  <div class="card-header card-header-warning card-header-icon">
-                      <div class="card-icon">
-                          <i class="material-icons">people</i>
-                      </div>
-                      <p class="card-category">Clients</p>
-                      <h3 class="card-title">{{ model.customerCount.totalCount }}</h3>
-                  </div>
-                  <div class="card-footer">
-                      <div class="stats">
-                        <i class="material-icons">person</i>{{ model.customerCount.todayCount }} aujourd'hui
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                  <div class="card-header card-header-success card-header-icon">
-                      <div class="card-icon">
-                          <i class="material-icons">store</i>
-                      </div>
-                      <p class="card-category">Revenus annuel</p>
-                      <h3 class="card-title">{{ model.revenues.yearRevenues }}€</h3>
-                  </div>
-                  <div class="card-footer">
-                      <div class="stats">
-                        <span class="text-success" *ngIf="model.revenues.variation > 0"><i class="fa fa-long-arrow-up"></i> {{ Math.round(model.revenues.variation * 100) }}%</span>
-                        <span class="text-danger" *ngIf="model.revenues.variation < 0"><i class="fa fa-long-arrow-down"></i> {{ Math.round(model.revenues.variation * 100) }}%</span> 
-                        <span class="text-primary" *ngIf="!model.revenues.variation">0%</span>                        
-                        &nbsp;(année dernière)
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                  <div class="card-header card-header-danger card-header-icon">
-                      <div class="card-icon">
-                          <i class="material-icons">error</i>
-                      </div>
-                      <p class="card-category">Paiements incomplets</p>
-                      <h3 class="card-title">{{ model.incompletePaymentsCount }}</h3>
-                  </div>
-                  <div class="card-footer">
-                      <div class="stats">
-                          <i class="material-icons">local_offer</i> Détails dans paiements
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-- <div class="col-lg-3 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                  <div class="card-header card-header-info card-header-icon">
-                      <div class="card-icon">
-                          <i class="fa fa-twitter"></i>
-                      </div>
-                      <p class="card-category">Followers</p>
-                      <h3 class="card-title">+245</h3>
-                  </div>
-                  <div class="card-footer">
-                      <div class="stats">
-                          <i class="material-icons">update</i> Just Updated
-                      </div>
-                  </div>
-              </div>
-          </div> -->
-      </div>
-      <div class="row">
-          <div class="col-md-6">
-              <div class="card card-chart">
-                  <div class="card-header card-header-success">
-                      <div class="ct-chart" id="dailySalesChart"></div>
-                  </div>
-                  <div class="card-body">
-                    <h4 class="card-title">Revenus 7 derniers jours</h4>
-                    <p class="card-category">
-                        <span class="text-success" *ngIf="model.dayVariation > 0"><i class="fa fa-long-arrow-up"></i> {{ Math.round(model.revenues.variation * 100) }}%</span>
-                        <span class="text-danger" *ngIf="model.dayVariation < 0"><i class="fa fa-long-arrow-down"></i> {{ Math.round(model.revenues.variation * 100) }}%</span> 
-                        <span class="text-primary" *ngIf="!model.dayVariation">0%</span> de ventes aujourd'hui
-                    </p>
-                  </div>
-                  <!-- <div class="card-footer">
-                      <div class="stats">
-                          <i class="material-icons">access_time</i> updated 4 minutes ago
-                      </div>
-                  </div> -->
-              </div>
-          </div>
-          <div class="col-md-6">
-              <div class="card card-chart">
-                  <div class="card-header card-header-warning">
-                      <div class="ct-chart" id="websiteViewsChart"></div>
-                  </div>
-                  <div class="card-body">
-                      <h4 class="card-title">Clients inscrits</h4>
-                      <p class="card-category">Participant à au moins un voyage</p>
-                  </div>
-                  <!-- <div class="card-footer">
-                      <div class="stats">
-                          <i class="material-icons">access_time</i> campaign sent 2 days ago
-                      </div>
-                  </div> -->
-              </div>
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-12">
-              <div class="card">
-                  <div class="card-header card-header-tabs card-header-primary">
-                      <div class="nav-tabs-navigation">
-                          <div class="nav-tabs-wrapper">
-                              <!-- <span class="nav-tabs-title">Tasks:</span> -->
-                              <ul class="nav nav-tabs" data-tabs="tabs">
-                                  <li class="nav-item">
-                                      <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 1}" (click)="activeTab = 1">
-                                          <i class="material-icons">flight_land</i>Arrivées
-                                          <div class="ripple-container"></div>
-                                      </button>
-                                  </li>
-                                  <li class="nav-item">
-                                      <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 2}" (click)="activeTab = 2">
-                                          <i class="material-icons">flight_takeoff</i>Départs
-                                          <div class="ripple-container"></div>
-                                      </button>
-                                  </li>
-                                  <li class="nav-item">
-                                      <a mat-button class="nav-link" [ngClass]="{'active': activeTab == 3}" (click)="activeTab = 3">
-                                          <i class="material-icons">hotel</i>Hôtels
-                                          <div class="ripple-container"></div>
-                                      </a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="tab-content">
-                        <div class="tab-pane" [ngClass]="{'active': activeTab == 1}">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Vol Info</th>
-                                        <th>Nb pelerins</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let booking of model.flightsOnArrival">
-                                        <td>{{ booking.arrivalDate | date:'dd/MM/yyyy' }}</td>
-                                        <td>{{ booking.flight?.airline?.name }} <b>{{ booking.flight?.airportFrom }} - {{ booking.flight?.airportTo }}</b></td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+    <app-spinner [loader]="loader"></app-spinner>
+      <div>
+        <div class="row" *ngIf="loader.closed">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">people</i>
                         </div>
-                        <div class="tab-pane" [ngClass]="{'active': activeTab == 2}">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Vol Info</th>
-                                        <th>Nb pelerins</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let booking of model.flightsOnDeparture">
-                                        <td>{{ booking.departureDate | date:'dd/MM/yyyy' }}</td>
-                                        <td>{{ booking.flight?.airline?.name }} <b>{{ booking.flight?.airportFrom }} - {{ booking.flight?.airportTo }}</b></td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="tab-pane" [ngClass]="{'active': activeTab == 3}">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Hôtel</th>
-                                        <th>Nb pelerins</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let booking of model.hotelBookings">
-                                        <td>{{ booking.createdDate | date:'dd/MM/yyyy' }}</td>
-                                        <td>{{ booking.hotel?.name }}</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <p class="card-category">Clients</p>
+                        <h3 class="card-title">{{ model.customerCount.totalCount }}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">person</i>{{ model.customerCount.todayCount }} aujourd'hui
                         </div>
                     </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <p class="card-category">Revenus annuel</p>
+                        <h3 class="card-title">{{ model.revenues.yearRevenues }}€</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <span class="text-success" *ngIf="model.revenues.variation > 0"><i class="fa fa-long-arrow-up"></i> {{ Math.round(model.revenues.variation * 100) }}%</span>
+                            <span class="text-danger" *ngIf="model.revenues.variation < 0"><i class="fa fa-long-arrow-down"></i> {{ Math.round(model.revenues.variation * 100) }}%</span> 
+                            <span class="text-primary" *ngIf="!model.revenues.variation">0%</span>                        
+                            &nbsp;(année dernière)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">error</i>
+                        </div>
+                        <p class="card-category">Paiements incomplets</p>
+                        <h3 class="card-title">{{ model.incompletePaymentsCount }}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">local_offer</i> Détails dans paiements
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                        <div class="card-icon">
+                            <i class="fa fa-twitter"></i>
+                        </div>
+                        <p class="card-category">Followers</p>
+                        <h3 class="card-title">+245</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">update</i> Just Updated
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div class="ct-chart" id="dailySalesChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Revenus 7 derniers jours</h4>
+                        <p class="card-category">
+                            <span class="text-success" *ngIf="model.dayVariation > 0"><i class="fa fa-long-arrow-up"></i> {{ Math.round(model.revenues.variation * 100) }}%</span>
+                            <span class="text-danger" *ngIf="model.dayVariation < 0"><i class="fa fa-long-arrow-down"></i> {{ Math.round(model.revenues.variation * 100) }}%</span> 
+                            <span class="text-primary" *ngIf="!model.dayVariation">0%</span> de ventes aujourd'hui
+                        </p>
+                    </div>
+                    <!-- <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-warning">
+                        <div class="ct-chart" id="websiteViewsChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Clients inscrits</h4>
+                        <p class="card-category">Participant à au moins un voyage</p>
+                    </div>
+                    <!-- <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> campaign sent 2 days ago
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="loader.closed">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header card-header-tabs card-header-primary">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <!-- <span class="nav-tabs-title">Tasks:</span> -->
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 1}" (click)="activeTab = 1">
+                                            <i class="material-icons">flight_land</i>Arrivées
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 2}" (click)="activeTab = 2">
+                                            <i class="material-icons">flight_takeoff</i>Départs
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link" [ngClass]="{'active': activeTab == 3}" (click)="activeTab = 3">
+                                            <i class="material-icons">hotel</i>Hôtels
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane" [ngClass]="{'active': activeTab == 1}">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Vol Info</th>
+                                            <th>Nb pelerins</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let booking of model.flightsOnArrival">
+                                            <td>{{ booking.arrivalDate | date:'dd/MM/yyyy' }}</td>
+                                            <td>{{ booking.flight?.airline?.name }} <b>{{ booking.flight?.airportFrom }} - {{ booking.flight?.airportTo }}</b></td>
+                                            <td>0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" [ngClass]="{'active': activeTab == 2}">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Vol Info</th>
+                                            <th>Nb pelerins</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let booking of model.flightsOnDeparture">
+                                            <td>{{ booking.departureDate | date:'dd/MM/yyyy' }}</td>
+                                            <td>{{ booking.flight?.airline?.name }} <b>{{ booking.flight?.airportFrom }} - {{ booking.flight?.airportTo }}</b></td>
+                                            <td>{{ booking.travelerCount }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" [ngClass]="{'active': activeTab == 3}">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Hôtel</th>
+                                            <th>Nb pelerins</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let booking of model.hotelBookings">
+                                            <td>{{ booking.createdDate | date:'dd/MM/yyyy' }}</td>
+                                            <td>{{ booking.hotel?.name }}</td>
+                                            <td>{{ booking.travelerCount }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </div>

@@ -45,21 +45,25 @@ export class PaymentDialogComponent implements OnInit {
 
       if (this.customerTravel.customer.hotelBookings) {
         this.customerTravel.customer.hotelBookings.forEach(booking => {
-          booking.rooms.forEach(room => {
-            this.fees.push({
-              name: booking.hotel.name + ' ' + room.roomType.name,
-              price: room.price
+            booking.rooms.forEach(room => {
+              if (room.isSeparateBooking) {
+                this.fees.push({
+                  name: booking.hotel.name + ' ' + room.roomType.name,
+                  price: room.price
+                });
+              }
             });
-          });
         });
       }
 
       if (this.customerTravel.customer.flightBookings) {
         this.customerTravel.customer.flightBookings.forEach(booking => {
-          this.fees.push({ 
-            name: booking.flight.airline.name,
-            price: booking.price
-          });
+          if (booking.isSeparateBooking) {
+            this.fees.push({ 
+              name: booking.flight.airline.name,
+              price: booking.price
+            });
+          }
         });
       }
     }

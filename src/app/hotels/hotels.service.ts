@@ -38,10 +38,7 @@ export class HotelsService {
   }
 
   saveHotelBooking(travelId: string, reservation: HotelReservation) : Observable<HotelReservation> {
-    return this.http.post(this.resource + '/rooms', {
-      travelId: travelId,
-      hotelBooking: reservation
-    });
+    return this.http.post(this.resource + '/' + travelId + '/rooms', reservation);
   }
 
   createRoomsBooking(reservations: HotelRoomReservation[]) : Observable<HotelRoomReservation[]> {

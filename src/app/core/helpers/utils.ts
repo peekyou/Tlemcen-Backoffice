@@ -58,3 +58,17 @@ export function filterLookup(value: string, list: any[]): any[] {
     }
     return [value];
 }
+
+export function getHajjOmraCityIdFromName(city): string {
+    if (city) {
+        return city.toLowerCase().indexOf('mecque') == -1 ? '2' : '1';
+    }
+    return null;
+}
+
+export function isMekka(address): boolean {
+    if (address && address.city) {
+        return address.city.toLowerCase().indexOf('mecque') !== -1;
+    }
+    return false;
+}

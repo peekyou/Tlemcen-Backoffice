@@ -3,7 +3,7 @@
     <mat-icon>camera_alt</mat-icon>Prendre une photo
   </button>
 </div>
-<webcam [height]="380" [width]="380" [trigger]="triggerObservable" 
+<webcam [height]="230" [width]="180" [trigger]="triggerObservable" 
   (imageCapture)="handleImage($event)"
   [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
   [videoOptions]="videoOptions"

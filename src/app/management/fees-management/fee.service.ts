@@ -9,11 +9,6 @@ import { AuthHttpService } from '../../core/services/auth-http.service';
 export class FeeService {
     resource = 'fees';
     
-    // fees: Fee[] = [
-    //     { id: '1', name: 'Hajj 2018', amount: 12333, categories: ['Hajj'] },
-    //     { id: '2', name: 'Omra decembre 2018', amount: 4588, categories: ['Omra'] },
-    // ];
-
     constructor(private http: AuthHttpService) { }
     
     getFees(page: number, count: number): Observable<PagingResponse<Fee>> {

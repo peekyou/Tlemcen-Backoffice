@@ -1,33 +1,39 @@
 <div>
     <div class="row">
-      <div class="action-buttons">
-        <button mat-raised-button type="submit" class="btn btn-info pull-left" color="accent" (click)="save()">
+      <div class="pull-left" style="margin-left: 26px;">
+        <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedCity">
+          <mat-button-toggle value="1" (click)="changeCity(group.value)">La Mecque</mat-button-toggle>
+          <mat-button-toggle value="2" (click)="changeCity(group.value)">Médine</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="action-buttons pull-right" style="margin-left: 126px;">
+        <button mat-raised-button type="submit" class="btn btn-info" color="accent" (click)="save()">
           Sauvegarder
         </button>
-        <button mat-raised-button type="submit" class="btn btn-primary pull-left" (click)="generate()">
+        <button mat-raised-button type="submit" class="btn btn-primary" (click)="generate()">
           Générer automatiqument
         </button>
       </div>
     </div>
     <div class="drag-wrapper row">
-      <div *ngIf="customers" [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
+      <div *ngIf="customers[selectedCity]" [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
         <div class="row">
-          <h4 *ngIf="customersExpanded" class="col-9">{{ customers.length }} Personnes</h4>
+          <h4 *ngIf="customersExpanded" class="col-9">{{ customers[selectedCity].length }} Personnes</h4>
           <button class="col-2" mat-icon-button (click)="customersExpanded = !customersExpanded">
             <mat-icon *ngIf="customersExpanded">chevron_right</mat-icon>
             <mat-icon *ngIf="!customersExpanded">chevron_right</mat-icon>
           </button>
         </div>
         <div *ngIf="customersExpanded" class="drag-container sticky-top customer-scrollable" 
-             dragula="ROOMS" [(dragulaModel)]="customers">
-          <div *ngFor="let customer of customers" class="customer"
+             dragula="ROOMS" [(dragulaModel)]="customers[selectedCity]">
+          <div *ngFor="let customer of customers[selectedCity]" class="customer"
               [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
               {{ customer.firstname }} {{ customer.lastname }}
           </div>
         </div>
       </div>
       <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
-        <div *ngFor="let booking of hotelBookings" class="card">
+        <div *ngFor="let booking of displayedHotelBookings" class="card">
             <div class="card-header card-header-hotel card-header-warning" (click)="booking.hotel.expanded = !booking.hotel.expanded">
               <h4 class="card-title pull-left">{{ booking.hotel.name }}</h4>
               <div class="card-header-actions">

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import * as Chartist from 'chartist';
 import * as moment from 'moment';
 
@@ -15,6 +16,7 @@ export class DashboardComponent implements OnInit {
   Math;
   model: Dashboard = new Dashboard();
   activeTab = 1;
+  loader: Subscription;
 
   month = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
@@ -74,7 +76,7 @@ export class DashboardComponent implements OnInit {
         this.startAnimationForLineChart(dailySalesChart);
       });
       
-    this.service.getMonthlyCustomerCount(null)
+    this.loader = this.service.getMonthlyCustomerCount(null)
       .subscribe(res => {
         this.model.monthlyCustomerCount = res;
         var serie = [];

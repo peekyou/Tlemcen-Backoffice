@@ -16,15 +16,15 @@
                                 <thead class=" text-primary">
                                     <th>Année</th>
                                     <th>Nombre de personnes</th>
-                                    <th>Status</th>
+                                    <th>Statut</th>
                                     <th>Revenus</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let hajj of hajjList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hajjList?.paging?.totalCount }" [routerLink]="['/hajj', hajj.id]">
                                         <td>{{ hajj.name }}</td>
-                                        <td>{{ hajj.customers?.length }}</td>
+                                        <td>{{ hajj.travelerCount }}</td>
                                         <td>{{ hajj.status }}</td>
-                                        <td class="text-primary">{{ hajj.revenues }} €</td>
+                                        <td class="text-primary">{{ hajj.revenues }}€</td>
                                     </tr>
                                 </tbody>
                             </table>

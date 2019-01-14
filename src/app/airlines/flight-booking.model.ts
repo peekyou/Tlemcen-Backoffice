@@ -12,4 +12,5 @@ export class FlightBooking {
     customers? : Customer[];
     displayOrder?: number;
     travelerCount?: number;
+    isSeparateBooking?: boolean;
 }

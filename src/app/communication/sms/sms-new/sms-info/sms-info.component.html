@@ -1,0 +1,57 @@
+<form [formGroup]="form" class="form" (ngSubmit)="form.valid" novalidate>
+    <mat-form-field >
+        <input matInput placeholder="{{ 'CAMPAIGNS.CAMPAIGN_NAME' | translate }}" formControlName="name" required>
+    </mat-form-field>
+    <!-- <div class="row">
+        <div class="col-12 col-lg-8">
+            <div class="form-group valid-dates">
+                <div class="row">
+                    <div class="col pl-0">
+                        <label for="dateFrom">{{ 'CAMPAIGNS.VALID_FROM' | translate }}*</label>                        
+                    </div>
+                    <div class="col-7 pl-0">
+                        <div class="input-group">
+                            <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" formControlName="dateFrom"
+                                id="dateFrom" ngbDatepicker #from="ngbDatepicker" required>
+                            <button class="input-group-addon" (click)="from.toggle()" type="button">
+                                <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <div *ngIf="dateFrom.invalid && (dateFrom.dirty || dateFrom.touched)" class="invalid-field">
+                                {{ 'FORM.INVALID_DATE' | translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col pl-0">
+                            <label for="dateTo">{{ 'CAMPAIGNS.VALID_UNTIL' | translate }}*</label>                        
+                    </div>
+                    <div class="col-7 pl-0">
+                        <div class="input-group">
+                            <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" formControlName="dateTo"
+                                    id="dateTo" ngbDatepicker #to="ngbDatepicker" required>
+                            <button class="input-group-addon" (click)="to.toggle()" type="button">
+                                <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>
+                            </button>
+                            <div *ngIf="dateTo.invalid && (dateTo.dirty || dateTo.touched)" class="invalid-field">
+                                {{ 'FORM.INVALID_DATE' | translate }}
+                            </div>
+                        </div>
+                        <div class="invalid-field" *ngIf="form.errors">{{ form.errors?.dates | json }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="form-group">
+        <mat-form-field >
+            <textarea matInput placeholder="{{ 'CAMPAIGNS.MESSAGE' | translate }}" 
+              formControlName="details" rows="4" required></textarea>
+        </mat-form-field>
+        <div >
+            <small class="form-text text-muted"><b>{{ getSmsCounter().remaining }}</b> {{ 'SMS.REMAINING_CHARACTERS' | translate }}</small>
+            <small class="form-text text-muted"><b>{{ getSmsCounter().messages }}</b> {{ 'SMS.SMS_NUMBER_SENT' | translate }}</small>
+            <small class="form-text text-danger" *ngIf="!smsQuotaValid()">{{ 'SMS.INSUFICIENT_QUOTA' | translate }} ({{smsQuota}})</small>
+        </div>
+    </div>
+</form>

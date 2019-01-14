@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DndModule } from 'ngx-drag-drop';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 import { AppMaterialModules } from './material.module';
 import { DirectivesModule } from '../directives';
@@ -20,6 +21,7 @@ const IMPORTS = [
     TranslateModule,
     NgxPaginationModule,
     DndModule,
+    MultiselectDropdownModule,
     AppMaterialModules,
     DirectivesModule,
     PipesModule

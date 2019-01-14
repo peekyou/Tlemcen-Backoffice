@@ -8,6 +8,7 @@ import { FlightBooking } from '../airlines/flight-booking.model';
 import { CustomerTravel } from '../customers/customer-travel.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
+import { Lookup } from '../core/models/lookup.model';
 
 @Injectable()
 export class TravelService {
@@ -20,8 +21,8 @@ export class TravelService {
     return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
   }
 
-  getAllTravels(page: number, count: number): Observable<PagingResponse<Travel>> {
-    return this.http.get(this.resource + '/all?pageNumber=' + page + '&itemsCount=' + count);
+  getTravelsAsLookup(): Observable<Lookup[]> {
+    return this.http.get(this.resource + '/lookup');
   }
 
   getTravel(id, itemsCount: number): Observable<Travel> {
@@ -48,8 +49,8 @@ export class TravelService {
     return this.http.get(this.resource + '/' + travelId + '/travelers?pageNumber=' + page + '&itemsCount=' + count);
   }
 
-  getTraveler(travelId: string, travelerId: string): Observable<CustomerTravel> {
-    return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId);
+  getTraveler(travelId: string, travelerId: string, onlySeparateBooking: boolean = false): Observable<CustomerTravel> {
+    return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '?onlySeparateBooking=' + onlySeparateBooking);
   }
 
   addTravelers(customerTravel: CustomerTravel): Observable<boolean> {
@@ -64,22 +65,52 @@ export class TravelService {
     return this.http.delete(this.resource + '/travelers', { travelId: travelId, entityIds: customerIds });
   }
   
+  removeHotelBooking(travelId: string, booking: HotelReservation): Observable<boolean> {
+    return this.http.delete(this.resource + '/' + travelId + '/hotels/bookings/' + booking.id);
+  }
+  
+  removeFlightBooking(travelId: string, booking: FlightBooking): Observable<boolean> {
+    return this.http.delete(this.resource + '/' + travelId + '/flights/bookings/' + booking.id);
+  }
+  
   getHotelBookings(travelId: string): Observable<HotelReservation[]> {
     return this.http.get(this.resource + '/' + travelId + '/hotels/bookings');
   }
 
-  getTravelersWithoutHotelBooking(travelId: string): Observable<Customer[]> {
+  getTravelersWithoutHotelBooking(travelId: string): Observable<any> {
     return this.http.get(this.resource + '/' + travelId + '/travelers/hotelbookingless');
   }
 
   getFlightBookings(travelId: string): Observable<FlightBooking[]> {
     return this.http.get(this.resource + '/' + travelId + '/flights/bookings');
   }
+
+  saveHotelsPlan(travelId: string, bookings: HotelReservation[]): Observable<boolean> {
+    return this.http.post(this.resource + '/' + travelId + '/hotels/plan', {
+      hotelBooking: bookings
+    });
+  }
   
-  downloadTravelerContract(travelId: string, travelerId: string): Observable<CustomerTravel> {
+  downloadTravelerContract(travelId: string, travelerId: string): Observable<void> {
     return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/contract');
   }
   
+  downloadPaymentReceipt(travelId: string, travelerId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/receipt');
+  }
+
+  downloadTravelerBadge(travelId: string, travelerId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/badge');
+  }
+
+  downloadAllBadges(travelId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/badges');
+  }
+  
+  downloadInhumationAuthorization(travelId: string, travelerId: string): Observable<CustomerTravel> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/inhumation');
+  }
+
   downloadAirlineFile(travelId: string, airlineId: string): Observable<CustomerTravel> {
     return this.http.download(this.resource + '/' + travelId + '/airlines/' + airlineId + '/file');
   }

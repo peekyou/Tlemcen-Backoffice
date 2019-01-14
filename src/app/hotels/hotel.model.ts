@@ -10,6 +10,10 @@ export class Hotel {
     category?: number;
     address?: Address;
     expanded?: boolean;
+
+    constructor() {
+        this.address = {};
+    }
 }
 
 export class RoomType {

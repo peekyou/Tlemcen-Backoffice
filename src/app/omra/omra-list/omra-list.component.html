@@ -14,17 +14,17 @@
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class=" text-primary">
-                                    <th>Date</th>
+                                    <th>Nom</th>
                                     <th>Nombre de personnes</th>
-                                    <th>Status</th>
+                                    <th>Statut</th>
                                     <th>Revenus</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let omra of omraList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: omraList?.paging?.totalCount }" [routerLink]="['/omra', omra.id]">
                                         <td>{{ omra.name }}</td>
-                                        <td>{{ omra.customers?.length }}</td>
+                                        <td>{{ omra.travelerCount }}</td>
                                         <td>{{ omra.status }}</td>
-                                        <td class="text-primary">{{ omra.revenues }} €</td>
+                                        <td class="text-primary">{{ omra.revenues }}€</td>
                                     </tr>
                                 </tbody>
                             </table>

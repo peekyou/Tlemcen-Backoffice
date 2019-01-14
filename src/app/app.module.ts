@@ -8,13 +8,12 @@ import { DragulaModule } from 'ng2-dragula';
 import { StarRatingModule } from 'angular-star-rating';
 
 import { AppRoutingModule } from './app.routing';
-import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 import { APP_PROVIDERS } from './app.providers';
 
 import { SharedModule } from './core/shared/shared.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { ComponentsModule } from './components/components.module';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { TableListComponent } from './table-list/table-list.component';
 import { TypographyComponent } from './typography/typography.component';
@@ -31,7 +30,7 @@ const PROVIDERS = [
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, "/assets/lang/", ".json");
+  return new TranslateHttpLoader(http, "/assets/lang/", "-v2.json");
 }
 
 @NgModule({

@@ -1,0 +1,88 @@
+<div mat-dialog-title>
+  Acheter des SMS
+</div>
+<div mat-dialog-content>
+  <div class="row" *ngIf="smsPack">
+    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+        <div>
+            <div class="color-primary">{{ 'SMS.STOCK' | translate }}</div>
+            <app-circle-progress
+                subtitle="{{ 'SMS.SMS' | translate }}"
+                [title]="quota" 
+                backgroundColor="#46c3a8"
+                backgroundOpacity=1
+                backgroundStroke="#000000"
+                backgroundPadding="7"
+                radius=33
+                space=-3
+                maxPercent=100
+                unitsColor="#ffffff"
+                outerStrokeWidth=3
+                outerStrokeColor="#ffffff"
+                innerStrokeColor="#ffdf72"
+                innerStrokeWidth=3
+                titleColor="#ffffff"
+                titleFontSize="18"
+                subtitleColor="#ffffff"
+                subtitleFontSize=13
+                animationDuration=0
+                [showUnits]=false
+                percent="100">
+            </app-circle-progress>
+        </div>
+        
+        <form #form class="form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+            <input name="cmd" type="hidden" value="_xclick" />
+            <input name="business" type="hidden" value="ZBD6ZJMJF737A" />
+            <input name="lc" type="hidden" value="FR" />
+            <input name="item_name" type="hidden" value="SMS Packs" />
+            <input name="amount" type="hidden" value="{{ smsPack.price }}" />
+            <input name="quantity" type="hidden" value="{{ packNumber }}" />
+            <input name="button_subtype" type="hidden" value="services" />
+            <input name="no_note" type="hidden" value="1" />
+            <input name="no_shipping" type="hidden" value="1" />
+            <input name="currency_code" type="hidden" value="{{ currency }}" />
+            <input type="hidden" name="return" value="https://shop.app-wards.com/odwichbj/sms?payment=s&c={{ packNumber }}" />
+            <input type="hidden" name="cancel_return" value="https://shop.app-wards.com/odwichbj/sms" />
+            <input name="bn" type="hidden" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHosted" />
+            
+            <mat-form-field style="margin-top: 15px;">
+              <input matInput type="number" name="stock" min="1" max="10000" 
+                placeholder="{{ 'SMS.BUY' | translate }} {{ packNumber * smsPack.smsNumber }} {{ 'SMS.ADD_SMS_LABEL' | translate }} {{ packNumber * smsPack.price }}{{ currency }}" 
+                [(ngModel)]="packNumber" (keypress)="onInputChange($event)" step="1">
+            </mat-form-field>
+
+            <button mat-raised-button class="btn btn-primary" (click)="form.submit()">{{ 'SMS.BUY_BTN' | translate }}</button>
+            <!-- <input alt="PayPal, le réflexe sécurité pour payer en ligne" name="submit" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_buynowCC_LG.gif" type="image" /> -->
+            <img src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" alt="" width="1" height="1" border="0" />
+        </form>
+
+    </div>
+    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+        <p class="lead theme-color bold">{{ 'SMS.NEW_STOCK' | translate }}</p>                                            
+        <app-circle-progress 
+            subtitle="{{ 'SMS.SMS' | translate }}"
+            [title]="(packNumber * smsPack.smsNumber) + quota" 
+            backgroundColor="#e2ae3d"
+            backgroundOpacity=1
+            backgroundStroke="#000000"
+            backgroundPadding="10"
+            radius=60
+            space=-7
+            maxPercent=100
+            unitsColor="#ffffff"
+            outerStrokeWidth=7
+            outerStrokeColor="#ffffff"
+            innerStrokeColor="#ffdf72"
+            innerStrokeWidth=7
+            titleColor="#ffffff"
+            titleFontSize="30"
+            subtitleColor="#ffffff"
+            subtitleFontSize=14
+            animationDuration=0
+            [showUnits]="false"
+            percent="80">
+        </app-circle-progress>
+    </div>
+  </div>
+</div>

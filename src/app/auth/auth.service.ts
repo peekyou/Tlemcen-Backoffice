@@ -85,6 +85,18 @@ export class AuthService {
         return this.userId;
     }
 
+    hasAnyPermission(permissions: string[]): boolean {
+        if (!permissions || !this.permissions) {
+            return false;
+        }
+        for (var i = 0; i < permissions.length; i++) {
+            if (this.permissions.indexOf(permissions[i]) > -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     hasPermission(permission: string): boolean {
         if (!permission || !this.permissions) {
             return false;

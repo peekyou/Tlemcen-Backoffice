@@ -5,9 +5,10 @@
                 <div *ngIf="!isEditing" class="card card-profile">
                     <div class="card-body">
                         <div class="card-avatar">
-                            <img class="img" src="../assets/images/faces/marc.jpg" />
+                            <img *ngIf="customer.picture && customer.picture.src" class="img" [src]="customer.picture.src" />
                         </div>
                         <div class="card-body">
+                            <br *ngIf="!customer.picture || !customer.picture.src">
                             <h4 class="card-title">{{ customer.firstname }} {{ customer.lastname }}</h4>
                             <div class="row">
                                 <div class="col-md-6">
@@ -30,7 +31,7 @@
                                     <b>{{ 'COMMON.BIRTHDATE' | translate }} :</b> {{ customer.birthDate | date:'dd/MM/yyyy' }}
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Pays de naissance :</b> {{ customer.birthCountry }}
+                                    <b>Pays de naissance :</b> {{ customer.birthCountry?.nameFr }}
                                 </div>
                             </div>
                             <div class="row">
@@ -43,7 +44,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <b>Nationalité :</b> {{ customer.nationality }}
+                                    <b>Nationalité :</b> {{ customer.nationality?.nameFr }}
                                 </div>
                                 <div class="col-md-6">
                                     <b>Connu l'agence par :</b> {{ customer.howKnewAgency }}

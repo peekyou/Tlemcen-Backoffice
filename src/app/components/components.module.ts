@@ -19,19 +19,24 @@ import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-roo
 import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
 import { DeleteDialogComponent } from './common/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from './common/confirmation-dialog/confirmation-dialog.component';
 import { SpinnerComponent } from './common/spinner/spinner.component';
 import { TravelServicesComponent } from './travels/travel-services/travel-services.component';
 import { CustomerTravelComponent } from './customers/customer-travel/customer-travel.component';
 import { FlightBookingComponent } from './airlines/flight-booking/flight-booking.component';
 import { FlightBookingDialogComponent } from './airlines/flight-booking-dialog/flight-booking-dialog.component';
 import { TravelDetailComponent } from './travels/travel-detail/travel-detail.component';
+import { PrintDocumentsDialogComponent } from './travels/print-documents-dialog/print-documents-dialog.component';
+import { CircleProgressComponent } from './common/circle-progress/circle-progress.component';
 
 const MODALS = [
   CustomerDialogComponent,
   SearchCustomerDialogComponent,
   HotelRoomsDialogComponent,
   DeleteDialogComponent,
+  ConfirmationDialogComponent,
   FlightBookingDialogComponent,
+  PrintDocumentsDialogComponent,
 ];
 
 @NgModule({
@@ -58,6 +63,7 @@ const MODALS = [
     CustomerTravelComponent,
     FlightBookingComponent,
     TravelDetailComponent,
+    CircleProgressComponent,
     ...MODALS,
   ],
   exports: [
@@ -76,6 +82,7 @@ const MODALS = [
     CustomerTravelComponent,
     FlightBookingComponent,
     TravelDetailComponent,
+    CircleProgressComponent,
     ...MODALS
   ],
   entryComponents: MODALS

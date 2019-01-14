@@ -2,7 +2,6 @@ import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 
-import { ToasterService } from '../../../core/services/toaster.service';
 import { Customer } from '../../../customers/customer.model';
 import { CustomersService } from '../../../customers/customers.service';
 import { CustomerDialogComponent } from '../customer-dialog/customer-dialog.component';
@@ -27,7 +26,6 @@ export class SearchCustomerDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<SearchCustomerDialogComponent>,
-    public toasterService: ToasterService,
     private service: CustomersService) {
       this.getCustomers();
   }

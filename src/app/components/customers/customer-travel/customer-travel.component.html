@@ -45,7 +45,9 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <app-travel-services [travelTypeId]="travel.travelTypeId" [customer]="customers[customerIndex]" (onChange)="onTravelServicesChange($event)"></app-travel-services>        
+      <app-travel-services [travelTypeId]="travel.travelTypeId" [customer]="customers[customerIndex]"
+        [isGroup]="isGroup" (onChange)="onTravelServicesChange($event)">
+      </app-travel-services>        
       
       <mat-action-row>
         <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
@@ -65,7 +67,7 @@
   
       <mat-action-row>
         <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
-        <button mat-button [disabled]="loading" class="btn btn-sm btn-info" (click)="validate()">Valider</button>
+        <button mat-button [disabled]="loading" class="btn btn-sm btn-info" (click)="openConfirmationDialog()">Valider</button>
       </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>

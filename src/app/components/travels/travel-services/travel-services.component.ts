@@ -16,6 +16,7 @@ import { Airline } from '../../../airlines/airline.model';
 import { validateDate, filterLookup } from '../../../core/helpers/utils';
 import { Lookup } from '../../../core/models/lookup.model';
 import { LookupService } from '../../../core/services/lookup.service';
+import { isMekka } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-travel-services',
@@ -29,7 +30,11 @@ export class TravelServicesComponent implements OnInit {
   hotelFees: Fee[] = [];
   flightFees: Fee[] = [];
   hotels: Hotel[];
+  hotelsMekka: Hotel[];
+  hotelsMedina: Hotel[];
   roomTypes: RoomType[];
+  takeHotelsSeparately = false;
+  takeFlightsSeparately = false;
   loader: Subscription;
   formData;
   _customer: CustomerDetail = {};
@@ -44,6 +49,7 @@ export class TravelServicesComponent implements OnInit {
   }
 
   @Input() travelTypeId;
+  @Input() isGroup = false;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -66,6 +72,8 @@ export class TravelServicesComponent implements OnInit {
     .subscribe(res => {
       this.fees = res[0];
       this.hotels = res[1].data;
+      this.hotelsMekka = this.hotels.filter(x => isMekka(x.address));
+      this.hotelsMedina = this.hotels.filter(x => !isMekka(x.address));
       this.roomTypes = res[2];
 
       this.fees.forEach(f => f.isServiceFee = true);
@@ -74,13 +82,25 @@ export class TravelServicesComponent implements OnInit {
   }
 
   initForm() {
+    if (this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0) {
+      for (var i = 0; i < this.customer.hotelBookings.length; i++) {
+        if (this.customer.hotelBookings[i].rooms && this.customer.hotelBookings[i].rooms.length > 0) {
+          this.takeHotelsSeparately = true;
+          break;
+        }
+      }
+    }
+    if (this.customer && this.customer.flightBookings && this.customer.flightBookings.length > 0) {
+      this.takeFlightsSeparately = true;
+    }
+
     this.form = this.fb.group({
-      hotelMekka: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 ? this.customer.hotelBookings[0].hotel.id : null),
-      hotelMekkaRoom: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 && this.customer.hotelBookings[0].rooms[0].roomType ? this.customer.hotelBookings[0].rooms[0].roomType.id : null),
-      hotelMekkaRoomPrice: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 ? this.customer.hotelBookings[0].rooms[0].price : null),
-      hotelMedina: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 ? this.customer.hotelBookings[1].hotel.id : null),
-      hotelMedinaRoom: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 && this.customer.hotelBookings[1].rooms[0].roomType ? this.customer.hotelBookings[1].rooms[0].roomType.id : null),
-      hotelMedinaRoomPrice: this.fb.control(this.customer && this.customer.hotelBookings && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 ? this.customer.hotelBookings[1].rooms[0].price : null),
+      hotelMekka: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 ? this.customer.hotelBookings[0].hotel.id : null),
+      hotelMekkaRoom: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 && this.customer.hotelBookings[0].rooms[0].roomType ? this.customer.hotelBookings[0].rooms[0].roomType.id : null),
+      hotelMekkaRoomPrice: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 ? this.customer.hotelBookings[0].rooms[0].price : null),
+      hotelMedina: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 ? this.customer.hotelBookings[1].hotel.id : null),
+      hotelMedinaRoom: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 && this.customer.hotelBookings[1].rooms[0].roomType ? this.customer.hotelBookings[1].rooms[0].roomType.id : null),
+      hotelMedinaRoomPrice: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 ? this.customer.hotelBookings[1].rooms[0].price : null),
     });
 
     this.form.valueChanges.subscribe(data => {
@@ -124,10 +144,17 @@ export class TravelServicesComponent implements OnInit {
 
   emitChanges() {
     var selectedFees = this.fees ? this.fees.filter(f => f.checked) : [];
+    if (this.takeHotelsSeparately) {
+      selectedFees = selectedFees.concat(this.hotelFees);
+    }
+    if (this.takeFlightsSeparately) {
+      selectedFees = selectedFees.concat(this.flightFees);
+    }
+
     this.onChange.emit({ 
-      fees: selectedFees.concat(this.hotelFees).concat(this.flightFees),
-      hotelBookings: this.customer.hotelBookings,
-      flightBookings: this.customer.flightBookings
+      fees: selectedFees,
+      hotelBookings: this.takeHotelsSeparately ? this.customer.hotelBookings : [],
+      flightBookings: this.takeFlightsSeparately ? this.customer.flightBookings : []
     });
   }
 
@@ -153,9 +180,15 @@ export class TravelServicesComponent implements OnInit {
   }
 
   reset() {
-    if (this.form) {
+    if (this.form && !this.isGroup) {
       this.form.reset();
     }
+    else if (this.form) {
+      // If this is a group, we keep the hotels, so we need to emit the 
+      // this.setHotelFees(this.form.value);
+      // this.emitChanges();
+    }
+
     if (this.fees) {
       this.fees.forEach(f => {
         f.checked = false;

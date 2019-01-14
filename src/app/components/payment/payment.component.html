@@ -18,13 +18,21 @@
             <div class="col">Montant payé</div>
             <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
         </div>
+        
+        <!-- Display payment details in read only mode -->
+        <div *ngIf="readOnly" class="payment-details">
+            <div *ngFor="let payment of customer.payments" class="row">
+                <div class="col payment-date">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
+                <div class="col amount">{{ payment.amountPaid }}€</div>
+            </div>
+        </div>
 
         <mat-form-field *ngIf="!readOnly">
             <input type='number' matInput min="0" placeholder="Accorder une remise" formControlName="discount">
         </mat-form-field>
 
         <div class="total row bold">
-            <div class="col">A PAYER</div>
+            <div class="col">RESTE A PAYER</div>
             <div class="col">{{ getAmountToPay() }}€</div>
         </div>
         <div *ngIf="getAmountToRefund() > 0" class="total row bold">

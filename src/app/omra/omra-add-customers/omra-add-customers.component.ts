@@ -29,7 +29,7 @@ export class OmraAddCustomersComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id'] && params['customerId']) {
-        this.travelService.getTraveler(params['id'], params['customerId'])
+        this.travelService.getTraveler(params['id'], params['customerId'], true)
           .subscribe(
             res => {
               if (!res) {
@@ -49,6 +49,7 @@ export class OmraAddCustomersComponent implements OnInit {
             this.customers = this.travelService.travelWithCustomers.customers;
             this.omra = this.travelService.travelWithCustomers.travel;
             this.isGroup = this.travelService.travelWithCustomers.isGroup;
+            this.travelService.travelWithCustomers = null;
           }
           else {
               this.router.navigate(['../../'], { relativeTo: this.route });

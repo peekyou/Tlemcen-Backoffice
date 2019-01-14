@@ -16,11 +16,14 @@ export class Customer {
     profession?: string;
     address?: Address;
     relationship?: string;
-    nationalityCode?: string;
+    nationality?: Lookup;
     passportNumber?: string;
     passportExpiryDate?: Date;
-    birthCountryCode?: string;
+    passportIssuingCountry?: Lookup;
+    birthCountry?: Lookup;
     howKnewAgency?: string;
+    bloodGroup?: string;
+    medicalInfo?: string;
     picture?: AppFile;
     documents?: CustomerDocument[];
     travelPayment?: Payment;
@@ -31,7 +34,7 @@ export class Customer {
     constructor() {
         this.address = new Address();
         this.travelPayment = {};
-        this.picture = {};
+        this.picture = null; // Set to null for upload component
 		this.documents = [];
     }
 }

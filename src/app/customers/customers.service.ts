@@ -29,7 +29,7 @@ export class CustomersService {
     return this.http.post(this.resource, customer);
   }
 
-  updateCustomer(customer: Customer): Observable<Customer> {
+  updateCustomer(customer: Customer): Observable<boolean> {
     return this.http.put(this.resource + '/' + customer.id, customer);
   }
 

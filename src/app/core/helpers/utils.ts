@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export function guid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -49,6 +51,11 @@ export function validateDate(event: any) {
         // invalid character, prevent input
         event.preventDefault();
     }
+}
+
+export function dateToMoment(date) {
+    if (date) return moment(date);
+    return null;
 }
 
 export function filterLookup(value: string, list: any[]): any[] {

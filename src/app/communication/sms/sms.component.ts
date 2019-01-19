@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { TranslationService } from '../../core/services/translation.service';
 import { ModalButtons } from '../../core/models/modal';
 import { SmsService } from './sms.service';
 import { SmsPack } from './sms-pack.model';
+import { Campaign, CampaignFilter } from '../campaign.model';
 
 @Component({
   selector: 'app-sms',
@@ -29,6 +30,7 @@ export class SmsComponent implements OnInit {
   constructor(
     private service: SmsService,
     private translation: TranslationService,
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private fb: FormBuilder) { 
           
@@ -42,6 +44,21 @@ export class SmsComponent implements OnInit {
   }
 
   ngOnInit() {
+    var payment = this.route.snapshot.paramMap.get('payment');
+    var packCount = this.route.snapshot.paramMap.get('c');
+    
+
+    this.route.queryParamMap.subscribe(params => {
+      var payment = params.get('payment');
+      var packCount = params.get('c');
+      if (payment == 's' && packCount) {
+        this.service.buyPack(parseInt(packCount))
+          .subscribe(
+            res => this.smsPack.quota += res,
+            err => console.log(err)
+          );
+      }
+  });
   }
 
   initForm() {
@@ -82,6 +99,7 @@ export class SmsComponent implements OnInit {
 
       let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '534px',
+        autoFocus: false,
         data: {
           text: sentence,
           buttons: ModalButtons.OkCancel
@@ -96,32 +114,25 @@ export class SmsComponent implements OnInit {
   }
   
   submit() {
-      // var promoInfo = this.topLevelForm.value['stepInfo'];
-      // var promoFilter = this.topLevelForm.value['stepFilter'];
-      // let newPromotion: Promotion = {
-      //     createdDate: new Date(),
-      //     details: promoInfo.details,
-      //     name: promoInfo.name,
-      //     promotionType: promoInfo.promotionType,
-      //     fromDate: ngbDateStructToDate(promoInfo.dateFrom),
-      //     toDate: ngbDateStructToDate(promoInfo.dateTo),
-      //     percentage: promoInfo.percentage,
-      //     nbRecipients: promoInfo.nbRecipients,
-      //     filter: PromotionFilter.createFromForm(promoFilter)
-      // };
+      var promoInfo = this.topLevelForm.value['stepInfo'];
+      var promoFilter = this.topLevelForm.value['stepFilter'];
+      let newCampaign: Campaign = {
+          createdDate: new Date(),
+          content: promoInfo.details,
+          name: promoInfo.name,
+          promotionType: promoInfo.promotionType,
+          // fromDate: ngbDateStructToDate(promoInfo.dateFrom),
+          // toDate: ngbDateStructToDate(promoInfo.dateTo),
+          nbRecipients: promoInfo.nbRecipients,
+          campaignFilter: CampaignFilter.createFromForm(promoFilter)
+      };
 
-      // this.submitSubscription = this.service
-      //     .create(newPromotion)
-      //     .subscribe(
-      //         p => {
-      //             this.reload = true;
-      //             // this.reset();
-      //         },
-      //         err => { 
-      //             console.log(err);
-      //             this.notifications.setErrorNotification();
-      //          }
-      //     );
+      this.submitSubscription = this.service
+        .createCampaign(newCampaign)
+        .subscribe(p => {
+            this.reload = true;
+            this.reset();
+        });
   }
 
   reset() {

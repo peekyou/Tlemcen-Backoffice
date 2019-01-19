@@ -5,14 +5,14 @@ export class Campaign {
     createdDate?: Date;
     fromDate?: Date;
     toDate?: Date;
-    details?: string;
+    content?: string;
     nbSmsSent?: number;
     nbRecipients?: number;
-    filter?: CampaignFilter;
+    campaignFilter?: CampaignFilter;
     promotionType?: string;
 
     constructor() {
-        this.filter = new CampaignFilter();
+        this.campaignFilter = new CampaignFilter();
     }
 }
 

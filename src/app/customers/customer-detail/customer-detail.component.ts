@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Customer } from '../customer.model';
 import { CustomersService } from '../customers.service';
@@ -12,6 +13,7 @@ import { CustomersService } from '../customers.service';
 export class CustomerDetailComponent implements OnInit {
   isEditing = false;
   customer: Customer;
+  saveSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,8 +23,7 @@ export class CustomerDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-          this.service.getCustomer(params['id'])
-            .subscribe(res => this.customer = res);
+        this.getCustomer(params['id']);
       }
     })
   }
@@ -32,7 +33,16 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   saveCustomer(customer: Customer) {
-    this.isEditing = false;
-    this.customer = customer;
+    this.saveSubscription = this.service.updateCustomer(customer)
+    .subscribe(res => {
+      if (res === true) {
+        this.isEditing = false;
+        this.getCustomer(customer.id);
+      }
+    });
+  }
+
+  getCustomer(id) {
+    this.service.getCustomer(id).subscribe(res => this.customer = res);
   }
 }

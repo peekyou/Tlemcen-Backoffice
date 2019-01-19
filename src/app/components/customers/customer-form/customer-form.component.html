@@ -19,7 +19,7 @@
             </mat-form-field>
             <mat-form-field class="full-width">
                 <input matInput [matDatepicker]="picker" maxlength="10" (keypress)="validateDate($event)"
-                    placeholder="{{ 'COMMON.BIRTHDATE' | translate }}" formControlName="birthDate" required>
+                    placeholder="{{ 'COMMON.BIRTHDATE' | translate }}" formControlName="birthDate">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-error *ngIf="birthDate.errors?.required && (birthDate.dirty ||birthDate.touched)">

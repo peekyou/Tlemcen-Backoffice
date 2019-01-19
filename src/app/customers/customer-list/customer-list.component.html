@@ -26,7 +26,7 @@
                                 <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }" [routerLink]="['/customers', customer.id]">
                                   <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                                   <td>{{ customer.gender }}</td>
-                                  <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
+                                  <td><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
                                   <td>{{ customer.mobileNumber }}</td>
                                   <td>{{ customer.email }}</td>
                                   <td>

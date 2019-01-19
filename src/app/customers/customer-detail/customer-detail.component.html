@@ -62,12 +62,13 @@
                 </div>
                 <div *ngIf="isEditing" class="card">
                     <div class="card-body">
-                      <app-customer-form [customer]="customer" (onSave)="saveCustomer($event)" (onCancel)="isEditing=false">
+                      <app-customer-form [customer]="customer" [submitSubscription]="saveSubscription"
+                        (onSave)="saveCustomer($event)" (onCancel)="isEditing=false">
                       </app-customer-form>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Participations</h4>
@@ -86,7 +87,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
   </div>

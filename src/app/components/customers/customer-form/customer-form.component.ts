@@ -4,11 +4,12 @@ import { FormBuilder, FormControl, Validators, AbstractControl, ValidationErrors
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription, Observable, forkJoin } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
+import * as moment from 'moment';
 
 import { LookupService } from '../../../core/services/lookup.service';
 import { Lookup } from '../../../core/models/lookup.model';
 import { Customer } from '../../../customers/customer.model';
-import { validateDate, filterLookup } from '../../../core/helpers/utils';
+import { validateDate, filterLookup, dateToMoment } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-customer-form',
@@ -39,7 +40,6 @@ export class CustomerFormComponent implements OnInit {
         private fb: FormBuilder,
         private lookupService: LookupService,
         private router: Router) {
-
         this.validateDate = validateDate;
     }
 
@@ -79,16 +79,20 @@ export class CustomerFormComponent implements OnInit {
         this.customer.passportExpiryDate = this.form.value.passportExpiryDate;
         this.customer.passportIssuingCountry = this.form.value.passportIssuingCountry;
         this.customer.nationality = this.form.value.nationality;
-        this.customer.profession = this.form.value.profession ? this.form.value.profession.name : null;
+        this.customer.profession = this.form.value.profession && this.form.value.profession.name ? this.form.value.profession.name : this.form.value.profession;
         this.customer.bloodGroup = this.form.value.bloodGroup;
         this.customer.medicalInfo = this.form.value.medicalInfo;
-		var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
+        var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
+
+        if (!this.customer.address) {
+            this.customer.address = {};
+        }
 		this.customer.address.city = cityPostalCode[0];
 		this.customer.address.postalCode = cityPostalCode[1];
 		this.customer.address.addressLine1 = this.form.value.address1;
-		this.customer.address.country.id = 'FR';
+        this.customer.address.country.id = 'FR';
         
-		this.onSave.emit(this.customer);
+        this.onSave.emit(this.customer);
     }
 
     setCustomerPicture(picture: WebcamImage) {
@@ -119,7 +123,7 @@ export class CustomerFormComponent implements OnInit {
             gender: this.fb.control(this.customer.gender ? this.customer.gender : 'M', Validators.required),
             firstname: this.fb.control(this.customer.firstname, Validators.required),
             lastname: this.fb.control(this.customer.lastname, Validators.required),
-            birthDate: this.fb.control(this.customer.birthDate, Validators.required),
+            birthDate: this.fb.control(dateToMoment(this.customer.birthDate)),
             mobile: this.fb.control(this.customer.mobileNumber),
             phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
@@ -129,7 +133,7 @@ export class CustomerFormComponent implements OnInit {
             address1: this.fb.control(this.customer.address ? this.customer.address.addressLine1 : null),
             cityPostalCode: this.fb.control(this.customer.address && this.customer.address.city && this.customer.address.postalCode ? this.customer.address.postalCode + ' - ' + this.customer.address.city : null),
             passportNumber: this.fb.control(this.customer.passportNumber),
-            passportExpiryDate: this.fb.control(this.customer.passportExpiryDate),
+            passportExpiryDate: this.fb.control(dateToMoment(this.customer.passportExpiryDate)),
             passportIssuingCountry: this.fb.control(this.customer.passportIssuingCountry ? this.customer.passportIssuingCountry.id : null),
             howKnewAgency: this.fb.control(null),
             bloodGroup: this.fb.control(this.customer.bloodGroup),
@@ -217,6 +221,11 @@ export class CustomerFormComponent implements OnInit {
         if (value && value.id) {
             postalCode = value.id.split(' - ')[0];
             city = value.id.split(' - ')[1];
+        }
+        else if (typeof value === 'string' && value) {
+            var s = <string>value;
+            postalCode = s.split(' - ')[0];
+            city = s.split(' - ')[1];
         }
         return [city, postalCode];
     }

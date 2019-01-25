@@ -44,14 +44,17 @@ export class OmraListComponent implements OnInit {
     this.getOmraList();
   }
 
-  newOmra() {
+  openOmraDialog(omra: Omra = null) {
     let dialogRef = this.dialog.open(OmraDialogComponent, {
       autoFocus: true,
-      width: '534px'
+      width: '534px',
+      data: {
+        omra: omra
+      }
     });
 
     dialogRef.afterClosed().subscribe(newOmra => {
-      if (newOmra) {
+      if (newOmra && newOmra.id) {
         this.router.navigate(['/omra', newOmra.id]);
       }
     });

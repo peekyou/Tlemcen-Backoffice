@@ -12,10 +12,10 @@ import { HotelRoomReservation } from '../../../hotels/hotel-room-reservation.mod
 import { Airline } from '../../../airlines/airline.model';
 import { FlightBooking } from '../../../airlines/flight-booking.model';
 import { Travel, TravelType } from '../../../travels/travel.model';
-import { SearchCustomerDialogComponent } from '../../../components/customers/search-customer-dialog/search-customer-dialog.component';
-import { HotelRoomsDialogComponent } from '../../../components/hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
-import { FlightBookingDialogComponent } from '../../../components/airlines/flight-booking-dialog/flight-booking-dialog.component';
-import { DeleteDialogComponent } from '../../../components/common/delete-dialog/delete-dialog.component';
+import { SearchCustomerDialogComponent } from '../../customers/search-customer-dialog/search-customer-dialog.component';
+import { HotelRoomsDialogComponent } from '../..//hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
+import { FlightBookingDialogComponent } from '../..//airlines/flight-booking-dialog/flight-booking-dialog.component';
+import { DeleteDialogComponent } from '../..//common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-travel-detail',
@@ -64,7 +64,7 @@ export class TravelDetailComponent implements OnInit {
   openAddCustomerDialog(isGroup = false) {
     let dialogRef = this.dialog.open(SearchCustomerDialogComponent, {
         autoFocus: false,
-        width: '534px',
+        width: isGroup ? '634px' : '534px',
         data: {
           title: 'Pèlerins ' + this.travel.name,
           travel: this.travel,

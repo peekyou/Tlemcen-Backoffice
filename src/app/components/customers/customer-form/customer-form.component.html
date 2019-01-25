@@ -104,6 +104,12 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <label style="display:block">Converti</label>
+            <mat-radio-group formControlName="isConverted">
+                <mat-radio-button style="margin-bottom: 11px" value="T">{{ 'COMMON.YES' | translate }}</mat-radio-button>
+                <mat-radio-button style="margin-left: 15px" value="F">{{ 'COMMON.NO' | translate }}</mat-radio-button>
+            </mat-radio-group>
             <mat-form-field class="full-width">
                 <input matInput placeholder="Groupe sanguin" formControlName="bloodGroup">
             </mat-form-field>

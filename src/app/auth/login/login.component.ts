@@ -12,7 +12,6 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   loginSubscription: Subscription;
-  error: boolean = false;
   username = this.fb.control('', Validators.required);
   password = this.fb.control('', Validators.required);
 
@@ -37,13 +36,10 @@ export class LoginComponent implements OnInit {
           .subscribe(result => {
               if (result === true) {
                   this.router.navigate(['/']);
-              } else {
-                  this.error = true;
               }
           },
           err => {
               console.log(err);
-              this.error = err.error && err.error.errorCode ? err.error.errorCode : true;
           });
   }
 }

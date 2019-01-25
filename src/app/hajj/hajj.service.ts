@@ -27,5 +27,8 @@ export class HajjService extends TravelService {
     hajj.travelTypeId = TravelType.Hajj;
     return super.createTravel(hajj);
   }
+  
+  updateHajj(hajj: Hajj): Observable<Hajj> {
+    return super.updateTravel(hajj);
+  }
 }
-

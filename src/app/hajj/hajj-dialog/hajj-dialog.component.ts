@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, Validators,  FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { validateDate } from '../../core/helpers/utils';
 
 import { HajjService } from '../hajj.service';
+import { Hajj } from '../hajj.model';
 
 @Component({
   selector: 'app-hajj-dialog',
@@ -16,32 +17,40 @@ export class HajjDialogComponent implements OnInit {
   form: FormGroup;
   saveSubscription: Subscription;
   validateDate: Function;
+  hajj: Hajj = new Hajj();
+  isEdit = false;
 
   constructor(
     private fb: FormBuilder,
     private service: HajjService,
     public dialogRef: MatDialogRef<HajjDialogComponent>,
-    private dialog: MatDialog) { 
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialog) {
+
       this.validateDate = validateDate;
-    }
+      if (data && data.hajj) {
+        this.hajj = data.hajj;
+        this.isEdit = true;
+      }
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
-      startDate: this.fb.control(null, Validators.required),
-      endDate: this.fb.control(null, Validators.required),
-      price: this.fb.control(null, Validators.required),
+      startDate: this.fb.control(this.hajj.startDate, Validators.required),
+      endDate: this.fb.control(this.hajj.endDate, Validators.required),
+      price: this.fb.control(this.hajj.unitPrice, Validators.required),
     });
   }
 
   save() {
     this.loading = true;
-    this.saveSubscription = this.service.createHajj({
-      name: 'Hajj ' + this.form.value.startDate.year(),
-      startDate: this.form.value.startDate,
-      endDate: this.form.value.endDate,
-      unitPrice: this.form.value.price,
-      status: new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours'
-    })
+    this.hajj.name = 'Hajj ' + this.form.value.startDate.year();
+    this.hajj.startDate = this.form.value.startDate;
+    this.hajj.endDate = this.form.value.endDate;
+    this.hajj.unitPrice = this.form.value.price;
+    this.hajj.status = new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours';
+
+    this.saveSubscription = this.saveHajj()
     .subscribe(
       res => {
         this.loading = false;
@@ -51,6 +60,10 @@ export class HajjDialogComponent implements OnInit {
         this.loading = false;
         console.log(err);
       });
+  }
+
+  private saveHajj() : Observable<Hajj> {
+    return this.isEdit ? this.service.updateHajj(this.hajj) : this.service.createHajj(this.hajj);
   }
 
   cancel() {

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormControl, Validators,  FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { OmraService } from '../omra.service';
+import { Omra } from '../omra.model';
 import { validateDate } from '../../core/helpers/utils';
 
 @Component({
@@ -16,21 +17,29 @@ export class OmraDialogComponent implements OnInit {
   form: FormGroup;
   saveSubscription: Subscription;
   validateDate: Function;
+  omra: Omra = new Omra();
+  isEdit = false;
 
   constructor(
     private fb: FormBuilder,
     private service: OmraService,
     public dialogRef: MatDialogRef<OmraDialogComponent>,
-    private dialog: MatDialog) { 
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialog) {
+
       this.validateDate = validateDate;
-    }
+      if (data && data.omra) {
+        this.omra = data.omra;
+        this.isEdit = true;
+      }
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
-      name: this.fb.control(null, Validators.required),
-      startDate: this.fb.control(null, Validators.required),
-      endDate: this.fb.control(null, Validators.required),
-      price: this.fb.control(null, Validators.required),
+      name: this.fb.control(this.omra.name, Validators.required),
+      startDate: this.fb.control(this.omra.startDate, Validators.required),
+      endDate: this.fb.control(this.omra.endDate, Validators.required),
+      price: this.fb.control(this.omra.unitPrice, Validators.required),
     });
   }
 
@@ -41,13 +50,13 @@ export class OmraDialogComponent implements OnInit {
       name = 'Omra ' + name;
     }
     
-    this.saveSubscription = this.service.createOmra({
-      name: name,
-      startDate: this.form.value.startDate,
-      endDate: this.form.value.endDate,
-      unitPrice: this.form.value.price,
-      status: new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours'
-    })
+    this.omra.name = name;
+    this.omra.startDate = this.form.value.startDate;
+    this.omra.endDate = this.form.value.endDate;
+    this.omra.unitPrice = this.form.value.price;
+    this.omra.status = new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours';
+
+    this.saveSubscription = this.saveOmra()
     .subscribe(
       res => {
         this.loading = false;
@@ -57,6 +66,10 @@ export class OmraDialogComponent implements OnInit {
         this.loading = false;
         console.log(err);
       });
+  }
+
+  private saveOmra() : Observable<Omra> {
+    return this.isEdit ? this.service.updateOmra(this.omra) : this.service.createOmra(this.omra);
   }
 
   cancel() {

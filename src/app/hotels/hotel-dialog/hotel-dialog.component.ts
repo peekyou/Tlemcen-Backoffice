@@ -39,6 +39,7 @@ export class HotelDialogComponent implements OnInit {
             name: this.fb.control(this.hotel.name, Validators.required),
             city: this.fb.control(null, Validators.required),
             category: this.fb.control(this.hotel.category || ''),
+            haramDistance: this.fb.control(this.hotel.haramDistance),
             phone: this.fb.control(this.hotel.contactPhoneNumber),
             email: this.fb.control(this.hotel.contactEmail, (c) => this.customEmailValidator(c)),
             roomsCount: this.fb.control(this.hotel.roomsCount)
@@ -61,6 +62,7 @@ export class HotelDialogComponent implements OnInit {
         this.hotel.roomsCount = this.form.value.roomsCount;
         this.hotel.contactEmail = this.form.value.email;
         this.hotel.contactPhoneNumber = this.form.value.phone;
+        this.hotel.haramDistance = this.form.value.haramDistance;
         if (!this.hotel.address) {
             this.hotel.address = {};
         }

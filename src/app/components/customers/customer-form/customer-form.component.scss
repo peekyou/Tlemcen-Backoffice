@@ -1,10 +1,6 @@
 .picture {
     margin-bottom: 25px;
     text-align: center;
-    
-    label {
-        margin: 0;
-    }
 
     img {
         margin-top: 15px;
@@ -12,4 +8,11 @@
         max-height: 130px;
         // border-radius: 50%;
     }
+}
+
+    
+label {
+    margin-bottom: 0;
+    color: rgba(0,0,0,.54);
+    font-size: 15px;
 }

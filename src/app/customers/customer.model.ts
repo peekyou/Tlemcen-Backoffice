@@ -24,6 +24,7 @@ export class Customer {
     howKnewAgency?: string;
     bloodGroup?: string;
     medicalInfo?: string;
+    isConverted?: boolean;
     picture?: AppFile;
     documents?: CustomerDocument[];
     travelPayment?: Payment;

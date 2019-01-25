@@ -5,28 +5,31 @@ import { Omra } from './omra.model';
 import { TravelType } from '../travels/travel.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
+import { TravelService } from '../travels/travel.service';
 
 @Injectable()
-export class OmraService {
-  resource = 'omras';
-
-  constructor(private http: AuthHttpService) { }
-    
+export class OmraService extends TravelService {
+  
+  constructor(http: AuthHttpService) {
+    super(http);
+    this.resource = 'hajjs';
+  }
+  
   getOmraList(page: number, count: number): Observable<PagingResponse<Omra>> {
-    return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
+    return super.getTravels(page, count);
   }
 
-  getOmra(id): Observable<Omra> {
-    return this.http.get(this.resource + '/' + id);
+  getOmra(id: string, itemsCount: number): Observable<Omra> {
+    return super.getTravel(id, itemsCount);
   }
 
-  createOmra(omra: Omra): Observable<Omra> {
-    omra.travelTypeId = TravelType.Omra;
-    return this.http.post('travels', omra);
+  createOmra(hajj: Omra): Observable<Omra> {
+    hajj.travelTypeId = TravelType.Omra;
+    return super.createTravel(hajj);
   }
-
-  deleteOmra(id: string) : Observable<boolean> {
-    return this.http.delete(this.resource + '/' + id);
+  
+  updateOmra(hajj: Omra): Observable<Omra> {
+    return super.updateTravel(hajj);
   }
 }
 

@@ -20,7 +20,7 @@
                             <h4 class="card-title pull-left">Hôtels</h4>
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table table-hover">
+                            <table class="table">
                                 <thead class="text-warning">
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th>Pèlerins</th>
@@ -57,8 +57,8 @@
                 <div *ngIf="travel.flightBookings && travel.flightBookings.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openFlightBookingDialog()"><mat-icon>flight</mat-icon>Ajouter un vol</button>
-                        <!-- <button class="btn btn-info"><mat-icon>view_module</mat-icon>Organiser les vols</button> -->
-                        <button [disabled]="generatingAirlinesFiles" class="btn btn-info" (click)="downloadAirlinesFile()"><mat-icon>cloud_download</mat-icon>Télécharger les fichiers</button>
+                        <!-- <button routerLink="flights" class="btn btn-info"><mat-icon>view_module</mat-icon>Organiser les vols</button> -->
+                        <button [disabled]="generatingAirlinesFiles" class="btn btn-info" (click)="downloadAirlinesFile()"><mat-icon>cloud_download</mat-icon>Manifest PNR</button>
                     </div>
                     <div class="card">
                         <div class="card-header card-header-warning">
@@ -74,7 +74,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let booking of travel.flightBookings">
+                                    <tr *ngFor="let booking of travel.flightBookings" [routerLink]="['flights', booking.id]">
                                         <td>{{ booking.flight?.airline?.name }}</td>
                                         <td><span class="bold">{{ booking.departureDate | date:'dd/MM' }}</span> {{ booking.flight?.airportFrom }}</td>
                                         <td><span class="bold">{{ booking.arrivalDate | date:'dd/MM' }}</span> {{ booking.flight?.airportTo }}</td>

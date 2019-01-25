@@ -13,4 +13,7 @@ export class FlightBooking {
     displayOrder?: number;
     travelerCount?: number;
     isSeparateBooking?: boolean;
+
+    // UI fields
+    expanded: boolean;
 }

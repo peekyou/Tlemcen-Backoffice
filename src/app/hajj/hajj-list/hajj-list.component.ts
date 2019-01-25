@@ -41,14 +41,17 @@ export class HajjListComponent implements OnInit {
     this.getHajjList();
   }
 
-  newHajj() {
+  openHajjDialog(hajj: Hajj = null) {
     let dialogRef = this.dialog.open(HajjDialogComponent, {
       autoFocus: true,
-      width: '534px'
+      width: '534px',
+      data: {
+        hajj: hajj
+      }
     });
 
     dialogRef.afterClosed().subscribe(newHajj => {
-      if (newHajj) {
+      if (newHajj && newHajj.id) {
         this.router.navigate(['/hajj', newHajj.id]);
       }
     });

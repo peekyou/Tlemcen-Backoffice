@@ -7,8 +7,8 @@ import { SetPasswordComponent } from './set-password/set-password.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'forget-password', component: ForgetPasswordComponent },
-  { path: 'set-password', component: SetPasswordComponent }
+  { path: 'forgetpassword', component: ForgetPasswordComponent },
+  { path: 'setpassword', component: SetPasswordComponent }
 ];
 
 @NgModule({

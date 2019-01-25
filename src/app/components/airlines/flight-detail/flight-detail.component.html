@@ -1,0 +1,33 @@
+<div class="action-buttons">
+    <button class="btn btn-info" (click)="openAddCustomerDialog()"><mat-icon>person_add</mat-icon>Ajouter des voyageurs</button>
+</div>
+<div *ngIf="flightBooking" class="card">
+  <div class="card-header card-header-warning">
+    <h4 class="card-title pull-left">{{ flightBooking.flight.airline.name }} {{ flightBooking.flight.flightNumber }}  {{ flightBooking.flight.airportFrom }}-{{ flightBooking.flight.airportTo }}</h4>
+  </div>
+  <div class="card-body table-responsive" 
+    *ngIf="travelers && travelers.data && travelers.data.length > 0">
+    <table class="table">
+      <thead class="text-warning">
+        <th>Nom</th>
+        <th>Telephone</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of travelers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: travelers.paging?.totalCount }">
+          <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+          <td>{{ customer.mobileNumber }}</td>
+          <td>
+            <button mat-icon-button matTooltip="Enlever du vol" (click)="openRemovePilgrimDialog(customer);$event.stopPropagation()">
+                <mat-icon class="text-danger">close</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <pagination-controls *ngIf="travelers" (pageChange)="pageChanged($event)" 
+      autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+  </pagination-controls>
+</div>
+<app-spinner [loader]="loader"></app-spinner>

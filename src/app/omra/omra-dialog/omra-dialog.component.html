@@ -19,7 +19,7 @@
         <input matInput [matDatepicker]="endDate" maxlength="10" (keypress)="validateDate($event)"
           placeholder="Date de fin" formControlName="endDate" required>
         <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
-        <mat-datepicker #endDate></mat-datepicker>
+        <mat-datepicker #endDate [startAt]="form.value.startDate"></mat-datepicker>
         <mat-error *ngIf="endDate.errors?.required && (endDate.dirty ||endDate.touched)">
             {{ 'FORM.INVALID_DATE' | translate }}
         </mat-error>

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="action-buttons">
-                    <button class="btn btn-info" (click)="newOmra()"><mat-icon>add</mat-icon>Ajouter une Omra</button>
+                    <button class="btn btn-info" (click)="openOmraDialog()"><mat-icon>add</mat-icon>Ajouter une Omra</button>
                 </div>
                 <app-spinner [loader]="loader"></app-spinner>
                 <div class="card" *ngIf="loader.closed && omraList && omraList.data && omraList.data.length > 0">
@@ -18,6 +18,7 @@
                                     <th>Nombre de personnes</th>
                                     <th>Statut</th>
                                     <th>Revenus</th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let omra of omraList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: omraList?.paging?.totalCount }" [routerLink]="['/omra', omra.id]">
@@ -25,6 +26,11 @@
                                         <td>{{ omra.travelerCount }}</td>
                                         <td>{{ omra.status }}</td>
                                         <td class="text-primary">{{ omra.revenues }}€</td>
+                                        <td>
+                                            <button mat-icon-button matTooltip="Modifier" (click)="openOmraDialog(omra);$event.stopPropagation()">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

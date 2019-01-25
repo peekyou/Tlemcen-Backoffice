@@ -1,0 +1,36 @@
+<div *ngFor="let booking of flightBookings" class="card">
+  <div class="card-header card-header-warning" (click)="booking.expanded = !booking.expanded">
+    <h4 class="card-title pull-left">{{ booking.flight.airline.name }} {{ booking.flight.flightNumber }}  {{ booking.flight.airportFrom }}-{{ booking.flight.airportTo }}</h4>
+    <div class="card-header-actions">
+        <button mat-icon-button>
+          <mat-icon *ngIf="booking.expanded">expand_more</mat-icon>
+          <mat-icon *ngIf="!booking.expanded">chevron_right</mat-icon>
+        </button>
+    </div>
+  </div>
+  <div class="card-body table-responsive" 
+    *ngIf="booking.expanded && travelersByFlight[booking.id] && travelersByFlight[booking.id].data && travelersByFlight[booking.id].data.length > 0">
+    <table class="table">
+      <thead class="text-warning">
+        <th>Nom</th>
+        <th>Telephone</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of travelersByFlight[booking.id].data | paginate: { itemsPerPage: itemsPerPage, currentPage: pages[booking.id], totalItems: travelersByFlight[booking.id].paging?.totalCount, id: booking.id }">
+          <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+          <td>{{ customer.mobileNumber }}</td>
+          <td>
+            <button mat-icon-button matTooltip="Enlever du vol" (click)="openRemovePilgrimDialog(booking, customer);$event.stopPropagation()">
+                <mat-icon class="text-danger">close</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <pagination-controls *ngIf="booking.expanded && travelersByFlight[booking.id]" (pageChange)="pageChanged($event, booking.id)" 
+      [id]="booking.id" autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+  </pagination-controls>
+  <app-spinner [loader]="loader"></app-spinner>
+</div>

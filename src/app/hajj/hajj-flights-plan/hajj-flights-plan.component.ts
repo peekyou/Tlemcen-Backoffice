@@ -6,21 +6,21 @@ import { Hajj } from '../hajj.model';
 import { HajjService } from '../hajj.service';
 
 @Component({
-  selector: 'app-hajj-rooms-plan',
-  templateUrl: './hajj-rooms-plan.component.html',
-  styleUrls: ['./hajj-rooms-plan.component.scss']
+  selector: 'app-hajj-flights-plan',
+  templateUrl: './hajj-flights-plan.component.html',
+  styleUrls: ['./hajj-flights-plan.component.scss']
 })
-export class HajjRoomsPlanComponent implements OnInit {
-  hajj: Hajj;
+export class HajjFlightsPlanComponent implements OnInit {
+  flightBookingId: string;
+  hajjId: string;
   loader: Subscription;
 
   constructor(private route: ActivatedRoute, private service: HajjService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      if(params['id']) {
-        this.loader = this.service.getHajj(params['id'], null).subscribe(res => this.hajj = res );
-      }
+      this.hajjId = params['id'];
+      this.flightBookingId = params['flightId'];
     });
   }
 }

@@ -3,8 +3,8 @@
     <span *ngIf="isEdit">{{ hotel.name }}</span>
 </div>
 <div mat-dialog-content>
-    <form [formGroup]="form">
-      <div>
+  <form [formGroup]="form">
+    <div>
         <div class="row">
             <mat-form-field class="col">
                 <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
@@ -17,8 +17,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-
-          <div class="row">
+        <div class="row">
             <div class="col hotel-category">
                 <label>Catégorie</label>
                 <star-rating-control staticColor="ok" starType="svg" size="medium" 
@@ -27,8 +26,8 @@
             <mat-form-field class="col">
                 <input type='number' matInput placeholder="Nombre de chambres" formControlName="roomsCount">
             </mat-form-field>
-          </div>
-          <div class="row">
+        </div>
+        <div class="row">
             <mat-form-field class="col">
                 <input type='number' matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="phone">
             </mat-form-field>
@@ -38,12 +37,17 @@
                     {{ 'FORM.INVALID_EMAIL' | translate }}
                 </mat-error>
             </mat-form-field>
-          </div>
         </div>
-        <div class="pull-right">
-            <button mat-raised-button type="submit" class="btn btn-info" (click)="saveHotel()"
-                [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
-            <button mat-raised-button type="button" class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <div class="row">
+            <mat-form-field class="col">
+                <input type='number' min="0" matInput placeholder="Distance du Haram en mètres" formControlName="haramDistance">
+            </mat-form-field>
         </div>
-    </form>
+    </div>
+    <div class="pull-right">
+        <button mat-raised-button type="submit" class="btn btn-info" (click)="saveHotel()"
+            [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>
+        <button mat-raised-button type="button" class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+  </form>
 </div>

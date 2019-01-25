@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IconsComponent } from './icons.component';
+import { HajjFlightsPlanComponent } from './hajj-flights-plan.component';
 
-describe('IconsComponent', () => {
-  let component: IconsComponent;
-  let fixture: ComponentFixture<IconsComponent>;
+describe('HajjFlightsPlanComponent', () => {
+  let component: HajjFlightsPlanComponent;
+  let fixture: ComponentFixture<HajjFlightsPlanComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IconsComponent ]
+      declarations: [ HajjFlightsPlanComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IconsComponent);
+    fixture = TestBed.createComponent(HajjFlightsPlanComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

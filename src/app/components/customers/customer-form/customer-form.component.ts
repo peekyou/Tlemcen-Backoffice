@@ -82,6 +82,7 @@ export class CustomerFormComponent implements OnInit {
         this.customer.profession = this.form.value.profession && this.form.value.profession.name ? this.form.value.profession.name : this.form.value.profession;
         this.customer.bloodGroup = this.form.value.bloodGroup;
         this.customer.medicalInfo = this.form.value.medicalInfo;
+        this.customer.isConverted = this.form.value.isConverted == 'T';
         var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
 
         if (!this.customer.address) {
@@ -136,6 +137,7 @@ export class CustomerFormComponent implements OnInit {
             passportExpiryDate: this.fb.control(dateToMoment(this.customer.passportExpiryDate)),
             passportIssuingCountry: this.fb.control(this.customer.passportIssuingCountry ? this.customer.passportIssuingCountry.id : null),
             howKnewAgency: this.fb.control(null),
+            isConverted: this.fb.control(this.customer.isConverted ? 'T' : 'F'),
             bloodGroup: this.fb.control(this.customer.bloodGroup),
             medicalInfo: this.fb.control(this.customer.medicalInfo),
         });

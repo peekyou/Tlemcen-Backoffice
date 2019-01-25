@@ -28,6 +28,8 @@ import { FlightBookingDialogComponent } from './airlines/flight-booking-dialog/f
 import { TravelDetailComponent } from './travels/travel-detail/travel-detail.component';
 import { PrintDocumentsDialogComponent } from './travels/print-documents-dialog/print-documents-dialog.component';
 import { CircleProgressComponent } from './common/circle-progress/circle-progress.component';
+import { FlightsAssignmentComponent } from './airlines/flights-assignment/flights-assignment.component';
+import { FlightDetailComponent } from './airlines/flight-detail/flight-detail.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -64,6 +66,8 @@ const MODALS = [
     FlightBookingComponent,
     TravelDetailComponent,
     CircleProgressComponent,
+    FlightsAssignmentComponent,
+    FlightDetailComponent,
     ...MODALS,
   ],
   exports: [
@@ -83,6 +87,8 @@ const MODALS = [
     FlightBookingComponent,
     TravelDetailComponent,
     CircleProgressComponent,
+    FlightsAssignmentComponent,
+    FlightDetailComponent,
     ...MODALS
   ],
   entryComponents: MODALS

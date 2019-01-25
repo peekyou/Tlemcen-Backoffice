@@ -20,6 +20,7 @@ import { SmsService } from './communication/sms/sms.service';
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
+import { RoleGuard } from './core/guards/role.guard';
 
 export const APP_PROVIDERS = [
     HttpService,
@@ -42,5 +43,6 @@ export const APP_PROVIDERS = [
     CustomersTravelService,
     SmsService,
     AuthGuard,
-    PermissionGuard
+    PermissionGuard,
+    RoleGuard
 ];

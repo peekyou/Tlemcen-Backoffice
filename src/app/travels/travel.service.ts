@@ -32,6 +32,10 @@ export class TravelService {
   createTravel(travel: Travel): Observable<Travel> {
     return this.http.post(this.resource, travel);
   }
+  
+  updateTravel(travel: Travel): Observable<Travel> {
+    return this.http.put(this.resource + '/' + travel.id, travel);
+  }
 
   deleteTravel(id: string) : Observable<boolean> {
     return this.http.delete(this.resource + '/' + id);

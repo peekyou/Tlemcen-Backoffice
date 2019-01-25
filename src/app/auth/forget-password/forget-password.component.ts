@@ -4,6 +4,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
+import { ToasterService } from '../../core/services/toaster.service';
+import { ToasterType } from '../../core/models/toaster-type';
+import { TranslationService } from '../../core/services/translation.service';
 
 @Component({
   selector: 'app-forget-password',
@@ -12,7 +15,8 @@ import { AuthService } from '../auth.service';
 })
 export class ForgetPasswordComponent implements OnInit {
   forgetPasswordSubscription: Subscription;
-  error: boolean;
+  successMessage: string;
+  errorMessage: string;
   email = this.fb.control('', Validators.email);
   form = this.fb.group({
       email: this.email,
@@ -21,7 +25,15 @@ export class ForgetPasswordComponent implements OnInit {
   constructor(
       private fb: FormBuilder, 
       private auth: AuthService, 
-      private router: Router) { }
+      private toasterService: ToasterService,
+      private translationService: TranslationService,
+      private router: Router) { 
+          translationService.getMultiple(['AUTH.FORGET_PASSWORD_SUCCESS', 'ERRORS.SERVER_ERROR'], 
+            x => {
+                this.successMessage = x['AUTH.FORGET_PASSWORD_SUCCESS'];
+                this.errorMessage = x['ERRORS.SERVER_ERROR'];
+            });
+      }
 
   ngOnInit() {
       if (this.auth.isAuthenticated()) {
@@ -30,13 +42,14 @@ export class ForgetPasswordComponent implements OnInit {
   }
   
   onSumbit() {
-      this.forgetPasswordSubscription = this.auth.forgetPassword(this.email.value)
-          .subscribe(result => {
-              this.error = !result;
-          },
-          err => {
-              console.log(err);
-              this.error = true;
-          });
+    this.forgetPasswordSubscription = this.auth.forgetPassword(this.email.value)
+        .subscribe(result => {
+            if (result === true) {
+                this.toasterService.showToaster(this.successMessage);
+            }
+            else {
+                this.toasterService.showToaster(this.errorMessage, ToasterType.Error);
+            }
+        });
   }
 }

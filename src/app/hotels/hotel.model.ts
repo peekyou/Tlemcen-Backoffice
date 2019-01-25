@@ -8,6 +8,7 @@ export class Hotel {
     contactEmail?: string;
     contactPhoneNumber?: string;
     category?: number;
+    haramDistance?: number;
     address?: Address;
     expanded?: boolean;
 

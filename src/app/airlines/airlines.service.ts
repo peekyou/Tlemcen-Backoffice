@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Airline } from './airline.model';
+import { Customer } from '../customers/customer.model';
 import { Flight } from './flight.model';
 import { FlightBooking } from './flight-booking.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
@@ -46,5 +47,21 @@ export class AirlinesService {
       travelId: travelId,
       flightBookings: flightBookings
     });
+  }
+  
+  getFlight(flightId: string): Observable<FlightBooking> {
+    return this.http.get(this.resource + '/flights/' + flightId);
+  }
+
+  getFlightTravelers(flightId: string, page: number, count: number): Observable<PagingResponse<Customer>> {
+    return this.http.get(this.resource + '/flights/' + flightId + '/travelers?pageNumber=' + page + '&itemsCount=' + count);
+  }
+
+  addTravelersInFlight(flightId: string, travelerIds: string[]): Observable<void> {
+    return this.http.post(this.resource + '/flights/' + flightId + '/travelers', travelerIds);
+  }
+
+  removeTravelerFromFlight(flightId: string, travelerId: string): Observable<void> {
+    return this.http.delete(this.resource + '/flights/' + flightId + '/travelers/' + travelerId);
   }
 }

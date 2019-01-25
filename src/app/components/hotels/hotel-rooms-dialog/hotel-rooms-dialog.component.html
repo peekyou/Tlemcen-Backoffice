@@ -25,7 +25,7 @@
 						<input matInput [matDatepicker]="toDate" maxlength="10" (keypress)="validateDate($event)"
 							placeholder="Au" formControlName="toDate">
 						<mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-						<mat-datepicker #toDate></mat-datepicker>
+						<mat-datepicker #toDate [startAt]="form.value.fromDate"></mat-datepicker>
 						<mat-error *ngIf="toDate.errors?.required && (toDate.dirty ||toDate.touched)">
 								{{ 'FORM.INVALID_DATE' | translate }}
 						</mat-error>

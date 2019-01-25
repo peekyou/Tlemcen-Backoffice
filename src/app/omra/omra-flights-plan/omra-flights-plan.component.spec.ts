@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NotificationsComponent } from './notifications.component';
+import { OmraFlightsPlanComponent } from './omra-flights-plan.component';
 
-describe('NotificationsComponent', () => {
-  let component: NotificationsComponent;
-  let fixture: ComponentFixture<NotificationsComponent>;
+describe('OmraFlightsPlanComponent', () => {
+  let component: OmraFlightsPlanComponent;
+  let fixture: ComponentFixture<OmraFlightsPlanComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotificationsComponent ]
+      declarations: [ OmraFlightsPlanComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotificationsComponent);
+    fixture = TestBed.createComponent(OmraFlightsPlanComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

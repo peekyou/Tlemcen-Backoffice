@@ -50,13 +50,17 @@ export class SearchCustomerDialogComponent implements OnInit {
     this.getCustomers();
   }
 
-  customerChecked($event, customer: Customer) {
+  onCustomerChecked($event, customer: Customer) {
     if ($event.checked) {
       this.customersChecked.push(customer);
     }
     else {
       this.customersChecked = removeFromArray(this.customersChecked, customer);
     }
+  }
+
+  isCustomerChecked(customer: Customer) {
+    return this.customersChecked.find(x => x.id == customer.id) != null;
   }
 
   newCustomer() {

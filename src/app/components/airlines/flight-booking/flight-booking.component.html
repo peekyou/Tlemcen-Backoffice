@@ -57,7 +57,7 @@
       <input matInput [matDatepicker]="flightOneWay2Date" maxlength="10" (keypress)="validateDate($event)"
         placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightOneWay2Date">
       <mat-datepicker-toggle matSuffix [for]="flightOneWay2Date"></mat-datepicker-toggle>
-      <mat-datepicker #flightOneWay2Date></mat-datepicker>
+      <mat-datepicker #flightOneWay2Date [startAt]="form.value.flightOneWay1Date"></mat-datepicker>
       <mat-error *ngIf="flightOneWay2Date.errors?.required && (flightOneWay2Date.dirty ||flightOneWay2Date.touched)">
           {{ 'FORM.INVALID_DATE' | translate }}
       </mat-error>
@@ -100,7 +100,7 @@
       <input matInput [matDatepicker]="flightReturn1Date" maxlength="10" (keypress)="validateDate($event)"
         placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightReturn1Date">
       <mat-datepicker-toggle matSuffix [for]="flightReturn1Date"></mat-datepicker-toggle>
-      <mat-datepicker #flightReturn1Date></mat-datepicker>
+      <mat-datepicker #flightReturn1Date [startAt]="form.value.flightOneWay2Date"></mat-datepicker>
       <mat-error *ngIf="flightReturn1Date.errors?.required && (flightReturn1Date.dirty ||flightReturn1Date.touched)">
           {{ 'FORM.INVALID_DATE' | translate }}
       </mat-error>
@@ -142,7 +142,7 @@
       <input matInput [matDatepicker]="flightReturn2Date" maxlength="10" (keypress)="validateDate($event)"
         placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="flightReturn2Date">
       <mat-datepicker-toggle matSuffix [for]="flightReturn2Date"></mat-datepicker-toggle>
-      <mat-datepicker #flightReturn2Date></mat-datepicker>
+      <mat-datepicker #flightReturn2Date [startAt]="form.value.flightReturn1Date"></mat-datepicker>
       <mat-error *ngIf="flightReturn2Date.errors?.required && (flightReturn2Date.dirty ||flightReturn2Date.touched)">
           {{ 'FORM.INVALID_DATE' | translate }}
       </mat-error>

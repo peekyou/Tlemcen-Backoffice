@@ -1,0 +1,7 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <app-spinner [loader]="loader"></app-spinner>
+    <!-- <app-flights-assignment *ngIf="hajj" [flightBookings]="hajj.flightBookings" [travelId]="hajj.id"></app-flights-assignment> -->
+    <app-flight-detail *ngIf="hajjId && flightBookingId" [flightBookingId]="flightBookingId" [travelId]="hajjId"></app-flight-detail>
+  </div>
+</div>

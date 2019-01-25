@@ -11,9 +11,8 @@ import { Claims } from '../core/helpers/claims';
 @Injectable()
 export class AuthService {
     private tokenKey = 'token';
-    private customFieldsKey = 'customfields';
-    private api: string;
     private permissions: string[];
+    private roles: string[];
     private username: string;
     private userId: string;
     public token: string = null;
@@ -21,6 +20,7 @@ export class AuthService {
     constructor(private http: HttpService) {
         this.token = localStorage.getItem(this.tokenKey);
         this.setPermissions();
+        this.setRoles();
     }
 
     login(username: string, password: string): Observable<boolean> {
@@ -31,6 +31,7 @@ export class AuthService {
                 this.token = token;
                 localStorage.setItem(this.tokenKey, token);
                 this.setPermissions();
+                this.setRoles();
                 return true;
             } else {
                 return false;
@@ -38,14 +39,22 @@ export class AuthService {
         }));
     }
 
-    setPassword(password: string, token: string, code: string): Observable<boolean> {
-      return of(true);
-        // return this.http.put(this.api + '/users/password', { token: token, password: password, code: code });
+    setPassword(password: string, token: string, code: string): Observable<void> {
+        return this.http.put('password', { token: token, password: password, code: code });
     }
 
     forgetPassword(email: string): Observable<boolean> {
-      return of(true);
-        // return this.http.post(this.api + '/users/password/forget', { email: email, groupId: this.config.GroupId });
+        return this.http.post('password/forget', email);
+    }
+
+    setRoles() {
+        if (this.token) {
+            var claims = parseJwt(this.token);
+            this.roles = claims[Claims.Roles];
+        }
+        else {
+            this.roles = [];
+        }
     }
 
     setPermissions() {
@@ -102,5 +111,17 @@ export class AuthService {
             return false;
         }
         return this.permissions.indexOf(permission) > -1;
+    }
+    
+    isInRole(roles: string[]): boolean {
+        if (!roles || !this.roles) {
+            return false;
+        }
+        for (var i = 0; i < roles.length; i++) {
+            if (this.roles.indexOf(roles[i]) > -1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

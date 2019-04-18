@@ -9,6 +9,7 @@ import { Roles } from '../../core/helpers/roles';
   styleUrls: ['./management.component.scss']
 })
 export class ManagementComponent implements OnInit {
+  adminRole = Roles.Admin;
   feeManagementRole = Roles.FeesManagement;
   documentManagementRole = Roles.DocumentsManagement;
   userManagementRole = Roles.UserManagement;

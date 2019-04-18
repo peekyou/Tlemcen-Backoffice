@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, of } from 'rxjs'; 
 
 import { Omra } from './omra.model';
-import { TravelType } from '../travels/travel.model';
+import { TravelType, TravelStatus } from '../travels/travel.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
 import { TravelService } from '../travels/travel.service';
@@ -12,11 +12,11 @@ export class OmraService extends TravelService {
   
   constructor(http: AuthHttpService) {
     super(http);
-    this.resource = 'hajjs';
+    this.resource = 'omras';
   }
   
-  getOmraList(page: number, count: number): Observable<PagingResponse<Omra>> {
-    return super.getTravels(page, count);
+  getOmraList(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Omra>> {
+    return super.getTravels(status, page, count);
   }
 
   getOmra(id: string, itemsCount: number): Observable<Omra> {

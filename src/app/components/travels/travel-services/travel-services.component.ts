@@ -24,19 +24,12 @@ import { isMekka } from '../../../core/helpers/utils';
   styleUrls: ['./travel-services.component.scss']
 })
 export class TravelServicesComponent implements OnInit {
-  form: FormGroup;
-  loading: boolean;
   fees: Fee[];
   hotelFees: Fee[] = [];
   flightFees: Fee[] = [];
-  hotels: Hotel[];
-  hotelsMekka: Hotel[];
-  hotelsMedina: Hotel[];
-  roomTypes: RoomType[];
   takeHotelsSeparately = false;
   takeFlightsSeparately = false;
   loader: Subscription;
-  formData;
   _customer: CustomerDetail = {};
 
   @Input() 
@@ -65,18 +58,17 @@ export class TravelServicesComponent implements OnInit {
     this.initForm();
     
     this.loader = forkJoin(
-      this.feeService.getFeesByCategory(this.travelTypeId),
-      this.hotelService.getHotels(null, null),
-      this.hotelService.getRoomTypes(null, null)
+      this.feeService.getFeesByCategory(this.travelTypeId)
     )
     .subscribe(res => {
       this.fees = res[0];
-      this.hotels = res[1].data;
-      this.hotelsMekka = this.hotels.filter(x => isMekka(x.address));
-      this.hotelsMedina = this.hotels.filter(x => !isMekka(x.address));
-      this.roomTypes = res[2];
+      this.fees.forEach(x => {
+        x.isServiceFee = true;
+        if (x.price == null) {
+          x.isDynamic = true;
+        }
+      });
 
-      this.fees.forEach(f => f.isServiceFee = true);
       this.populateCustomerFees();
     })
   }
@@ -93,34 +85,22 @@ export class TravelServicesComponent implements OnInit {
     if (this.customer && this.customer.flightBookings && this.customer.flightBookings.length > 0) {
       this.takeFlightsSeparately = true;
     }
-
-    this.form = this.fb.group({
-      hotelMekka: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 ? this.customer.hotelBookings[0].hotel.id : null),
-      hotelMekkaRoom: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 && this.customer.hotelBookings[0].rooms[0].roomType ? this.customer.hotelBookings[0].rooms[0].roomType.id : null),
-      hotelMekkaRoomPrice: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 0 && this.customer.hotelBookings[0].rooms && this.customer.hotelBookings[0].rooms.length > 0 ? this.customer.hotelBookings[0].rooms[0].price : null),
-      hotelMedina: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 ? this.customer.hotelBookings[1].hotel.id : null),
-      hotelMedinaRoom: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 && this.customer.hotelBookings[1].rooms[0].roomType ? this.customer.hotelBookings[1].rooms[0].roomType.id : null),
-      hotelMedinaRoomPrice: this.fb.control(this.takeHotelsSeparately && this.customer.hotelBookings.length > 1 && this.customer.hotelBookings[1].rooms && this.customer.hotelBookings[1].rooms.length > 0 ? this.customer.hotelBookings[1].rooms[0].price : null),
-    });
-
-    this.form.valueChanges.subscribe(data => {
-      this.setHotelFees(data);
-      this.emitChanges();
-    });
   }
 
   populateCustomerFees() {
     if (this.customer && this.customer.additionalFees) {
-      this.customer.additionalFees.forEach(fee => {
-        var fee = this.fees.find(f => f.id == fee.id);
+      this.customer.additionalFees.forEach(customerFee => {
+        var fee = this.fees.find(f => f.id == customerFee.id);
         if (fee) {
           fee.checked = true;
+          if (fee.isDynamic) {
+            fee.price = customerFee.price;
+          }
         }
       });
     }
     
     // For edit mode
-    this.setHotelFees(this.form.value);
     this.emitChanges();
   }
 
@@ -128,18 +108,14 @@ export class TravelServicesComponent implements OnInit {
     this.emitChanges();
   }
 
-  setHotelFees(formData) {
-    this.hotelFees = [];
-    this.customer.hotelBookings = [];
-
-    this.buildHotelBooking(formData.hotelMekka, formData.hotelMekkaRoom, formData.hotelMekkaRoomPrice);
-    this.buildHotelBooking(formData.hotelMedina, formData.hotelMedinaRoom, formData.hotelMedinaRoomPrice);
-  }
-
   onFlightsChange(flights) {
     this.customer.flightBookings = flights.flightBookings;
     this.flightFees = flights.flightFees;
     this.emitChanges();
+  }
+
+  onHotelsChange(hotels) {
+    
   }
 
   emitChanges() {
@@ -158,44 +134,11 @@ export class TravelServicesComponent implements OnInit {
     });
   }
 
-  buildHotelBooking(hotelId, roomTypeId, price) {
-    if (hotelId && roomTypeId) {
-      var hotel = this.hotels.find(x => x.id == hotelId);
-      var roomType = this.roomTypes.find(x => x.id == roomTypeId);
-      var fee = price ? price : 0;
-      this.hotelFees.push({ 
-        name: hotel.name + ' ' + roomType.name,
-        price: fee
-      });
-
-      this.customer.hotelBookings.push({
-        hotel: { id: hotelId },
-        rooms: [{
-          price: fee,
-          roomType: { id: roomTypeId },
-          customers: [{ id: this.customer.id }]
-        }]
-      });
-    }
-  }
-
   reset() {
-    if (this.form && !this.isGroup) {
-      this.form.reset();
-    }
-    else if (this.form) {
-      // If this is a group, we keep the hotels, so we need to emit the 
-      // this.setHotelFees(this.form.value);
-      // this.emitChanges();
-    }
-
     if (this.fees) {
       this.fees.forEach(f => {
         f.checked = false;
       });
     }
   }
-  
-  get hotelMekka() { return this.form.get('hotelMekka'); }
-  get hotelMedina() { return this.form.get('hotelMedina'); }
 }

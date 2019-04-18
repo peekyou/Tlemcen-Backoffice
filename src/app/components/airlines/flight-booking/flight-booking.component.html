@@ -1,7 +1,15 @@
 <app-spinner [loader]="loader"></app-spinner>
 <div [formGroup]="form" *ngIf="airports && airlines">
-  <div class="row col bold">Vols aller</div>
-  <div class="row col">Vol 1</div>
+  <div class="row col bold">Aller</div>
+  <div class="row">
+    <mat-checkbox class="vertical-align col-12 col-md-3" formControlName="hasBusTransferDeparture">Départ en bus ?</mat-checkbox>    
+    <div *ngIf="hasBusTransferDeparture.value == true" class="col-12 col-md-4">
+      <input  class="form-control form-control-sm" placeholder="Ville de départ" formControlName="busTransferDeparture">
+    </div>
+  </div>
+
+  <mat-checkbox class="row col" formControlName="hasTransfer">Vol vec escale ?</mat-checkbox>
+  <div *ngIf="hasTransfer.value == true" class="row col">Vol 1</div>
   <div class="row">
     <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
       <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineOneWay1">
@@ -43,8 +51,8 @@
     </mat-form-field>
   </div>
 
-  <div class="row col">Vol 2</div>
-  <div class="row">
+  <div *ngIf="hasTransfer.value == true" class="row col">Vol 2</div>
+  <div *ngIf="hasTransfer.value == true" class="row">
     <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
       <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineOneWay2">
         <mat-option></mat-option>
@@ -85,8 +93,33 @@
     </mat-form-field>
   </div>
 
-  <div class="row col bold">Vols retour</div>
-  <div class="row col">Vol 1</div>
+  <div class="row">
+    <mat-checkbox class="vertical-align col-12 col-md-3" formControlName="hasBusTransferArrival">Arrivée en bus ?</mat-checkbox>    
+    <div *ngIf="hasBusTransferArrival.value == true" class="col-6 col-md-4">
+      <input  class="form-control form-control-sm" placeholder="Ville d'arrivée" formControlName="busTransferArrival">
+    </div>
+    <mat-form-field *ngIf="hasBusTransferArrival.value == true" class="col-6 col-md-4" style="margin-top:-10px;">
+      <input matInput [matDatepicker]="busTransferArrivalDate" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="busTransferArrivalDate">
+      <mat-datepicker-toggle matSuffix [for]="busTransferArrivalDate"></mat-datepicker-toggle>
+      <mat-datepicker #busTransferArrivalDate></mat-datepicker>
+      <mat-error *ngIf="busTransferArrivalDate.errors?.required && (busTransferArrivalDate.dirty ||busTransferArrivalDate.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <hr>
+
+  <div class="row col bold">Retour</div>
+  <div class="row">
+    <mat-checkbox class="vertical-align col-12 col-md-3" formControlName="returnHasBusTransferDeparture">Départ en bus ?</mat-checkbox>    
+    <div *ngIf="returnHasBusTransferDeparture.value == true" class="col-12 col-md-4">
+      <input  class="form-control form-control-sm" placeholder="Ville de départ" formControlName="returnBusTransferDeparture">
+    </div>
+  </div>
+  <mat-checkbox class="row col" formControlName="returnHasTransfer">Vol avec escale ?</mat-checkbox>    
+  <div class="row col" *ngIf="returnHasTransfer.value == true">Vol 1</div>
   <div class="row">
     <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
       <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineReturn1">
@@ -128,8 +161,8 @@
     </mat-form-field>
   </div>
 
-  <div class="row col">Vol 2</div>
-  <div class="row">
+  <div class="row col" *ngIf="returnHasTransfer.value == true">Vol 2</div>
+  <div class="row" *ngIf="returnHasTransfer.value == true">
     <mat-form-field [ngClass]="{'col-12 col-md-6': dialog, 'col-12 col-md-3': !dialog}">
       <mat-select placeholder="{{ 'AIRLINES.AIRLINE' | translate }}" formControlName="airlineReturn2">
         <mat-option></mat-option>
@@ -167,6 +200,22 @@
             {{ option.name }}
         </mat-option>
       </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-checkbox class="vertical-align col-12 col-md-3" formControlName="returnHasBusTransferArrival">Arrivée en bus ?</mat-checkbox>    
+    <div *ngIf="returnHasBusTransferArrival.value == true" class="col-12 col-md-4">
+      <input placeholder="Ville d'arrivée" class="form-control form-control-sm" formControlName="returnBusTransferArrival">
+    </div>
+    <mat-form-field *ngIf="returnHasBusTransferArrival.value == true" class="col-6 col-md-4" style="margin-top:-10px;">
+      <input matInput [matDatepicker]="returnBusTransferArrivalDate" maxlength="10" (keypress)="validateDate($event)"
+        placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="returnBusTransferArrivalDate">
+      <mat-datepicker-toggle matSuffix [for]="returnBusTransferArrivalDate"></mat-datepicker-toggle>
+      <mat-datepicker #returnBusTransferArrivalDate [startAt]="form.value.flightReturn1Date"></mat-datepicker>
+      <mat-error *ngIf="returnBusTransferArrivalDate.errors?.required && (returnBusTransferArrivalDate.dirty || returnBusTransferArrivalDate.touched)">
+          {{ 'FORM.INVALID_DATE' | translate }}
+      </mat-error>
     </mat-form-field>
   </div>
 </div>

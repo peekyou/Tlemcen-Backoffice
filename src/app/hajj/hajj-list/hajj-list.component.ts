@@ -7,6 +7,7 @@ import { PagingResponse } from '../../core/models/paging';
 import { Hajj } from '../hajj.model';
 import { HajjService } from '../hajj.service';
 import { HajjDialogComponent } from '../hajj-dialog/hajj-dialog.component';
+import { TravelStatus } from '../../travels/travel.model';
 
 @Component({
   selector: 'app-hajj-list',
@@ -17,28 +18,38 @@ export class HajjListComponent implements OnInit {
   loader: Subscription;
   currentPage: number = 1;
   itemsPerPage: number = 20;
-  hajjList: PagingResponse<Hajj>;
+  currentHajj: Hajj[];
+  completedHajj: PagingResponse<Hajj>;
 
   constructor(private router: Router, private service: HajjService, private dialog: MatDialog,) {
-    this.getHajjList();
+    this.getCurrentHajj();
+    this.getCompletedHajj();
   }
 
   ngOnInit() {
   }
 
-  getHajjList() {
+  getCurrentHajj() {
+    this.loader = this.service.getHajjList(TravelStatus.NotCompleted, null, null)
+    .subscribe(
+      res => this.currentHajj = res.data,
+      err => console.log(err)
+    );
+  }
+
+  getCompletedHajj() {
     window.scroll(0,0);
 
-    this.loader = this.service.getHajjList(this.currentPage, this.itemsPerPage)
+    this.service.getHajjList(TravelStatus.Completed, this.currentPage, this.itemsPerPage)
     .subscribe(
-      res => this.hajjList = res,
+      res => this.completedHajj = res,
       err => console.log(err)
     );
   }
 
   pageChanged(page) {
     this.currentPage = page;
-    this.getHajjList();
+    this.getCompletedHajj();
   }
 
   openHajjDialog(hajj: Hajj = null) {

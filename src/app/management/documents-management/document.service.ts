@@ -32,6 +32,16 @@ export class DocumentService {
         }));
     }
 
+    getCustomerDocumentsByCategory(category, customerId): Observable<AppDocument[]> {
+        return this.http.get(this.resource + '/category/' + category + '/customer/' + customerId)
+        .pipe(map(documents => {
+            documents.forEach(doc => {
+                doc.file = null;
+            });
+            return documents;
+        }));
+    }
+
     getDocument(id): Observable<AppDocument> {
         return this.http.get(this.resource + '/' + id);
     }

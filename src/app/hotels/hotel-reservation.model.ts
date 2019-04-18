@@ -4,6 +4,8 @@ import { Hotel } from './hotel.model';
 export class HotelReservation {
     id?: string;
     hotel?: Hotel;
+    fromDate?: Date;
+    toDate?: Date;
     travelerCount?: number;
     rooms?: HotelRoomReservation[];
 

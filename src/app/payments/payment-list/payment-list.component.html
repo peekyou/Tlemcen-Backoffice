@@ -3,6 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <app-spinner [loader]="loader"></app-spinner>
+                <h3 *ngIf="payments && payments.paging.totalCount == 0">Aucun paiement</h3>
                 <div class="card" *ngIf="loader.closed && payments && payments.data && payments.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title pull-left">Historique des paiements</h4>
@@ -16,18 +17,22 @@
                                     <th>Client</th>
                                     <th>Status</th>
                                     <th>Reste à payer</th>
+                                    <th>Voyage</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let payment of payments.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: payments?.paging?.totalCount }" (click)="openPaymentDialog(payment)">
                                         <td>{{ payment.createdDate | date:'dd/MM/yyyy' }}</td>
                                         <td>{{ payment.amountPaid }} €</td>
-                                        <td><span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span></td>
+                                        <td style="max-width:200px">
+                                            <span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span>
+                                        </td>
                                         <td>
                                           <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
                                           <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
                                           <span *ngIf="payment.status == 'R'" class="badge badge-warning">A rembourser</span>
                                         </td>
                                         <td>{{ payment.amount - payment.amountPaid - payment.discount }} €</td>
+                                        <td style="max-width:200px">{{ payment.travelName }}</td>
                                     </tr>
                                 </tbody>
                             </table>

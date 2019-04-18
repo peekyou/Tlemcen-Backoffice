@@ -1,61 +1,22 @@
 <app-spinner [loader]="loader"></app-spinner>
 <div class="row">
   <div class="col-lg-6 col-12" *ngFor="let fee of fees; let i = index">
-    <mat-checkbox [(ngModel)]="fee.checked" (change)="serviceChecked($event, fee)">{{ fee.name }} ({{ fee.price }}€)</mat-checkbox>
+    <div style="display:flex">
+      <mat-checkbox [(ngModel)]="fee.checked" (change)="serviceChecked($event, fee)">{{ fee.name }} <span *ngIf="!fee.isDynamic">({{ fee.price }}€)</span></mat-checkbox>
+      <!-- <mat-form-field class="col-4" *ngIf="fee.isDynamic">
+          <input type="number" matInput min="0" [(ngModel)]="fee.price" placeholder="Prix">
+      </mat-form-field> -->
+      <input type="number" *ngIf="fee.isDynamic" min="0" class="form-control form-control-sm" placeholder="Prix" [(ngModel)]="fee.price"/>
+    </div>
   </div>
 </div>
 <br>
-<div class="row col">
+<!-- <div class="row col">
   <mat-checkbox [(ngModel)]="takeHotelsSeparately" (change)="emitChanges()">Prendre hôtels séparément ?</mat-checkbox>
 </div>
 <div class="row" *ngIf="takeHotelsSeparately">
   <div class="col">
-    <form [formGroup]="form">
-      <div class="bold">Chambres d'hôtel</div>
-      <div *ngIf="travelTypeId == 2 || travelTypeId == 3">
-        <div class="row">
-          <mat-form-field class="col-12 col-md-4">
-            <mat-select placeholder="Hôtel La Mecque" formControlName="hotelMekka">
-              <mat-option></mat-option>
-              <mat-option *ngFor="let h of hotelsMekka" [value]="h.id">
-                {{ h.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field *ngIf="hotelMekka.value" class="col-6 col-md-4">
-            <mat-select placeholder="Chambre" formControlName="hotelMekkaRoom">
-              <mat-option *ngFor="let option of roomTypes" [value]="option.id">
-                {{ option.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field *ngIf="hotelMekka.value" class="col-6 col-md-4">
-              <input type="number" matInput min="0" placeholder="Prix par personne" formControlName="hotelMekkaRoomPrice">
-          </mat-form-field>
-        </div>
-
-        <div class="row">
-          <mat-form-field class="col-12 col-md-4">
-            <mat-select placeholder="Hôtel Médine" formControlName="hotelMedina">
-              <mat-option></mat-option>
-              <mat-option *ngFor="let h of hotelsMedina" [value]="h.id">
-                {{ h.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field *ngIf="hotelMedina.value" class="col-6 col-md-4">
-            <mat-select placeholder="Chambre" formControlName="hotelMedinaRoom">
-              <mat-option *ngFor="let option of roomTypes" [value]="option.id">
-                {{ option.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field *ngIf="hotelMedina.value" class="col-6 col-md-4">
-              <input type="number" matInput min="0" placeholder="Prix par personne" formControlName="hotelMedinaRoomPrice">
-          </mat-form-field>
-        </div>
-      </div>
-    </form>
+    
   </div>
 </div>
 <br>
@@ -68,4 +29,4 @@
         <app-flight-booking [customer]="customer" [isGroup]="isGroup" (onChange)="onFlightsChange($event)"></app-flight-booking>
       </div>
   </div>
-</div>
+</div> -->

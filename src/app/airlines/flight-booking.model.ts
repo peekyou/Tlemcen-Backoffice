@@ -15,5 +15,5 @@ export class FlightBooking {
     isSeparateBooking?: boolean;
 
     // UI fields
-    expanded: boolean;
+    expanded?: boolean;
 }

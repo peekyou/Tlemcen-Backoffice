@@ -20,6 +20,7 @@ import {
     MatProgressSpinnerModule,
     MatExpansionModule,
     MatTabsModule,
+    MatSlideToggleModule,
     MAT_DATE_LOCALE,
     MAT_DATE_FORMATS,
     MAT_NATIVE_DATE_FORMATS,
@@ -51,6 +52,7 @@ import { MomentDateAdapter, MOMENT_DATE_FORMATS } from '../helpers/date.adapter'
         MatProgressSpinnerModule,
         MatExpansionModule,
         MatTabsModule,
+        MatSlideToggleModule,
     ],
     declarations: [],
     providers: [

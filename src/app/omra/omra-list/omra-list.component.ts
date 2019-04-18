@@ -7,6 +7,7 @@ import { PagingResponse } from '../../core/models/paging';
 import { Omra } from '../omra.model';
 import { OmraService } from '../omra.service';
 import { OmraDialogComponent } from '../omra-dialog/omra-dialog.component';
+import { TravelStatus } from '../../travels/travel.model';
 
 @Component({
   selector: 'app-omra-list',
@@ -17,37 +18,48 @@ export class OmraListComponent implements OnInit {
   loader: Subscription;
   currentPage: number = 1;
   itemsPerPage: number = 20;
-  omraList: PagingResponse<Omra>;
+  currentOmra: Omra[];
+  completedOmra: PagingResponse<Omra>;
   
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private service: OmraService) {
-      this.getOmraList();
+
+      this.getCurrentOmra();
+      this.getCompletedOmra();
   }
 
   ngOnInit() {
   }
 
-  getOmraList() {
+  getCurrentOmra() {
+    this.loader = this.service.getOmraList(TravelStatus.NotCompleted, null, null)
+    .subscribe(
+      res => this.currentOmra = res.data,
+      err => console.log(err)
+    );
+  }
+
+  getCompletedOmra() {
     window.scroll(0,0);
 
-    this.loader = this.service.getOmraList(this.currentPage, this.itemsPerPage)
+    this.service.getOmraList(TravelStatus.Completed, this.currentPage, this.itemsPerPage)
     .subscribe(
-      res => this.omraList = res,
+      res => this.completedOmra = res,
       err => console.log(err)
     );
   }
 
   pageChanged(page) {
     this.currentPage = page;
-    this.getOmraList();
+    this.getCompletedOmra();
   }
 
   openOmraDialog(omra: Omra = null) {
     let dialogRef = this.dialog.open(OmraDialogComponent, {
       autoFocus: true,
-      width: '534px',
+      width: '634px',
       data: {
         omra: omra
       }

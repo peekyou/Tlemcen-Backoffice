@@ -10,12 +10,16 @@ import { ModalButtons } from '../../../core/models/modal';
 })
 export class ConfirmationDialogComponent implements OnInit {
   text: string;
+  title: string;
   buttons = ModalButtons.YesNo;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>) { 
+      if (data && data.title) {
+        this.title = data.title;
+      }
       if (data && data.text) {
         this.text = data.text;
       }

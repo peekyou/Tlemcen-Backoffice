@@ -1,11 +1,11 @@
-
 .drag-wrapper {
     margin-top: 2rem;
-    // background-color: #fff;
 
     .drag-container {
-        // background-color: #ccc;
         padding: 10px;
+        min-height:90px;
+        margin-bottom:11px;
+        margin-top: 15px;
 
         div {
             margin: 4px 2px;
@@ -39,4 +39,23 @@
     button {
         margin-right: 10px;
     }
+}
+
+.mat-form-field {
+    padding: 0 10px;
+}
+
+.read-only {
+    background-color: #eee;
+}
+
+.room-type {
+    padding: 3px 10px !important;
+    display: flex;
+}
+
+.room-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 20px;
 }

@@ -32,6 +32,9 @@ export class Customer {
     // UI properties
     hovered?: boolean;
 
+    // For room booking
+    roomPrice?: number;
+
     constructor() {
         this.address = new Address();
         this.travelPayment = {};

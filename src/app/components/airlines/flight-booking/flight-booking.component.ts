@@ -6,8 +6,9 @@ import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operato
 import { AirlinesService } from '../../../airlines/airlines.service';
 import { Fee } from '../../../management/fees-management/fee.model';
 import { FlightBooking } from '../../../airlines/flight-booking.model';
+import { ShuttleBus } from '../../../airlines/shuttle-bus.model';
 import { Airline } from '../../../airlines/airline.model';
-import { validateDate, filterLookup } from '../../../core/helpers/utils';
+import { validateDate, filterLookup, dateToUTC } from '../../../core/helpers/utils';
 import { Lookup } from '../../../core/models/lookup.model';
 import { LookupService } from '../../../core/services/lookup.service';
 import { CustomerDetail } from '../../../customers/customer-detail.model';
@@ -21,8 +22,10 @@ export class FlightBookingComponent implements OnInit {
   loader: Subscription;
   form: FormGroup;
   flightFees: Fee[] = [];
+  shuttles: ShuttleBus[] = [];
   airlines: Airline[];
   airports: Lookup[];
+
   filteredAirports: Observable<Lookup[]>;
   filteredAirports2: Observable<Lookup[]>;
   filteredAirports3: Observable<Lookup[]>;
@@ -124,6 +127,20 @@ export class FlightBookingComponent implements OnInit {
       flightReturn2Arrival: this.fb.control(this._customer.flightBookings[3].flight != null ? this._customer.flightBookings[3].flight.airportTo : null),
       flightReturn2Date: this.fb.control(this._customer.flightBookings[3].departureDate),
       flightReturn2Price: this.fb.control(this._customer.flightBookings[3].price),
+
+      hasTransfer: this.fb.control(null),
+      returnHasTransfer: this.fb.control(null),
+
+      hasBusTransferDeparture: this.fb.control(null),
+      busTransferDeparture: this.fb.control(null),
+      hasBusTransferArrival: this.fb.control(null),
+      busTransferArrival: this.fb.control(null),
+      busTransferArrivalDate: this.fb.control(null),
+      returnHasBusTransferDeparture: this.fb.control(null),
+      returnBusTransferDeparture: this.fb.control(null),
+      returnHasBusTransferArrival: this.fb.control(null),
+      returnBusTransferArrival: this.fb.control(null),
+      returnBusTransferArrivalDate: this.fb.control(null),
     });
 
     this.form.valueChanges.subscribe(data => {
@@ -138,7 +155,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
     
     this.filteredAirports2 = this.flightOneWay1Arrival.valueChanges
@@ -146,7 +163,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports3 = this.flightOneWay2Departure.valueChanges
@@ -154,7 +171,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports4 = this.flightOneWay2Arrival.valueChanges
@@ -162,7 +179,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports5 = this.flightReturn1Departure.valueChanges
@@ -170,7 +187,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports6 = this.flightReturn1Arrival.valueChanges
@@ -178,7 +195,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports7 = this.flightReturn2Departure.valueChanges
@@ -186,7 +203,7 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
 
     this.filteredAirports8 = this.flightReturn2Arrival.valueChanges
@@ -194,18 +211,24 @@ export class FlightBookingComponent implements OnInit {
         startWith(''),
         debounceTime(200),
         distinctUntilChanged(),
-        map(option => option && option.length >= 2 ? filterLookup(option, this.airports) : [])
+        map(option => option && option.length > 2 ? filterLookup(option, this.airports, true) : [])
     );
   }
 
   setFlightsFees(formData) {
     this.flightFees = [];
     this._customer.flightBookings = [];
+    this.shuttles = [];
 
     this.buildFlightBooking(formData.airlineOneWay1, formData.flightOneWay1Departure, formData.flightOneWay1Arrival, formData.flightOneWay1Price, formData.flightOneWay1Date, formData.flightOneWay1Date);
-    this.buildFlightBooking(formData.airlineOneWay2, formData.flightOneWay2Departure, formData.flightOneWay2Arrival, formData.flightOneWay2Price, formData.flightOneWay2Date, formData.flightOneWay2Date);
+    if (formData.hasTransfer == true) {
+      this.buildFlightBooking(formData.airlineOneWay2, formData.flightOneWay2Departure, formData.flightOneWay2Arrival, formData.flightOneWay2Price, formData.flightOneWay2Date, formData.flightOneWay2Date);
+    }
     this.buildFlightBooking(formData.airlineReturn1, formData.flightReturn1Departure, formData.flightReturn1Arrival, formData.flightReturn1Price, formData.flightReturn1Date, formData.flightReturn1Date);
-    this.buildFlightBooking(formData.airlineReturn2, formData.flightReturn2Departure, formData.flightReturn2Arrival, formData.flightReturn2Price, formData.flightReturn2Date, formData.flightReturn2Date);
+    if (formData.returnHasTransfer == true) {
+      this.buildFlightBooking(formData.airlineReturn2, formData.flightReturn2Departure, formData.flightReturn2Arrival, formData.flightReturn2Price, formData.flightReturn2Date, formData.flightReturn2Date);
+    }
+    this.buildShuttles(formData);
   }
 
   buildFlightBooking(airlineId, departure, arrival, price, departureDate, arrivalDate) {
@@ -221,8 +244,8 @@ export class FlightBookingComponent implements OnInit {
 
       this._customer.flightBookings.push({
         price: fee,
-        departureDate: departureDate,
-        arrivalDate: arrivalDate,
+        departureDate: dateToUTC(departureDate),
+        arrivalDate: dateToUTC(arrivalDate),
         flight: {
           airline: { id: airlineId },
           airportFrom: departureId,
@@ -232,10 +255,53 @@ export class FlightBookingComponent implements OnInit {
     }
   }
 
+  buildShuttles(formData) {
+    if (formData.hasBusTransferDeparture && formData.airlineOneWay1, formData.flightOneWay1Departure) {
+      var airportFrom = typeof formData.flightOneWay1Departure === 'string' ? formData.flightOneWay1Departure : formData.flightOneWay1Departure ? formData.flightOneWay1Departure.id : null;
+      this.shuttles.push({
+        cityFrom: formData.busTransferDeparture,
+        cityTo: airportFrom
+      });
+    }
+    if (formData.hasBusTransferArrival) {
+      var flight = formData.flightOneWay1Arrival;
+      if (formData.hasTransfer && formData.airlineOneWay2 && formData.flightOneWay2Arrival) {
+        flight = formData.flightOneWay2Arrival;
+      }
+      var airportTo = typeof flight === 'string' ? flight : flight ? flight.id : null;
+      this.shuttles.push({
+        cityFrom: airportTo,
+        cityTo: formData.busTransferArrival,
+        departureDateTime: dateToUTC(formData.busTransferArrivalDate)
+      });
+    }
+
+    if (formData.returnHasBusTransferDeparture && formData.airlineReturn1, formData.flightReturn1Departure) {
+      var airportFrom = typeof formData.flightReturn1Departure === 'string' ? formData.flightReturn1Departure : formData.flightReturn1Departure ?formData.flightReturn1Departure.id : null;
+      this.shuttles.push({
+        cityFrom: formData.returnBusTransferDeparture,
+        cityTo: airportFrom
+      });
+    }
+    if (formData.returnHasBusTransferArrival) {
+      var flight = formData.flightReturn1Arrival;
+      if (formData.hasTransfer && formData.airlineReturn2 && formData.flightReturn2Arrival) {
+        flight = formData.flightReturn2Arrival;
+      }
+      var airportTo = typeof flight === 'string' ? flight : flight ? flight.id : null;
+      this.shuttles.push({
+        cityFrom: airportTo,
+        cityTo: formData.returnBusTransferArrival,
+        departureDateTime: dateToUTC(formData.returnBusTransferArrivalDate)
+      });
+    }
+  }
+
   emitChanges() {
     this.onChange.emit({
       flightBookings: this._customer.flightBookings,
       flightFees: this.flightFees,
+      shuttles: this.shuttles
     });
   }
 
@@ -260,4 +326,11 @@ export class FlightBookingComponent implements OnInit {
   get flightReturn1Arrival() { return this.form.get('flightReturn1Arrival'); }
   get flightReturn2Departure() { return this.form.get('flightReturn2Departure'); }
   get flightReturn2Arrival() { return this.form.get('flightReturn2Arrival'); }
+
+  get hasTransfer() { return this.form.get('hasTransfer'); }
+  get returnHasTransfer() { return this.form.get('returnHasTransfer'); }
+  get hasBusTransferDeparture() { return this.form.get('hasBusTransferDeparture'); }
+  get hasBusTransferArrival() { return this.form.get('hasBusTransferArrival'); }
+  get returnHasBusTransferDeparture() { return this.form.get('returnHasBusTransferDeparture'); }
+  get returnHasBusTransferArrival() { return this.form.get('returnHasBusTransferArrival'); }
 }

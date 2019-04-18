@@ -1,11 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormBuilder, FormControl, Validators,  FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators,  FormGroup, FormArray } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
+import * as moment from 'moment';
 
 import { OmraService } from '../omra.service';
 import { Omra } from '../omra.model';
-import { validateDate } from '../../core/helpers/utils';
+import { TravelGuide } from '../../travels/travel.model';
+import { validateDate, dateToMoment, dateToUTC } from '../../core/helpers/utils';
 
 @Component({
   selector: 'app-omra-dialog',
@@ -37,10 +39,18 @@ export class OmraDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.fb.group({
       name: this.fb.control(this.omra.name, Validators.required),
-      startDate: this.fb.control(this.omra.startDate, Validators.required),
-      endDate: this.fb.control(this.omra.endDate, Validators.required),
+      startDate: this.fb.control(dateToMoment(this.omra.startDate), Validators.required),
+      endDate: this.fb.control(dateToMoment(this.omra.endDate), Validators.required),
       price: this.fb.control(this.omra.unitPrice, Validators.required),
+      travelGuides: this.fb.array([])
     });
+
+    if (!this.omra.travelGuides || this.omra.travelGuides.length == 0) {
+      this.addGuideControl();
+    }
+    else {
+      this.omra.travelGuides.forEach(x => this.addGuideControl(x));
+    }
   }
 
   save() {
@@ -49,12 +59,12 @@ export class OmraDialogComponent implements OnInit {
     if (name.toLowerCase().indexOf('omra') === -1) {
       name = 'Omra ' + name;
     }
-    
+
     this.omra.name = name;
-    this.omra.startDate = this.form.value.startDate;
-    this.omra.endDate = this.form.value.endDate;
+    this.omra.startDate = dateToUTC(this.form.value.startDate);
+    this.omra.endDate = dateToUTC(this.form.value.endDate);
     this.omra.unitPrice = this.form.value.price;
-    this.omra.status = new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours';
+    this.omra.travelGuides = this.form.value.travelGuides;
 
     this.saveSubscription = this.saveOmra()
     .subscribe(
@@ -75,4 +85,19 @@ export class OmraDialogComponent implements OnInit {
   cancel() {
     this.dialogRef.close();
   }
+
+  addGuideControl(guide: TravelGuide = null) {
+    this.travelGuides.push(this.fb.group({
+      id: this.fb.control(guide ? guide.id : null),
+      firstname: this.fb.control(guide ? guide.firstname : null),
+      lastname: this.fb.control(guide ? guide.lastname : null),
+      mobileNumber: this.fb.control(guide ? guide.mobileNumber : null)
+    }));
+  }
+
+  removeGuideControl(index: number) {
+      this.travelGuides.removeAt(index);
+  }
+
+  get travelGuides(): FormArray { return <FormArray>this.form.get('travelGuides'); }
 }

@@ -5,6 +5,7 @@ export class AppFile {
     createdDate?: Date;
     src?: string | ArrayBuffer;
     data?: any;
+    mime?: string;
     
     constructor() {
     }

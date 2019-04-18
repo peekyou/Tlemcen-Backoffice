@@ -28,7 +28,7 @@
                     <th *ngIf="!data.isGroup"></th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }"
+                    <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount, id: 'dialog-pagination' }"
                         (mouseenter)="customer.hovered = true" (mouseleave)="customer.hovered = false">
                         <td>
                             <mat-checkbox (change)="onCustomerChecked($event, customer)" [checked]="isCustomerChecked(customer)"></mat-checkbox>
@@ -46,7 +46,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" 
+            <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" id="dialog-pagination"
                 autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
             </pagination-controls>
         </div>

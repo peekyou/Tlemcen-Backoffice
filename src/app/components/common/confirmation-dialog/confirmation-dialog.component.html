@@ -1,4 +1,7 @@
-<div mat-dialog-title>Confirmer</div>
+<div mat-dialog-title>
+  <span *ngIf="!title">{{title}}</span>
+  <span *ngIf="!title">{{ 'COMMON.CONFIRM' | translate }}</span>
+</div>
 <div mat-dialog-content>
   <div>
     {{text}}

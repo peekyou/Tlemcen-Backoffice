@@ -22,11 +22,13 @@ const PROVIDERS = [
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, "/assets/lang/", "-v2.json");
+  return new TranslateHttpLoader(http, "/assets/lang/", "-v4.json");
 }
 
 @NgModule({
   imports: [
+    RouterModule,
+    AppRoutingModule,
     SharedModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -39,8 +41,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     StarRatingModule.forRoot(),
     BrowserAnimationsModule,
     ComponentsModule,
-    RouterModule,
-    AppRoutingModule,
   ],
   declarations: [
     AppComponent,

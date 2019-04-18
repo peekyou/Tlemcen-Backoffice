@@ -31,7 +31,9 @@
         <div class="col attachment-content" *ngFor="let f of files || [file]">
             <div *ngIf="f">
                 <div class="attachment-thumb">
-                    <img [height]="imageHeight" [width]="imageWidth" [src]="f.src | safe" (load)="fileLoad()">
+                    <img *ngIf="isPdfFile()" [height]="imageHeight" [width]="imageWidth" src="/assets/images/pdf-icon.png"/>
+                    <img *ngIf="!isImageFile() && !isPdfFile()" [height]="imageHeight" [width]="imageWidth" src="/assets/images/file-icon.png"/>
+                    <img *ngIf="isImageFile()" [height]="imageHeight" [width]="imageWidth" [src]="f.src | safe" (load)="fileLoad()">
                 </div>
                 <dl>
                     <!-- <i class="fa fa-trash" (click)="delete(f)"></i> -->

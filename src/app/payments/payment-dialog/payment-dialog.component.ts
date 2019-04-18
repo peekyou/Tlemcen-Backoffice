@@ -47,9 +47,13 @@ export class PaymentDialogComponent implements OnInit {
         this.customerTravel.customer.hotelBookings.forEach(booking => {
             booking.rooms.forEach(room => {
               if (room.isSeparateBooking) {
+                var price = room.price;
+                if (price == null && room.customers && room.customers.length > 0) {
+                  price = room.customers[0].roomPrice;
+                }
                 this.fees.push({
                   name: booking.hotel.name + ' ' + room.roomType.name,
-                  price: room.price
+                  price: price
                 });
               }
             });

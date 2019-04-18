@@ -9,10 +9,21 @@ export class Payment {
     discount?: number;
     customer?: Customer;
     travelId?: string;
+    travelName?: string;
+    paymentTypeId?: string;
+
+    // UI Properties
+    payLater?: boolean;
+    isEdit?: boolean;
 
     constructor() {
         this.amount = 0;
         this.amountPaid = 0;
         this.discount = 0;
     }
+}
+
+export class PaymentType {
+    id?: string;
+    name?: string;
 }

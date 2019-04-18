@@ -1,11 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormBuilder, FormControl, Validators,  FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
-import { validateDate } from '../../core/helpers/utils';
+import * as moment from 'moment';
 
+import { validateDate, dateToMoment, dateToUTC } from '../../core/helpers/utils';
 import { HajjService } from '../hajj.service';
 import { Hajj } from '../hajj.model';
+import { TravelGuide } from '../../travels/travel.model';
 
 @Component({
   selector: 'app-hajj-dialog',
@@ -36,19 +38,31 @@ export class HajjDialogComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      startDate: this.fb.control(this.hajj.startDate, Validators.required),
-      endDate: this.fb.control(this.hajj.endDate, Validators.required),
+      name: this.fb.control(this.hajj.name, Validators.required),
+      startDate: this.fb.control(dateToMoment(this.hajj.startDate), Validators.required),
+      endDate: this.fb.control(dateToMoment(this.hajj.endDate), Validators.required),
       price: this.fb.control(this.hajj.unitPrice, Validators.required),
+      travelGuides: this.fb.array([])
     });
+    
+    if (!this.hajj.travelGuides || this.hajj.travelGuides.length == 0) {
+      this.addGuideControl();
+    }
+    else {
+      this.hajj.travelGuides.forEach(x => this.addGuideControl(x));
+    }
   }
 
   save() {
     this.loading = true;
-    this.hajj.name = 'Hajj ' + this.form.value.startDate.year();
-    this.hajj.startDate = this.form.value.startDate;
-    this.hajj.endDate = this.form.value.endDate;
+    var name: string = this.form.value.name;
+    if (name.toLowerCase().indexOf('hajj') === -1) {
+      name = 'Hajj ' + name;
+    }
+    this.hajj.name = name;
+    this.hajj.startDate = dateToUTC(this.form.value.startDate);
+    this.hajj.endDate = dateToUTC(this.form.value.endDate);
     this.hajj.unitPrice = this.form.value.price;
-    this.hajj.status = new Date() > this.form.value.endDate ? 'Terminé' : new Date() < this.form.value.startDate ? 'A venir' : 'En cours';
 
     this.saveSubscription = this.saveHajj()
     .subscribe(
@@ -69,4 +83,19 @@ export class HajjDialogComponent implements OnInit {
   cancel() {
     this.dialogRef.close();
   }
+
+  addGuideControl(guide: TravelGuide = null) {
+    this.travelGuides.push(this.fb.group({
+      id: this.fb.control(guide ? guide.id : null),
+      firstname: this.fb.control(guide ? guide.firstname : null),
+      lastname: this.fb.control(guide ? guide.lastname : null),
+      mobileNumber: this.fb.control(guide ? guide.mobileNumber : null)
+    }));
+  }
+
+  removeGuideControl(index: number) {
+      this.travelGuides.removeAt(index);
+  }
+
+  get travelGuides(): FormArray { return <FormArray>this.form.get('travelGuides'); }
 }

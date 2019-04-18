@@ -45,7 +45,10 @@ export class DocumentListComponent implements OnInit {
   openDocumentDialog(document: AppDocument = null) {
     let dialogRef = this.dialog.open(DocumentDialogComponent, {
       autoFocus: true,
-      width: '534px'
+      width: '534px',
+      data: {
+        document: document
+      }
     });
 
     dialogRef.afterClosed().subscribe(newDocument => {

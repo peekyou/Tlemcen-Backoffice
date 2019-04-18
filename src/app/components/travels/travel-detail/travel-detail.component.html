@@ -1,6 +1,10 @@
 <div class="main-content">
+    <app-spinner [loader]="loader"></app-spinner>
     <div class="container-fluid" *ngIf="travel">
-        <h2 class="text-primary">{{travel.name}}</h2>
+        <div class="travel-header">
+            <h3 class="text-primary">{{travel.name}}</h3>
+            <button class="btn btn-primary" (click)="downloadArrivalInformationFile()"><mat-icon>info</mat-icon>Imprimer document transports</button>
+        </div>
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div *ngIf="!travel.hotelBookings || travel.hotelBookings.length == 0" class="card card-block">
@@ -25,6 +29,7 @@
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th>Pèlerins</th>
                                     <th>Nb chambres</th>
+                                    <th>Nuits</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
@@ -32,6 +37,7 @@
                                     <td>{{ reservation.hotel.name }}</td>
                                     <td>{{ reservation.travelerCount }}</td>
                                     <td>{{ reservation.rooms.length }} ({{ getReservationAvailableSpace(reservation) }} places libres)</td>
+                                    <td>{{ getNights(reservation) }}</td>
                                     <td>
                                         <button matTooltip="Ajouter des chambres" mat-icon-button (click)="openRoomReservationDialog(reservation);$event.stopPropagation()">
                                             <mat-icon>add</mat-icon>
@@ -122,11 +128,6 @@
                     <div class="card">
                         <div class="card-header card-header-warning">
                             <h4 class="card-title pull-left">Pèlerins</h4>
-                            <!-- <div class="card-header-actions">
-                                <button mat-icon-button matTooltip="Ajouter pèlerins" (click)="openAddCustomerDialog()">
-                                    <mat-icon>add</mat-icon>
-                                </button>
-                            </div> -->
                         </div>
                         <div class="card-body table-responsive">
                             <table class="table table-hover">
@@ -134,14 +135,19 @@
                                     <th>Nom</th>
                                     <th>Age</th>
                                     <th>Telephone</th>
+                                    <th>Documents</th>
                                     <th>Paiment</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let customer of travel.customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: travel.customers?.paging?.totalCount }" [routerLink]="['customers', customer.id]">
                                     <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                    <td>{{ moment().diff(customer.birthDate, 'years') }}</td>
+                                    <td><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
                                     <td>{{ customer.mobileNumber }}</td>
+                                    <td>
+                                        <span [matTooltip]="getCustomerDocumentsStatus(customer)" matTooltipClass="multiline" *ngIf="customer.documentsErrors && customer.documentsErrors.length > 0" class="badge badge-danger">Incomplet</span>
+                                        <span *ngIf="!customer.documentsErrors || customer.documentsErrors.length == 0" class="badge badge-success">Complet</span>
+                                    </td>
                                     <td *ngIf="customer.travelPayment">
                                         <span *ngIf="customer.travelPayment.status == 'P'" class="badge badge-success">Payé</span>
                                         <span *ngIf="customer.travelPayment.status == 'I'" class="badge badge-danger">Incomplet</span>

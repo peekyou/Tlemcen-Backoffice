@@ -18,7 +18,7 @@
 }
 
 .payment-details {
-	font-size: .9rem;
+	font-size: 95%;
 	margin-left: 15px;
 
 	.payment-date {
@@ -27,5 +27,16 @@
 
 	.amount {
 		margin-left: -15px;
+	}
+
+	.icon-sm {
+		height: 19px;
+		width: 19px;
+		font-size: 19px;
+		vertical-align: sub;
+	}
+
+	.icon-sm:hover {
+		cursor: pointer;
 	}
 }

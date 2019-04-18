@@ -30,6 +30,8 @@ import { PrintDocumentsDialogComponent } from './travels/print-documents-dialog/
 import { CircleProgressComponent } from './common/circle-progress/circle-progress.component';
 import { FlightsAssignmentComponent } from './airlines/flights-assignment/flights-assignment.component';
 import { FlightDetailComponent } from './airlines/flight-detail/flight-detail.component';
+import { HotelBookingComponent } from './hotels/hotel-booking/hotel-booking.component';
+import { HotelBookingDialogComponent } from './hotels/hotel-booking-dialog/hotel-booking-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -39,6 +41,7 @@ const MODALS = [
   ConfirmationDialogComponent,
   FlightBookingDialogComponent,
   PrintDocumentsDialogComponent,
+  HotelBookingDialogComponent,
 ];
 
 @NgModule({
@@ -68,6 +71,7 @@ const MODALS = [
     CircleProgressComponent,
     FlightsAssignmentComponent,
     FlightDetailComponent,
+    HotelBookingComponent,
     ...MODALS,
   ],
   exports: [

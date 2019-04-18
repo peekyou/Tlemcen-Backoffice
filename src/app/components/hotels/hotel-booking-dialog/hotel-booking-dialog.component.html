@@ -1,0 +1,13 @@
+<div mat-dialog-title>Chambres privées</div>
+<div mat-dialog-content>
+  <div *ngIf="nbInfants > 0">{{ nbInfants }} {{ 'TRAVEL.INFANTS' | translate }}</div>
+  <div *ngIf="nbChildren > 0">{{ nbChildren }} {{ 'TRAVEL.CHILDREN' | translate }}</div>
+  <div *ngIf="nbAdults > 0">{{ nbAdults }} {{ 'TRAVEL.ADULTS' | translate }}</div>
+  <br />
+  <app-hotel-booking [customers]="customers" (onChange)="onHotelsChange($event)"></app-hotel-booking>      
+  <div class="pull-right">
+    <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="save()"
+      [disabled]="!canContinue">{{ 'COMMON.SAVE' | translate }}</button>
+    <button mat-raised-button class="btn btn-sm btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+  </div>
+</div>

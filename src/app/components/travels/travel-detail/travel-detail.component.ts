@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 
 import { Customer } from '../../../customers/customer.model';
@@ -13,9 +14,11 @@ import { Airline } from '../../../airlines/airline.model';
 import { FlightBooking } from '../../../airlines/flight-booking.model';
 import { Travel, TravelType } from '../../../travels/travel.model';
 import { SearchCustomerDialogComponent } from '../../customers/search-customer-dialog/search-customer-dialog.component';
-import { HotelRoomsDialogComponent } from '../..//hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
-import { FlightBookingDialogComponent } from '../..//airlines/flight-booking-dialog/flight-booking-dialog.component';
-import { DeleteDialogComponent } from '../..//common/delete-dialog/delete-dialog.component';
+import { HotelRoomsDialogComponent } from '../../hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
+import { FlightBookingDialogComponent } from '../../airlines/flight-booking-dialog/flight-booking-dialog.component';
+import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
+import { HotelBookingDialogComponent } from '../../hotels/hotel-booking-dialog/hotel-booking-dialog.component';
 
 @Component({
   selector: 'app-travel-detail',
@@ -26,14 +29,15 @@ export class TravelDetailComponent implements OnInit {
   moment;
   travel: Travel;
   currentPage: number = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 200;
   generatingAirlinesFiles = false;
   generatingBadges = false;
+  loader: Subscription;
 
   constructor(
-    private hajjService: HajjService, 
-    private service: TravelService, 
-    private dialog: MatDialog, 
+    private hajjService: HajjService,
+    private service: TravelService,
+    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute) { 
       this.moment = moment;
@@ -50,7 +54,7 @@ export class TravelDetailComponent implements OnInit {
   }
 
   loadTravel(travelId: string) {
-    this.service.getTravel(travelId, this.itemsPerPage)
+    this.loader = this.service.getTravel(travelId, this.itemsPerPage)
     .subscribe(
       res => {
         this.travel = res
@@ -72,22 +76,64 @@ export class TravelDetailComponent implements OnInit {
         }
     });
 
-    // const sub = dialogRef.componentInstance.onCustomersAdded.subscribe((customers: Customer[]) => {
-    // });
-
     dialogRef.afterClosed().subscribe((customers: Customer[]) => {
       if (customers && customers.length > 0) {
         this.service.validateTravelers(this.travel.id, customers.map(a => a.id))
           .subscribe(res => {
-            // dialogRef.componentInstance.onCustomersAdded.unsubscribe();
+
+            // Sort by birth date (youngest first)
+            customers.sort(function(a, b) { return +new Date(b.birthDate) - +new Date(a.birthDate)});
+
             this.service.travelWithCustomers = { 
               travel: this.travel,
               customers: customers,
               isGroup: isGroup
             };
-            this.router.navigate(['./customers'], { relativeTo: this.route });
+
+            if (isGroup) {
+              this.openPrivateBookingConfirmationDialog(customers);
+            }
+            else {
+              this.router.navigate(['./customers'], { relativeTo: this.route });
+            }
           });
         }
+    });
+  }
+
+  openPrivateBookingConfirmationDialog(customers: Customer[]) {
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      autoFocus: false,
+      data: { 
+        title: 'Chambres privées',
+        text: 'Mettre le groupe dans des chambres privées ?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.openPrivateRoomBookingDialog(customers);
+      }
+      else {
+        this.router.navigate(['./customers'], { relativeTo: this.route });
+      }
+    });
+  }
+
+  openPrivateRoomBookingDialog(customers: Customer[]) {
+    let dialogRef = this.dialog.open(HotelBookingDialogComponent, {
+        autoFocus: false,
+        width: '734px',
+        data: {
+          customers: customers,
+          travelId: this.travel.id
+        }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.router.navigate(['./customers'], { relativeTo: this.route });
+      }
     });
   }
 
@@ -188,19 +234,20 @@ export class TravelDetailComponent implements OnInit {
     });
   }
 
+  downloadArrivalInformationFile() {
+    this.service.downloadArrivalInformationFile(this.travel.id).subscribe(res => {});
+  }
+
   downloadTravelerContract(customer: Customer) {
-    this.service.downloadTravelerContract(this.travel.id, customer.id)
-    .subscribe(res => {});
+    this.service.downloadTravelerContract(this.travel.id, [customer.id]).subscribe(res => {});
   }
 
   downloadPaymentReceipt(customer: Customer) {
-    this.service.downloadPaymentReceipt(this.travel.id, customer.id)
-    .subscribe(res => {});
+    this.service.downloadPaymentReceipt(this.travel.id, [customer.id]).subscribe(res => {});
   }
 
   downloadTravelerBadge(customer: Customer) {
-    this.service.downloadTravelerBadge(this.travel.id, customer.id)
-    .subscribe(res => {});
+    this.service.downloadTravelerBadge(this.travel.id, [customer.id]).subscribe(res => {});
   }
 
   downloadAllBadges() {
@@ -225,5 +272,27 @@ export class TravelDetailComponent implements OnInit {
     this.currentPage = page;
     this.service.getTravelers(this.travel.id, this.currentPage, this.itemsPerPage)
       .subscribe(res => this.travel.customers = res);
+  }
+
+  getNights(booking: HotelReservation) {
+    if (booking.toDate && booking.fromDate) {
+      return moment(booking.toDate).diff(moment(booking.fromDate), 'days');
+    }
+    return '';
+  }
+
+  getCustomerDocumentsStatus(customer) {
+    var result = '';
+    if (customer.documentsErrors) {
+      for (let i = 0; i < customer.documentsErrors.length; i++) {
+        if (customer.documentsErrors[i].id == 'MISSING') {
+          result += customer.documentsErrors[i].name + ' : MANQUANT\n';
+        }
+        else if (customer.documentsErrors[i].id == 'PASSPORT_EXPIRED') {
+          result += 'Date d\'expiration du passeport';
+        }
+      }
+    }
+    return result;
   }
 }

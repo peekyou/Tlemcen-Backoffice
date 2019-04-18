@@ -1,0 +1,29 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="action-buttons">
+        <button class="btn btn-info" (click)="openNoteDialog()"><mat-icon>add</mat-icon>Ajouter une note</button>
+    </div>
+    <app-spinner [loader]="loader"></app-spinner>
+    <div *ngIf="loader.closed && notes && notes.data && notes.data.length > 0">
+      <div class="row" *ngFor="let note of notes.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: notes?.paging?.totalCount }">
+        <div class="col note">
+          <div class="note-header">
+            <h4>{{ note.title }}</h4>
+            <div>
+              <button mat-icon-button matTooltip="Modifier" (click)="openNoteDialog(note);$event.stopPropagation()">
+                  <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Supprimer" (click)="openDeleteDialog(note);$event.stopPropagation()">
+                  <mat-icon class="text-danger">delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <p>{{ note.content }}</p>
+        </div>
+      </div>
+      <pagination-controls *ngIf="notes" (pageChange)="pageChanged($event)" 
+        autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+      </pagination-controls>
+    </div>
+  </div>
+</div>

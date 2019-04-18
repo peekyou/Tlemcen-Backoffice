@@ -1,3 +1,7 @@
-<p>
-  omra-flights-plan works!
-</p>
+<div class="main-content">
+  <div class="container-fluid">
+    <app-spinner [loader]="loader"></app-spinner>
+    <!-- <app-flights-assignment *ngIf="omra" [flightBookings]="omra.flightBookings" [travelId]="omra.id"></app-flights-assignment> -->
+    <app-flight-detail *ngIf="omraId && flightBookingId" [flightBookingId]="flightBookingId" [travelId]="omraId"></app-flight-detail>
+  </div>
+</div>

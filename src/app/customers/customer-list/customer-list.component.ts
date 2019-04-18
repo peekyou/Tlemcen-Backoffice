@@ -22,7 +22,8 @@ export class CustomerListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 20;
   customers: PagingResponse<Customer>;
-  
+  searchTerm: string;
+
   constructor(private service: CustomersService, private dialog: MatDialog) { 
     this.moment = moment;
     this.getCustomers();
@@ -31,10 +32,10 @@ export class CustomerListComponent implements OnInit {
   ngOnInit() {
   }
 
-  getCustomers() {
+  getCustomers(resetPagination = false) {
     window.scroll(0,0);
-
-    this.loader = this.service.getCustomers(this.currentPage, this.itemsPerPage)
+    this.currentPage = resetPagination ? 1 : this.currentPage;
+    this.loader = this.service.getCustomers(this.currentPage, this.itemsPerPage, this.searchTerm)
     .subscribe(
       res => this.customers = res,
       err => console.log(err)

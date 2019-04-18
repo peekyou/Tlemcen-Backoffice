@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AirlinesService } from '../../../airlines/airlines.service';
 import { FlightBooking } from '../../../airlines/flight-booking.model';
+import { ShuttleBus } from '../../../airlines/shuttle-bus.model';
 
 @Component({
   selector: 'app-flight-booking-dialog',
@@ -11,6 +12,7 @@ import { FlightBooking } from '../../../airlines/flight-booking.model';
 })
 export class FlightBookingDialogComponent implements OnInit {
   flightBookings: FlightBooking[];
+  shuttles: ShuttleBus[];
   travelId: string;
 
   constructor(
@@ -28,6 +30,7 @@ export class FlightBookingDialogComponent implements OnInit {
 
   onFlightsChange(flights) {
     this.flightBookings = flights.flightBookings;
+    this.shuttles = flights.shuttles;
   }
 
   cancel() {
@@ -35,7 +38,7 @@ export class FlightBookingDialogComponent implements OnInit {
   }
 
   save() {
-    this.service.bookFlights(this.travelId, this.flightBookings)
+    this.service.bookFlights(this.travelId, this.flightBookings, this.shuttles)
     .subscribe(res => {
       this.dialogRef.close(true);
     });

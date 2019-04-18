@@ -1,0 +1,65 @@
+<form [formGroup]="form">
+  <div class="bold">Chambres d'hôtel</div>
+    <div class="row">
+      <mat-form-field class="col-12 col-md-6">
+        <mat-select placeholder="Hôtel La Mecque" formControlName="hotelMekka">
+          <mat-option></mat-option>
+          <mat-option *ngFor="let h of hotelsMekka" [value]="h.id">
+            {{ h.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="hotelMekka.value" class="col-6 col-md-3">
+        <mat-select placeholder="Chambre" formControlName="hotelMekkaRoom">
+          <mat-option *ngFor="let option of roomTypes" [value]="option.id">
+            {{ option.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="hotelMekka.value && !customers" class="col-6 col-md-3">
+          <input type="number" matInput min="0" placeholder="Prix" formControlName="hotelMekkaRoomPrice">
+      </mat-form-field>
+    </div>
+    <div *ngIf="customers && hotelMekka.value" formArrayName="hotelMekkaRoomPrices">
+      <div class="row" *ngFor="let customer of customers; let i = index">
+        <div class="col name-label">
+          {{ customer.firstname }} {{ customer.lastname }}
+        </div>
+        <mat-form-field *ngIf="hotelMekka.value" class="col">
+            <input type="number" matInput min="0" placeholder="Prix" formControlName="{{i}}">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <mat-form-field class="col-12 col-md-6">
+        <mat-select placeholder="Hôtel Médine" formControlName="hotelMedina">
+          <mat-option></mat-option>
+          <mat-option *ngFor="let h of hotelsMedina" [value]="h.id">
+            {{ h.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="hotelMedina.value" class="col-6 col-md-3">
+        <mat-select placeholder="Chambre" formControlName="hotelMedinaRoom">
+          <mat-option *ngFor="let option of roomTypes" [value]="option.id">
+            {{ option.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="hotelMedina.value && !customers" class="col-6 col-md-3">
+          <input type="number" matInput min="0" placeholder="Prix" formControlName="hotelMedinaRoomPrice">
+      </mat-form-field>
+    </div>
+    <div *ngIf="customers && hotelMedina.value" formArrayName="hotelMedinaRoomPrices">
+      <div class="row" *ngFor="let customer of customers; let i = index">
+        <div class="col name-label">
+          {{ customer.firstname }} {{ customer.lastname }}
+        </div>
+        <mat-form-field *ngIf="hotelMedina.value" class="col">
+            <input type="number" matInput min="0" placeholder="Prix" formControlName="{{i}}">
+        </mat-form-field>
+      </div>
+    </div>
+</form>
+<!-- <pre>{{ form.value | json }}</pre> -->

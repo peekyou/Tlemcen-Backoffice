@@ -29,6 +29,10 @@ a {
     text-align: center;
 }
 
+.multiline {
+    white-space: pre-line;
+}
+
 .inactive {
     pointer-events: none;
     cursor: default;
@@ -197,4 +201,28 @@ app-login, app-set-password, app-forget-password {
     input {
         vertical-align: middle;
     }     
+}
+
+.form-outline {
+    .mat-form-field-appearance-outline .mat-form-field-infix {
+        padding: .5em 0 .5em 0 !important;
+    }
+
+    .mat-form-field-infix {
+        border-top: .4375em solid transparent !important;
+    }
+
+    .mat-form-field-label-wrapper {
+        //top: -.84375em;
+        padding-top: .4375em !important;
+    }
+
+    .mat-form-field-appearance-outline .mat-form-field-label {
+        top: 1.4375em !important;
+    }
+
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        transform: translateY(-1em)scale(.75) !important;
+        -webkit-transform: translateY(-1em)scale(.75) !important;
+    }
 }

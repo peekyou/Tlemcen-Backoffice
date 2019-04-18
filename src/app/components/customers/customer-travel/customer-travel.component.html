@@ -1,21 +1,33 @@
 <h3 class="text-primary">{{ customers[customerIndex].firstname }} {{ customers[customerIndex].lastname }}</h3>
+<!-- <button mat-button class="btn btn-info">Modifier client</button> -->
 <mat-accordion class="headers-align">
     <mat-expansion-panel *ngIf="isGroup" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
       <mat-expansion-panel-header>
-        <mat-panel-title>Relation</mat-panel-title>
+        <mat-panel-title>{{ 'TRAVEL.RELATIONSHIP' | translate }}</mat-panel-title>
         <mat-panel-description>
           <mat-icon>people</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-
       <mat-form-field class="full-width">
-        <mat-select placeholder="Lien de parenté" [(value)]="selectedRelationship">
+        <mat-select placeholder="Lien" [(value)]="selectedRelationship">
             <mat-option *ngFor="let option of relationships" [value]="option">
               {{ option.name }}
             </mat-option>
         </mat-select>
       </mat-form-field>  
+      <mat-action-row>
+        <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
+      </mat-action-row>
+    </mat-expansion-panel>
 
+    <mat-expansion-panel *ngIf="!isGroup" [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ 'TRAVEL.RESIDENCE' | translate }}</mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>home</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-hotel-booking [customer]="customers[customerIndex]" (onChange)="onHotelsChange($event)"></app-hotel-booking>      
       <mat-action-row>
         <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
       </mat-action-row>
@@ -23,48 +35,42 @@
 
     <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
       <mat-expansion-panel-header>
-        <mat-panel-title>Documents</mat-panel-title>
+        <mat-panel-title>{{ 'TRAVEL.DOCUMENTS' | translate }}</mat-panel-title>
         <mat-panel-description>
           <mat-icon>insert_drive_file</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-
       <app-upload-documents [travelTypeId]="travel.travelTypeId" [customer]="customers[customerIndex]"></app-upload-documents>
-      
-      <mat-action-row>
-        <button *ngIf="isGroup" mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
-        <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
-      </mat-action-row>
-    </mat-expansion-panel>
-  
-    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>Services supplémentaires</mat-panel-title>
-        <mat-panel-description>
-          <mat-icon>add_shopping_cart</mat-icon>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <app-travel-services [travelTypeId]="travel.travelTypeId" [customer]="customers[customerIndex]"
-        [isGroup]="isGroup" (onChange)="onTravelServicesChange($event)">
-      </app-travel-services>        
-      
       <mat-action-row>
         <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
         <button mat-button class="btn btn-sm btn-primary" (click)="nextStep()">Suivant</button>
       </mat-action-row>
     </mat-expansion-panel>
   
+    <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ 'TRAVEL.SERVICES' | translate }}</mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>add_shopping_cart</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-travel-services [travelTypeId]="travel.travelTypeId" [customer]="customers[customerIndex]"
+        [isGroup]="isGroup" (onChange)="onTravelServicesChange($event)">
+      </app-travel-services>        
+      <mat-action-row>
+          <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
+          <button mat-button class="btn btn-sm btn-primary" (click)="enablePayStep()">Suivant</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  
     <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" hideToggle>
       <mat-expansion-panel-header>
-        <mat-panel-title>Paiment</mat-panel-title>
+        <mat-panel-title>{{ 'TRAVEL.PAYMENT' | translate }}</mat-panel-title>
         <mat-panel-description>
           <mat-icon>euro_symbol</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
-  
       <app-payment [fees]="fees" [customer]="customers[customerIndex]" [travel]="travel" (onChange)="onPaymentChange($event)"></app-payment>        
-  
       <mat-action-row>
         <button mat-button class="btn btn-sm btn-secondary" (click)="prevStep()">Précédent</button>
         <button mat-button [disabled]="loading" class="btn btn-sm btn-info" (click)="openConfirmationDialog()">Valider</button>

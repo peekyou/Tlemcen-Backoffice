@@ -6,9 +6,11 @@
                   <button class="btn btn-info" (click)="openHajjDialog()"><mat-icon>add</mat-icon>Ajouter un Hajj</button>
                 </div>
                 <app-spinner [loader]="loader"></app-spinner>
-                <div class="card" *ngIf="loader.closed && hajjList && hajjList.data && hajjList.data.length > 0">
+                <h3 *ngIf="currentHajj && currentHajj.length == 0 && completedHajj && completedHajj.paging.totalCount == 0">Aucun Hajj</h3>
+                
+                <div class="card" *ngIf="loader.closed && currentHajj && currentHajj.length > 0">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title">Historique des Hajj</h4>
+                        <h4 class="card-title">Hajj en cours/à venir</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -21,7 +23,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let hajj of hajjList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: hajjList?.paging?.totalCount }" [routerLink]="['/hajj', hajj.id]">
+                                    <tr *ngFor="let hajj of currentHajj" [routerLink]="['/hajj', hajj.id]">
                                         <td>{{ hajj.name }}</td>
                                         <td>{{ hajj.travelerCount }}</td>
                                         <td>{{ hajj.status }}</td>
@@ -36,7 +38,39 @@
                             </table>
                         </div>
                     </div>
-                    <pagination-controls *ngIf="hajjList" (pageChange)="pageChanged($event)" 
+                </div>
+
+                <div class="card" *ngIf="completedHajj && completedHajj.data && completedHajj.data.length > 0">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Hajj terminés</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>Année</th>
+                                    <th>Nombre de personnes</th>
+                                    <th>Statut</th>
+                                    <th>Revenus</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let hajj of completedHajj.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: completedHajj?.paging?.totalCount }" [routerLink]="['/hajj', hajj.id]">
+                                        <td>{{ hajj.name }}</td>
+                                        <td>{{ hajj.travelerCount }}</td>
+                                        <td>{{ hajj.status }}</td>
+                                        <td class="text-primary">{{ hajj.revenues }}€</td>
+                                        <td>
+                                            <button mat-icon-button matTooltip="Modifier" (click)="openHajjDialog(hajj);$event.stopPropagation()">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <pagination-controls *ngIf="completedHajj" (pageChange)="pageChanged($event)" 
                         autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
                     </pagination-controls>
                 </div>

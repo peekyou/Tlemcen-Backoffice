@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Travel } from './travel.model';
+import { Travel, TravelStatus } from './travel.model';
 import { Customer } from '../customers/customer.model';
 import { HotelReservation } from '../hotels/hotel-reservation.model';
 import { FlightBooking } from '../airlines/flight-booking.model';
@@ -17,8 +17,8 @@ export class TravelService {
 
   constructor(private http: AuthHttpService) { }
 
-  getTravels(page: number, count: number): Observable<PagingResponse<Travel>> {
-    return this.http.get(this.resource + '?pageNumber=' + page + '&itemsCount=' + count);
+  getTravels(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Travel>> {
+    return this.http.get(this.resource + '?travelStatus=' + status + '&pageNumber=' + page + '&itemsCount=' + count);
   }
 
   getTravelsAsLookup(): Observable<Lookup[]> {
@@ -57,8 +57,8 @@ export class TravelService {
     return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '?onlySeparateBooking=' + onlySeparateBooking);
   }
 
-  addTravelers(customerTravel: CustomerTravel): Observable<boolean> {
-    return this.http.post(this.resource + '/travelers', customerTravel);
+  addTravelers(customersTravel: CustomerTravel[]): Observable<boolean> {
+    return this.http.post(this.resource + '/travelers', customersTravel);
   }
   
   updateTraveler(customerTravel: CustomerTravel): Observable<boolean> {
@@ -94,17 +94,25 @@ export class TravelService {
       hotelBooking: bookings
     });
   }
-  
-  downloadTravelerContract(travelId: string, travelerId: string): Observable<void> {
-    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/contract');
+
+  downloadArrivalInformationFile(travelId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/arrivalinformation');
   }
   
-  downloadPaymentReceipt(travelId: string, travelerId: string): Observable<void> {
-    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/receipt');
+  downloadHotelsPlan(travelId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/hotelsplan');
   }
 
-  downloadTravelerBadge(travelId: string, travelerId: string): Observable<void> {
-    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/badge');
+  downloadTravelerContract(travelId: string, travelerIds: string[]): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/contract', travelerIds);
+  }
+  
+  downloadPaymentReceipt(travelId: string, travelerIds: string[]): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/receipt', travelerIds);
+  }
+
+  downloadTravelerBadge(travelId: string, travelerIds: string[]): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/badge', travelerIds);
   }
 
   downloadAllBadges(travelId: string): Observable<void> {

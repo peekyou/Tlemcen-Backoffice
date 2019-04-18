@@ -3,6 +3,7 @@ import { AuthHttpService } from './core/services/auth-http.service';
 import { TranslationService } from './core/services/translation.service';
 import { LookupService } from './core/services/lookup.service';
 import { ToasterService } from './core/services/toaster.service';
+import { DemoService } from './core/services/demo.service';
 import { AuthService } from './auth/auth.service';
 import { DashboardService } from './dashboard/dashboard.service';
 import { CustomersService } from './customers/customers.service';
@@ -17,6 +18,7 @@ import { FeeService } from './management/fees-management/fee.service';
 import { DocumentService } from './management/documents-management/document.service';
 import { CustomersTravelService } from './components/customers/customer-travel/customers-travel.service';
 import { SmsService } from './communication/sms/sms.service';
+import { NoteService } from './notes/note.service';
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
@@ -29,6 +31,7 @@ export const APP_PROVIDERS = [
     LookupService,
     ToasterService,
     AuthService,
+    DemoService,
     DashboardService,
     CustomersService,
     HajjService,
@@ -42,6 +45,7 @@ export const APP_PROVIDERS = [
     DocumentService,
     CustomersTravelService,
     SmsService,
+    NoteService,
     AuthGuard,
     PermissionGuard,
     RoleGuard

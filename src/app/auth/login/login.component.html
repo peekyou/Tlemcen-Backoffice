@@ -11,14 +11,14 @@
             <input matInput type="password" placeholder="{{ 'COMMON.PASSWORD' | translate }}" formControlName="password" required>
         </mat-form-field>
         
-        <app-submit-button value="{{ 'AUTH.LOGIN' | translate }}" [form]="form"
+        <app-submit-button value="{{ 'AUTH.LOGIN' | translate }}"
                             loadingValue="{{ 'AUTH.LOGIN' | translate }}" 
                             [subscription]="loginSubscription">
         </app-submit-button>
     </form>
     <div>
-      <app-error-message [(error)]="error" defaultMessage="{{ 'AUTH.INVALID_CREDENTIALS' | translate }}">
-      </app-error-message>
+      <!-- <app-error-message [(error)]="error" defaultMessage="{{ 'AUTH.INVALID_CREDENTIALS' | translate }}">
+      </app-error-message> -->
     </div>
     <div class="pull-right">
         <a routerLink="forgetpassword"><small>{{ 'AUTH.FORGOT_PASSWORD' | translate }}</small></a>

@@ -32,9 +32,9 @@ export class AuthHttpService extends HttpService {
         return super.getFile(resource);
     }
     
-    download(resource: string): Observable<any> {
+    download(resource: string, data?: any): Observable<any> {
         this.addAuthHeader();
-        return super.download(resource)
+        return super.download(resource, data)
             .pipe(catchError(this.showToaster(this.toasterService)));
     }
 

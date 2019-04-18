@@ -6,9 +6,11 @@
                     <button class="btn btn-info" (click)="openOmraDialog()"><mat-icon>add</mat-icon>Ajouter une Omra</button>
                 </div>
                 <app-spinner [loader]="loader"></app-spinner>
-                <div class="card" *ngIf="loader.closed && omraList && omraList.data && omraList.data.length > 0">
+                <h3 *ngIf="currentOmra && currentOmra.length == 0 && completedOmra && completedOmra.paging.totalCount == 0">Aucune Omra</h3>
+                
+                <div class="card" *ngIf="loader.closed && currentOmra && currentOmra.length > 0">
                     <div class="card-header card-header-warning">
-                        <h4 class="card-title">Historique des Omra</h4>
+                        <h4 class="card-title">Omra en cours/à venir</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -21,7 +23,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let omra of omraList.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: omraList?.paging?.totalCount }" [routerLink]="['/omra', omra.id]">
+                                    <tr *ngFor="let omra of currentOmra" [routerLink]="['/omra', omra.id]">
                                         <td>{{ omra.name }}</td>
                                         <td>{{ omra.travelerCount }}</td>
                                         <td>{{ omra.status }}</td>
@@ -36,7 +38,39 @@
                             </table>
                         </div>
                     </div>
-                    <pagination-controls *ngIf="omraList" (pageChange)="pageChanged($event)" 
+                </div>
+
+                <div class="card" *ngIf="completedOmra && completedOmra.data && completedOmra.data.length > 0">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Omra terminées</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>Nom</th>
+                                    <th>Nombre de personnes</th>
+                                    <th>Statut</th>
+                                    <th>Revenus</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let omra of completedOmra.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: completedOmra?.paging?.totalCount }" [routerLink]="['/omra', omra.id]">
+                                        <td>{{ omra.name }}</td>
+                                        <td>{{ omra.travelerCount }}</td>
+                                        <td>{{ omra.status }}</td>
+                                        <td class="text-primary">{{ omra.revenues }}€</td>
+                                        <td>
+                                            <button mat-icon-button matTooltip="Modifier" (click)="openOmraDialog(omra);$event.stopPropagation()">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <pagination-controls *ngIf="completedOmra" (pageChange)="pageChanged($event)" 
                         autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
                     </pagination-controls>
                 </div>

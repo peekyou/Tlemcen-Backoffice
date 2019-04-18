@@ -2,35 +2,36 @@
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div>
-			<h4 *ngIf="hotelBooking">{{ hotelBooking.hotel.name }}</h4>
-			<mat-form-field *ngIf="!hotelBooking">
-					<mat-select placeholder="Sélectionez un hôtel" formControlName="hotel">
-							<mat-option *ngFor="let h of hotels" [value]="h">
-									{{ h.name }}
-							</mat-option>
-					</mat-select>
-			</mat-form-field>
-			<div *ngIf="hotel.value || hotelBooking">
-				<div class="row">
-					<mat-form-field class="col-12 col-md-6">
-						<input matInput [matDatepicker]="fromDate" maxlength="10" (keypress)="validateDate($event)"
-							placeholder="Du" formControlName="fromDate">
-						<mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-						<mat-datepicker #fromDate></mat-datepicker>
-						<mat-error *ngIf="fromDate.errors?.required && (fromDate.dirty ||fromDate.touched)">
-								{{ 'FORM.INVALID_DATE' | translate }}
-						</mat-error>
-					</mat-form-field>
-					<mat-form-field class="col-12 col-md-6">
-						<input matInput [matDatepicker]="toDate" maxlength="10" (keypress)="validateDate($event)"
-							placeholder="Au" formControlName="toDate">
-						<mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-						<mat-datepicker #toDate [startAt]="form.value.fromDate"></mat-datepicker>
-						<mat-error *ngIf="toDate.errors?.required && (toDate.dirty ||toDate.touched)">
-								{{ 'FORM.INVALID_DATE' | translate }}
-						</mat-error>
-					</mat-form-field>
-				</div>
+		<h4 *ngIf="hotelBooking">{{ hotelBooking.hotel.name }}</h4>
+		<mat-form-field *ngIf="!hotelBooking">
+			<mat-select placeholder="Sélectionez un hôtel" formControlName="hotel">
+				<mat-option *ngFor="let h of hotels" [value]="h">
+						{{ h.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+		<div *ngIf="hotel.value || hotelBooking">
+			<div class="row">
+				<mat-form-field class="col-12 col-md-6">
+					<input matInput [matDatepicker]="fromDate" maxlength="10" (keypress)="validateDate($event)"
+						placeholder="Du" formControlName="fromDate" required>
+					<mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+					<mat-datepicker #fromDate></mat-datepicker>
+					<mat-error *ngIf="fromDate.errors?.required && (fromDate.dirty ||fromDate.touched)">
+						{{ 'FORM.INVALID_DATE' | translate }}
+					</mat-error>
+				</mat-form-field>
+				<mat-form-field class="col-12 col-md-6">
+					<input matInput [matDatepicker]="toDate" maxlength="10" (keypress)="validateDate($event)"
+						placeholder="Au" formControlName="toDate" required>
+					<mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+					<mat-datepicker #toDate [startAt]="form.value.fromDate"></mat-datepicker>
+					<mat-error *ngIf="toDate.errors?.required && (toDate.dirty ||toDate.touched)">
+						{{ 'FORM.INVALID_DATE' | translate }}
+					</mat-error>
+				</mat-form-field>
+			</div>
+			<div *ngIf="hotelBooking">
 				<div formArrayName="rooms" *ngFor="let room of rooms.controls; let i = index">
 					<div [formGroupName]="i" class="row">
 						<div class="col-12 col-md-4">
@@ -51,6 +52,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
     <div class="pull-right">
       <button mat-raised-button type="submit" class="btn btn-sm btn-info" (click)="save()"
               [disabled]="loading || form.invalid">{{ 'COMMON.SAVE' | translate }}</button>

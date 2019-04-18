@@ -1,32 +1,42 @@
-<form [formGroup]="form">
-    <div *ngIf="customer">
-        <div class="row" *ngFor="let fee of fees">
+<div *ngIf="customer">
+    <div *ngFor="let fee of fees">
+        <div class="row" *ngIf="fee.price != null">
             <div class="col">{{ fee.name }}</div>
             <div class="col">{{ fee.price }}€</div>
         </div>
-        <div *ngIf="isEdit && customer.travelPayment.discount > 0" class="row">
-            <div class="col">Remise</div>
-            <div class="col">-{{ customer.travelPayment.discount }}€</div>
-        </div>
+    </div>
+    <div *ngIf="customer.travelPayment.discount > 0" class="row">
+        <div class="col">Remise</div>
+        <div class="col">-{{ customer.travelPayment.discount }}€</div>
+    </div>
 
-        <div class="total row bold">
-            <div class="col">Total</div>
-            <div class="col">{{ calculateTotal() }}€</div>
-        </div>
+    <div class="total row bold">
+        <div class="col">Total</div>
+        <div class="col">{{ calculateTotal() }}€</div>
+    </div>
 
-        <div *ngIf="isEdit && customer.travelPayment.amountPaid > 0" class="row">
-            <div class="col">Montant payé</div>
-            <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
-        </div>
-        
-        <!-- Display payment details in read only mode -->
-        <div *ngIf="readOnly" class="payment-details">
-            <div *ngFor="let payment of customer.payments" class="row">
+    <div *ngIf="customer.travelPayment.amountPaid > 0" class="row">
+        <div class="col">Montant payé</div>
+        <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
+    </div>
+    
+    <!-- Display payment details in read only mode -->
+    <div class="payment-details">
+        <div *ngFor="let payment of paymentHistory">
+            <div *ngIf="payment.amountPaid > 0 || payment.isEdit" class="row">
                 <div class="col payment-date">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
-                <div class="col amount">{{ payment.amountPaid }}€</div>
+                <div class="col amount">
+                    <span *ngIf="!payment.isEdit">{{ payment.amountPaid }}€</span>
+                    <input type="number" *ngIf="payment.isEdit" [(ngModel)]="payment.amountPaid" style="max-width: 70px"/>
+                    <mat-icon *ngIf="!readOnly && !payment.isEdit" class="icon-sm" (click)="payment.isEdit = true" matTooltip="Modifier" style="margin-left: 25px">edit</mat-icon>
+                    <mat-icon *ngIf="!readOnly && payment.isEdit" class="text-success icon-sm" (click)="updatePayment(payment)" matTooltip="Valider" style="margin-left: 5px">check</mat-icon>
+                    <mat-icon *ngIf="!readOnly" (click)="openDeletePaymentDialog(payment)" class="text-danger icon-sm" matTooltip="Supprimer" style="margin-left: 10px">delete</mat-icon>
+                </div>
             </div>
         </div>
+    </div>
 
+    <form [formGroup]="form">
         <mat-form-field *ngIf="!readOnly">
             <input type='number' matInput min="0" placeholder="Accorder une remise" formControlName="discount">
         </mat-form-field>
@@ -35,12 +45,21 @@
             <div class="col">RESTE A PAYER</div>
             <div class="col">{{ getAmountToPay() }}€</div>
         </div>
-        <div *ngIf="getAmountToRefund() > 0" class="total row bold">
-            <div class="col">A REMBOURSER</div>
-            <div class="col">{{ getAmountToRefund() }}€</div>
+        <div *ngIf="!payLater.value">
+            <div *ngIf="getAmountToRefund() > 0" class="total row bold">
+                <div class="col">A REMBOURSER</div>
+                <div class="col">{{ getAmountToRefund() }}€</div>
+            </div>
+            <div *ngIf="!readOnly" class="row">
+                <mat-form-field class="col-12 col-md-3">
+                    <input type="number" matInput min="0" [max]="calculateTotal()" placeholder="Paiement en €" formControlName="amount">
+                </mat-form-field>
+                <mat-radio-group formControlName="paymentType" class="col-12 col-md-9" style="margin-top: 17px">
+                    <mat-radio-button *ngFor="let p of paymentTypes" style="margin-left: 15px" [value]="p.id">
+                        {{ p.name }}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
         </div>
-        <mat-form-field *ngIf="!readOnly">
-            <input type='number' matInput min="0" [max]="calculateTotal()" placeholder="Paiement en €" formControlName="amount">
-        </mat-form-field>
-    </div>
-</form>
+    </form>
+</div>

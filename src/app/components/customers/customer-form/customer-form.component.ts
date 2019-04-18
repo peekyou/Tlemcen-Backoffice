@@ -8,8 +8,9 @@ import * as moment from 'moment';
 
 import { LookupService } from '../../../core/services/lookup.service';
 import { Lookup } from '../../../core/models/lookup.model';
+import { Address } from '../../../core/models/address.model';
 import { Customer } from '../../../customers/customer.model';
-import { validateDate, filterLookup, dateToMoment } from '../../../core/helpers/utils';
+import { validateDate, filterLookup, dateToMoment, dateToUTC } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-customer-form',
@@ -72,11 +73,11 @@ export class CustomerFormComponent implements OnInit {
         this.customer.email = this.form.value.email;
         this.customer.mobileNumber = this.form.value.mobile;
         this.customer.phoneNumber = this.form.value.phone;
-        this.customer.birthDate = this.form.value.birthDate;
+        this.customer.birthDate = dateToUTC(this.form.value.birthDate);
         this.customer.birthCountry = this.form.value.birthCountry;
         this.customer.howKnewAgency = this.form.value.howKnewAgency ? this.form.value.howKnewAgency.name : null;
         this.customer.passportNumber = this.form.value.passportNumber;
-        this.customer.passportExpiryDate = this.form.value.passportExpiryDate;
+        this.customer.passportExpiryDate = dateToUTC(this.form.value.passportExpiryDate);
         this.customer.passportIssuingCountry = this.form.value.passportIssuingCountry;
         this.customer.nationality = this.form.value.nationality;
         this.customer.profession = this.form.value.profession && this.form.value.profession.name ? this.form.value.profession.name : this.form.value.profession;
@@ -84,9 +85,9 @@ export class CustomerFormComponent implements OnInit {
         this.customer.medicalInfo = this.form.value.medicalInfo;
         this.customer.isConverted = this.form.value.isConverted == 'T';
         var cityPostalCode = this.getcityPostalCode(this.form.value.cityPostalCode);
-
+        
         if (!this.customer.address) {
-            this.customer.address = {};
+            this.customer.address = new Address();
         }
 		this.customer.address.city = cityPostalCode[0];
 		this.customer.address.postalCode = cityPostalCode[1];
@@ -103,11 +104,24 @@ export class CustomerFormComponent implements OnInit {
 
         if (picture && picture.imageAsDataUrl) {
             this.customer.picture.src = picture.imageAsDataUrl;
+            this.customer.picture.mime = "image";
         }
         this.showCamera = false;
     }
 
+    nationalitySelected(value: Lookup) {
+        this.birthCountry.patchValue(value);
+        this.passportIssuingCountry.patchValue(value);
+    }
+
+    passportValidator(event) {
+        const pattern = /[A-Za-z0-9]/;
+        let inputChar = String.fromCharCode(event.charCode);
+        return pattern.test(inputChar);
+    }
+
     displayFn(val: Lookup) {
+        console.log(val)
         if (typeof val === 'string') {
             return val;
         }
@@ -124,17 +138,17 @@ export class CustomerFormComponent implements OnInit {
             gender: this.fb.control(this.customer.gender ? this.customer.gender : 'M', Validators.required),
             firstname: this.fb.control(this.customer.firstname, Validators.required),
             lastname: this.fb.control(this.customer.lastname, Validators.required),
-            birthDate: this.fb.control(dateToMoment(this.customer.birthDate)),
-            mobile: this.fb.control(this.customer.mobileNumber),
+            birthDate: this.fb.control(dateToMoment(this.customer.birthDate), Validators.required),
+            mobile: this.fb.control(this.customer.mobileNumber, Validators.required),
             phone: this.fb.control(this.customer.phoneNumber),
             email: this.fb.control(this.customer.email, (c) => this.customEmailValidator(c)),
             birthCountry: this.fb.control(this.customer.birthCountry ? this.customer.birthCountry.id : null),
-            nationality: this.fb.control(this.customer.nationality ? this.customer.nationality.id : null),
+            nationality: this.fb.control(this.customer.nationality ? this.customer.nationality.id : null, Validators.required),
             profession: this.fb.control(this.customer.profession),
-            address1: this.fb.control(this.customer.address ? this.customer.address.addressLine1 : null),
-            cityPostalCode: this.fb.control(this.customer.address && this.customer.address.city && this.customer.address.postalCode ? this.customer.address.postalCode + ' - ' + this.customer.address.city : null),
-            passportNumber: this.fb.control(this.customer.passportNumber),
-            passportExpiryDate: this.fb.control(dateToMoment(this.customer.passportExpiryDate)),
+            address1: this.fb.control(this.customer.address ? this.customer.address.addressLine1 : null, Validators.required),
+            cityPostalCode: this.fb.control(this.customer.address && this.customer.address.city && this.customer.address.postalCode ? new Lookup(this.customer.address.postalCode + ' - ' + this.customer.address.city, this.customer.address.postalCode + ' - ' + this.customer.address.city) : null, Validators.required),
+            passportNumber: this.fb.control(this.customer.passportNumber, Validators.required),
+            passportExpiryDate: this.fb.control(dateToMoment(this.customer.passportExpiryDate), Validators.required),
             passportIssuingCountry: this.fb.control(this.customer.passportIssuingCountry ? this.customer.passportIssuingCountry.id : null),
             howKnewAgency: this.fb.control(null),
             isConverted: this.fb.control(this.customer.isConverted ? 'T' : 'F'),
@@ -208,6 +222,12 @@ export class CustomerFormComponent implements OnInit {
                 passportIssuingCountry: country
             });
         }
+        if (this.customer && this.customer.profession) {
+            var profession = this.professions.find(a => a.name == this.customer.profession);
+            this.form.patchValue({
+                profession: profession
+            });
+        }
     }
 
     private customEmailValidator(control: AbstractControl): ValidationErrors {
@@ -233,6 +253,7 @@ export class CustomerFormComponent implements OnInit {
     }
   
     get cityPostalCode() { return this.form.get('cityPostalCode'); }
+    get passportNumber() { return this.form.get('passportNumber'); }
     get birthCountry() { return this.form.get('birthCountry'); }
     get nationality() { return this.form.get('nationality'); }
     get profession() { return this.form.get('profession'); }

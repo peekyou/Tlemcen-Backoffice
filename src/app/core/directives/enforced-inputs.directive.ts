@@ -37,7 +37,7 @@ export class EnforcedInputsDirective implements AfterContentInit {
 
         this.subscription = this.autoCompleteTrigger.panelClosingActions
             .subscribe((e) => {
-                if (!e || !e.source) {
+                if ((!e || !e.source) && typeof this.control.value === 'string') {
                     const selected = this.matAutocomplete.options
                         .map(option => option.value)
                         .find(option => option === this.control.value);

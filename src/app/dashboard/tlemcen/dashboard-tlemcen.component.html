@@ -1,0 +1,92 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <app-spinner [loader]="loader"></app-spinner>
+    <div class="row" *ngIf="!loader || loader.closed">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-tabs card-header-primary">
+            <div class="nav-tabs-navigation">
+              <div class="nav-tabs-wrapper">
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                  <li class="nav-item">
+                    <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 1}" (click)="activeTab = 1">
+                      <i class="material-icons">layers</i>Omra
+                      <div class="ripple-container"></div>
+                    </button>
+                  </li>
+                  <li class="nav-item">
+                    <button mat-button class="nav-link" [ngClass]="{'active': activeTab == 2}" (click)="activeTab = 2">
+                      <i class="material-icons">view_compact</i>Hajj
+                      <div class="ripple-container"></div>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane" [ngClass]="{'active': activeTab == 1}">
+                <h4 *ngIf="model.omras.length == 0">Aucune Omra à venir</h4>
+                <div class="list" *ngFor="let omra of model.omras">
+                  <h3>{{ omra.name }}</h3>
+                  <div class="row">
+                    <div class="col">
+                      <h4>{{ omra.pilgrims }} Pèlerins</h4>
+                      <div class="el"><i class="material-icons cyan">person</i> {{ omra.men }} Hommes</div>
+                      <div class="el"><i class="material-icons pink">person</i> {{ omra.women }} Femmes</div>
+                      <div class="el"><i class="material-icons child">person</i> {{ omra.children }} Enfants</div>
+                      <div class="el"><i class="material-icons infant">person</i> {{ omra.infants }} Bébés</div>
+                    </div>
+                    <div class="col">
+                      <h4>Hôtels</h4>
+                      <div *ngFor="let hotel of omra.hotels">
+                        <b>{{ hotel.city }} {{ hotel.name }}</b> : {{ hotel.pilgrims }} Pèlerins
+                      </div>
+                    </div>
+                    <div class="col">
+                      <h4>Vols</h4>
+                      <div *ngFor="let flight of omra.flights">
+                        <b>{{ flight.airline }} {{ flight.from }} - {{ flight.to }}</b> : {{ flight.pilgrims }} Pèlerins
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+              </div>
+              <div class="tab-pane" [ngClass]="{'active': activeTab == 2}">
+                <h4 *ngIf="model.hajjs.length == 0">Aucun Hajj à venir</h4>
+                <div class="list" *ngFor="let hajj of model.hajjs">
+                  <h3>{{ hajj.name }}</h3>
+                  <div class="row">
+                    <div class="col">
+                      <h4>{{ hajj.pilgrims }} Pèlerins</h4>
+                      <div class="el"><i class="material-icons cyan">person</i> {{ hajj.men }} Hommes</div>
+                      <div class="el"><i class="material-icons pink">person</i> {{ hajj.women }} Femmes</div>
+                      <div class="el"><i class="material-icons child">person</i> {{ hajj.children }} Enfants</div>
+                      <div class="el"><i class="material-icons infant">person</i> {{ hajj.infants }} Bébés</div>
+                    </div>
+                    <div class="col">
+                      <h4>Hôtels</h4>
+                      <div *ngFor="let hotel of hajj.hotels">
+                        <b>{{ hotel.city }} {{ hotel.name }}</b> : {{ hotel.pilgrims }} Pèlerins
+                      </div>
+                    </div>
+                    <div class="col">
+                      <h4>Vols</h4>
+                      <div *ngFor="let flight of hajj.flights">
+                        <b>{{ flight.airline }} {{ flight.from }} - {{ flight.to }}</b> : {{ flight.pilgrims }} Pèlerins
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  

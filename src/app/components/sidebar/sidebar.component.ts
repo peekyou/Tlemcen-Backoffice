@@ -22,6 +22,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/payments', title: 'Paiements',  icon: 'payment', class: '', roles: [Roles.Admin, Roles.Payments] },
     { path: '/communication', title: 'Communication',  icon: 'forum', class: '', roles: [Roles.Admin, Roles.Communication] },
     { path: '/management', title: 'Gestion',  icon: 'settings', class: '', roles: [Roles.Admin, Roles.DocumentsManagement, Roles.FeesManagement, Roles.UserManagement] },
+    { path: '/notes', title: 'Notes', icon: 'note', class: '' },        
     // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },

@@ -32,7 +32,7 @@ export class ServiceFeeDialogComponent implements OnInit {
       hotel: this.fb.control(this.fee.categories.indexOf(Category.Hotel) > -1),
       flight: this.fb.control(this.fee.categories.indexOf(Category.Flight) > -1),
       name: this.fb.control(this.fee.name, Validators.required),
-      price: this.fb.control(this.fee.price, Validators.required)
+      price: this.fb.control(this.fee.price)
     });
   }
 

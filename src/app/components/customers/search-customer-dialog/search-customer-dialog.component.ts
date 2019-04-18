@@ -55,7 +55,7 @@ export class SearchCustomerDialogComponent implements OnInit {
       this.customersChecked.push(customer);
     }
     else {
-      this.customersChecked = removeFromArray(this.customersChecked, customer);
+      this.customersChecked = this.customersChecked.filter(x => x.id != customer.id);
     }
   }
 

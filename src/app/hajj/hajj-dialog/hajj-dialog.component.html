@@ -3,6 +3,14 @@
   <form [formGroup]="form" (ngSubmit)="form.valid && save()">
     <div class="row">
       <mat-form-field class="full-width col">
+        <input formControlName="name" matInput placeholder="{{ 'COMMON.NAME' | translate }}" required>
+      </mat-form-field>
+      <mat-form-field class="full-width col">
+          <input formControlName="price" type="number" matInput placeholder="Prix en €" required>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width col">
         <input matInput [matDatepicker]="startDate" maxlength="10" (keypress)="validateDate($event)"
           placeholder="Date de début" formControlName="startDate" required>
         <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
@@ -22,16 +30,41 @@
         </mat-error>
       </mat-form-field>
     </div>
-    
-    <mat-form-field class="full-width">
-      <input formControlName="price" type="number" matInput placeholder="Prix en €" required>
-    </mat-form-field>
+    <br>
+    <div style="display:flex">
+      <h4>Guides</h4>
+      <button type="button" class="text-success" mat-icon-button matTooltip="Ajouter un guide" (click)="addGuideControl()" style="margin-top:-8px;margin-left:5px;">
+        <mat-icon>add_circle_outline</mat-icon>
+      </button>        
+    </div>
+    <div formArrayName="travelGuides" *ngFor="let travelGuide of travelGuides.controls; let i = index">
+      <div [formGroupName]="i" class="row">
+        <div class="col-6 col-md-4">
+          <mat-form-field>
+            <input matInput formControlName="firstname" placeholder="{{ 'COMMON.FIRSTNAME' | translate }}">
+          </mat-form-field>
+        </div>
+        <div class="col-6 col-md-4">
+          <mat-form-field>
+            <input matInput formControlName="lastname" placeholder="{{ 'COMMON.LASTNAME' | translate }}">
+          </mat-form-field>
+        </div>
+        <div class="col-10 col-md-3">
+          <mat-form-field>
+            <input matInput formControlName="mobileNumber" placeholder="{{ 'COMMON.PHONE' | translate }}">
+          </mat-form-field>
+        </div>
+        <button *ngIf="i > 0" type="button" class="text-danger col-2 col-md-1" mat-icon-button matTooltip="Supprimer le guide" (click)="removeGuideControl(i)" style="margin-top:8px">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button> 
+      </div>
+    </div>
     <div class="pull-buttons-right">
       <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
         loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
         [subscription]="saveSubscription">
       </app-submit-button>
-      <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button type="button" mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </form>
 </div>

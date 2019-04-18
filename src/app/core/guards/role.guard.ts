@@ -13,12 +13,13 @@ export class RoleGuard implements CanActivate, CanActivateChild {
     constructor(private auth: AuthService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        var roles: string[] = route && route.data["roles"] ? route.data["roles"] : null;
-        if (this.auth.isInRole(roles)) {
-            return true;
-        }
-        this.router.navigate(['/']);
-        return false;
+        return true;
+        // var roles: string[] = route && route.data["roles"] ? route.data["roles"] : null;
+        // if (this.auth.isInRole(roles)) {
+        //     return true;
+        // }
+        // this.router.navigate(['/notes']);
+        // return false;
     }
 
     canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {

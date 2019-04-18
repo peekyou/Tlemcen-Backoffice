@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: '', component: OmraListComponent },
   { path: ':id', component: OmraDetailComponent },
   { path: ':id/rooms', component: OmraRoomsPlanComponent },
-  { path: ':id/flights', component: OmraFlightsPlanComponent },
+  { path: ':id/flights/:flightId', component: OmraFlightsPlanComponent },
   { path: ':id/customers', component: OmraAddCustomersComponent },
   { path: ':id/customers/:customerId', component: OmraAddCustomersComponent }
 ];

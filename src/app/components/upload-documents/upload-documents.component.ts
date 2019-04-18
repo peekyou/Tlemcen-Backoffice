@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 
 import { AppDocument } from '../../management/documents-management/document.model';
 import { AppFile } from '../../core/models/file.model';
@@ -22,10 +22,8 @@ export class UploadDocumentsComponent implements OnInit {
   @Input() 
   set customer(customer: CustomerDetail) {
     this._customer = customer;
-    if (this.documentsConfigured) {
-      this.resetDocuments();
-      this.getCustomerDocuments();
-    }
+    this.resetDocuments();
+    this.getDocuments();
   }
   get customer(): CustomerDetail {
     return this._customer;
@@ -35,8 +33,11 @@ export class UploadDocumentsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getDocuments() {
     if (this.travelTypeId) {
-      this.loader = this.documentService.getDocumentsByCategory(this.travelTypeId)
+      this.loader = this.documentService.getCustomerDocumentsByCategory(this.travelTypeId, this._customer.id)
         .subscribe(res => {
           this.documentsConfigured = JSON.parse(JSON.stringify(res));
           this.getCustomerDocuments();
@@ -71,8 +72,10 @@ export class UploadDocumentsComponent implements OnInit {
   }
 
   resetDocuments() {
-    this.documentsConfigured.forEach(x => {
-      x.file = null;
-    })
+    if (this.documentsConfigured) {
+      this.documentsConfigured.forEach(x => {
+        x.file = null;
+      });
+    }
   }
 }

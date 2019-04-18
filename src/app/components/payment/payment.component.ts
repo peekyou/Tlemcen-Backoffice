@@ -1,9 +1,12 @@
 import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import * as moment from 'moment';
 
 import { CustomerDetail } from '../../customers/customer-detail.model';
-import { Payment } from '../../payments/payment.model';
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
+import { Payment, PaymentType } from '../../payments/payment.model';
 import { Travel, TravelType } from '../../travels/travel.model';
 import { PaymentService } from '../../payments/payment.service';
 import { Fee } from '../../management/fees-management/fee.model';
@@ -18,13 +21,18 @@ export class PaymentComponent implements OnInit {
   loading: boolean;
   form: FormGroup;
   loader: Subscription;
-  isEdit = false;
+  paymentTypes: PaymentType[] = [];
+  paymentHistory: Payment[] = [];
   _customer: CustomerDetail = {};
   _fees: Fee[] = [];
   
   @Input() 
   set customer(customer: CustomerDetail) {
     this._customer = customer;
+    if (customer.payments && customer.payments.length > 0) {
+      this.paymentHistory = customer.payments.map(x => ({ ...x })); // clone payments
+    }
+
     if (this.form) {
       this.form.reset();
     }  
@@ -50,15 +58,17 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private paymentService: PaymentService,
     private feeService: FeeService) {
   }
 
   ngOnInit() {
-    this.isEdit = this._customer != null && this._customer.payments != null && this._customer.payments.length > 0;
-    if (this.isEdit) {
-      this.sumCustomerPayments();
+    if (!this.readOnly) {
+      this.paymentService.getPaymentTypes().subscribe(res => this.paymentTypes = res);
     }
+
+    this.sumCustomerPayments();
     
     if (this.travel) {
       this._fees.unshift({
@@ -71,7 +81,9 @@ export class PaymentComponent implements OnInit {
 
     this.form = this.fb.group({
       amount: [null, Validators.required],
-      discount: [null]
+      discount: [null],
+      paymentType: [null],
+      payLater: [false]
     });
 
     this.form.valueChanges.subscribe(data => {
@@ -84,9 +96,9 @@ export class PaymentComponent implements OnInit {
 
   sumCustomerPayments() {
     this._customer.travelPayment = new Payment();
-    this._customer.payments.forEach(p => {
+    this.paymentHistory.forEach(p => {
       // The latest payment is the current one
-      this._customer.travelPayment.amount = this._customer.travelPayment.amount;
+      this._customer.travelPayment.amount = p.amount;
       this._customer.travelPayment.discount += p.discount;
       this._customer.travelPayment.amountPaid += p.amountPaid;
     });
@@ -96,29 +108,32 @@ export class PaymentComponent implements OnInit {
     this.onChange.emit(this.getPayment());
   }
 
-  getPayment(): Payment {
-    var totalAmount = this.calculateTotal();
+  private getPayment(): Payment {
+    var totalAmount = this.calculateTotal(true);
 
     // If edit mode, the previsous discount is included in the total for display purpose
     // We need to remove it for saving in DB
-    if (this.isEdit && this._customer.travelPayment) {
+    if (this._customer.travelPayment) {
       totalAmount += this._customer.travelPayment.discount;
     }
 
     var payment: Payment = {
-      amountPaid: this.form.value.amount,
+      amountPaid: this.form.value.payLater ? 0 : this.form.value.amount,
       discount: this.form.value.discount,
-      amount: totalAmount
+      amount: totalAmount,
+      paymentTypeId: this.form.value.paymentType,
+      payLater: this.form.value.payLater
     };
     return payment;
   }
 
-  calculateTotal() {
-    var total = this._fees.reduce(function(a, b){
+  calculateTotal(exludePreviousCustomerFees = false) {
+    var fees = exludePreviousCustomerFees ? this._fees.filter(x => !x.isPreviousFee) : this._fees;
+    var total = fees.reduce(function(a, b){
       return a + b.price;
     }, 0);
 
-    if (this.isEdit && this._customer.travelPayment.discount) {
+    if (this._customer.travelPayment.discount) {
       total = Math.max(0, total - this._customer.travelPayment.discount);
     }
     return total;
@@ -132,7 +147,7 @@ export class PaymentComponent implements OnInit {
       discount += this.form.value.discount;
     }
 
-    if (this.isEdit && this._customer.travelPayment.amountPaid) {
+    if (this._customer.travelPayment.amountPaid) {
       totalAmount = totalAmount - this._customer.travelPayment.amountPaid;
       return totalAmount - discount;
     }
@@ -146,4 +161,37 @@ export class PaymentComponent implements OnInit {
     }
     return 0;
   }
+
+  updatePayment(payment: Payment) {
+    payment.isEdit = false;
+    this.paymentService.updatePayment(payment)
+      .subscribe(
+        res => this.sumCustomerPayments(),
+        err => console.log(err)
+      );
+  }
+
+  openDeletePaymentDialog(payment: Payment) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: 'paiement de ' + payment.amountPaid + '€ du ' + moment(payment.createdDate).format('MM/DD/YYYY') }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.paymentService.deletePayment(payment.id)
+        .subscribe(
+          res => {
+            var index = this.paymentHistory.indexOf(payment);
+            if (index > -1) {
+                this.paymentHistory.splice(index, 1);
+            }
+          },
+          err => console.log(err)
+        );
+      }
+    });
+  }
+
+  get payLater() { return this.form.get('payLater'); }
 }

@@ -1,6 +1,6 @@
 <div mat-dialog-title>Nouveau document</div>
 <div mat-dialog-content>
-    <form [formGroup]="form" (ngSubmit)="form.valid && save()">
+    <form [formGroup]="form">
       <div>
         <mat-form-field class="full-width">
             <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
@@ -17,7 +17,7 @@
       <div class="pull-buttons-right">
         <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
           loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
-          [subscription]="saveSubscription">
+          [subscription]="saveSubscription" (click)="save()">
         </app-submit-button>
         <button mat-raised-button class="btn btn-secondary" (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
       </div>

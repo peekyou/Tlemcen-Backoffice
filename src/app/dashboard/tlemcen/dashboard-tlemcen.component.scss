@@ -1,0 +1,25 @@
+.list {
+    // display: flex;
+    // justify-content: space-evenly;
+
+    // span {
+    //     display: flex;
+    // }
+    
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 25px;
+
+    .el {
+        display: flex;
+    }
+
+    .child {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .infant {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+}

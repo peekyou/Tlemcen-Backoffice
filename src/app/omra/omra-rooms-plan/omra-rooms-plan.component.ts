@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { Omra } from '../omra.model';
 import { OmraService } from '../omra.service';
@@ -11,13 +12,14 @@ import { OmraService } from '../omra.service';
 })
 export class OmraRoomsPlanComponent implements OnInit {
   omra: Omra;
+  loader: Subscription;
   
   constructor(private route: ActivatedRoute, private service: OmraService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id']) {
-        this.service.getOmra(params['id']).subscribe(res => this.omra = res );
+        this.loader = this.service.getOmra(params['id'], null).subscribe(res => this.omra = res );
       }
     });
   }

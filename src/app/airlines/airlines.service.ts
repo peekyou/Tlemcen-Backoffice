@@ -5,6 +5,7 @@ import { Airline } from './airline.model';
 import { Customer } from '../customers/customer.model';
 import { Flight } from './flight.model';
 import { FlightBooking } from './flight-booking.model';
+import { ShuttleBus } from './shuttle-bus.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
 
@@ -42,10 +43,11 @@ export class AirlinesService {
     return this.http.delete(this.resource + '/' + id);
   }
   
-  bookFlights(travelId: string, flightBookings: FlightBooking[]) : Observable<boolean> {
+  bookFlights(travelId: string, flightBookings: FlightBooking[], shuttles: ShuttleBus[]) : Observable<boolean> {
     return this.http.post(this.resource + '/flights/book', {
       travelId: travelId,
-      flightBookings: flightBookings
+      flightBookings: flightBookings,
+      shuttles: shuttles
     });
   }
   

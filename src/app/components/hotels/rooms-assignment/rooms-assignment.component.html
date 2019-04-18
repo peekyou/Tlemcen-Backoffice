@@ -1,59 +1,87 @@
 <div>
     <div class="row">
-      <div class="pull-left" style="margin-left: 26px;">
-        <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedCity">
+      <div class="col-4">
+        <mat-form-field>
+          <mat-select placeholder="Hôtel (Ville)" [(ngModel)]="selectedBooking">
+            <mat-option *ngFor="let booking of hotelBookings" [value]="booking">
+              {{ booking.hotel.name }} ({{ booking.hotel.address.city }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedBooking.id">
           <mat-button-toggle value="1" (click)="changeCity(group.value)">La Mecque</mat-button-toggle>
           <mat-button-toggle value="2" (click)="changeCity(group.value)">Médine</mat-button-toggle>
-        </mat-button-toggle-group>
+        </mat-button-toggle-group> -->
       </div>
-      <div class="action-buttons pull-right" style="margin-left: 126px;">
-        <button mat-raised-button type="submit" class="btn btn-info" color="accent" (click)="save()">
-          Sauvegarder
+      <div class="col-8">
+        <button mat-raised-button class="btn btn-info" color="accent" (click)="save()">
+          <mat-icon>save</mat-icon>Sauvegarder
         </button>
-        <button mat-raised-button type="submit" class="btn btn-primary" (click)="generate()">
-          Générer automatiqument
+        <button mat-raised-button class="btn btn-primary" (click)="print()">
+          <mat-icon>print</mat-icon>Imprimer
         </button>
+        <button mat-raised-button class="btn btn-danger" (click)="deleteEmptyRooms()">
+          <mat-icon>delete</mat-icon>Supprimer chambres vides
+        </button>
+        <!-- <button mat-raised-button class="btn btn-primary" (click)="generate()">
+          <mat-icon>view_list</mat-icon>Générer automatiqument
+        </button> -->
       </div>
     </div>
-    <div class="drag-wrapper row">
-      <div *ngIf="customers[selectedCity]" [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
+    <app-spinner [loader]="loader"></app-spinner>
+    <div *ngIf="selectedBooking" class="drag-wrapper row">
+      <div [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
         <div class="row">
-          <h4 *ngIf="customersExpanded" class="col-9">{{ customers[selectedCity].length }} Personnes</h4>
+          <h4 *ngIf="customersExpanded && customers[selectedBooking.id]" class="col-9">{{ customers[selectedBooking.id].length }} Personnes</h4>
           <button class="col-2" mat-icon-button (click)="customersExpanded = !customersExpanded">
             <mat-icon *ngIf="customersExpanded">chevron_right</mat-icon>
             <mat-icon *ngIf="!customersExpanded">chevron_right</mat-icon>
           </button>
         </div>
         <div *ngIf="customersExpanded" class="drag-container sticky-top customer-scrollable" 
-             dragula="ROOMS" [(dragulaModel)]="customers[selectedCity]">
-          <div *ngFor="let customer of customers[selectedCity]" class="customer"
+             dragula="ROOMS" [(dragulaModel)]="customers[selectedBooking.id]">
+          <div *ngFor="let customer of customers[selectedBooking.id]" class="customer"
               [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
               {{ customer.firstname }} {{ customer.lastname }}
           </div>
         </div>
       </div>
       <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
-        <div *ngFor="let booking of displayedHotelBookings" class="card">
-            <div class="card-header card-header-hotel card-header-warning" (click)="booking.hotel.expanded = !booking.hotel.expanded">
-              <h4 class="card-title pull-left">{{ booking.hotel.name }}</h4>
-              <div class="card-header-actions">
-                  <button mat-icon-button>
-                      <mat-icon *ngIf="booking.hotel.expanded">expand_more</mat-icon>
-                      <mat-icon *ngIf="!booking.hotel.expanded">chevron_right</mat-icon>
-                  </button>
-              </div>
+        <div class="card">
+          <div class="card-header card-header-hotel card-header-warning" (click)="selectedBooking.hotel.expanded = !selectedBooking.hotel.expanded">
+            <h4 class="card-title pull-left">{{ selectedBooking.hotel.name }}</h4>
+            <div class="card-header-actions">
+                <button mat-icon-button>
+                    <mat-icon *ngIf="selectedBooking.hotel.expanded">expand_more</mat-icon>
+                    <mat-icon *ngIf="!selectedBooking.hotel.expanded">chevron_right</mat-icon>
+                </button>
             </div>
-            <div *ngIf="booking.hotel.expanded" class="card-body">
+          </div>
+          <div *ngIf="selectedBooking.hotel.expanded" class="card-body">
+            <div>
+              <mat-slide-toggle color="primary" (change)="isEdit = !isEdit">
+                  Modifier numéro des chambres
+              </mat-slide-toggle>
+              <button class="pull-right" matTooltip="Ajouter des chambres" mat-icon-button (click)="openRoomReservationDialog();$event.stopPropagation()">
+                  <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <div *ngFor="let rooms of groupedRoomByHotelBooking[selectedBooking.id]; let i = index">
+              <div *ngIf="rooms && rooms.length > 0" class="room-title">Chambres {{i}} personnes</div>
               <div class="card-columns">
-                <div class="drag-container card" [attr.id]="booking.id + '-' + room.id + '-' + room.roomType.personNumber" 
-                  dragula="ROOMS" *ngFor="let room of booking.rooms"
-                  [(dragulaModel)]="room.customers" style="min-height:100px; margin-bottom:11px;">
-                    Chambre {{ room.roomType.number }} ({{ room.roomType.personNumber }} pers.)
-                    <div *ngFor="let customer of room.customers" class="customer"
-                         [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
-                        {{ customer.firstname }} {{ customer.lastname }}
-                    </div>
+                <div class="drag-container card" [attr.id]="selectedBooking.id + '-' + room.id + '-' + room.roomType.personNumber" 
+                  [ngClass]="{'read-only': isEdit}" dragula="ROOMS" *ngFor="let room of rooms"
+                  [(dragulaModel)]="room.customers" [style.minHeight.px]="48 + (room.roomType.personNumber * 42)">
+                  <mat-form-field *ngIf="isEdit">
+                      <input matInput placeholder="No Chambre" [(ngModel)]="room.roomNumber">
+                  </mat-form-field>
+                  Chambre {{ room.roomNumber }} {{ room.privateLabel }}
+                  <div *ngFor="let customer of room.customers" class="customer"
+                      [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
+                      {{ customer.firstname }} {{ customer.lastname }}
+                  </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -70,62 +98,3 @@
         </div> -->
     </div>
   </div>
-
-<!-- <div class="row">
-  <div class="col-4">
-    <pre>Fruits</pre>
-    <mat-list dndDropzone
-            dndEffectAllowed="move"
-            (dndDrop)="onDrop($event, fruits)"
-            class="dndList">
-      <mat-list-item dndPlaceholderRef class="dndPlaceholder">
-      </mat-list-item>
-      <mat-list-item *ngFor="let fruit of fruits"
-                      [dndDraggable]="fruit"
-                      [dndType]="fruit"
-                      dndEffectAllowed="move"
-                      (dndMoved)="onDragged(fruit, fruits)">
-        <h1 mat-line>{{fruit}}</h1>
-      </mat-list-item>
-    </mat-list>
-  </div>
-
-  <div class="col-4">
-    <pre>Apples</pre>
-    <mat-list [dndDropzone]="['apple']"
-            dndEffectAllowed="move"
-            (dndDrop)="onDrop($event, apples)"
-            class="dndList">
-      <mat-list-item dndPlaceholderRef
-                      class="dndPlaceholder">
-      </mat-list-item>
-      <mat-list-item *ngFor="let apple of apples"
-                      [dndDraggable]="apple"
-                      [dndType]="apple"
-                      dndEffectAllowed="move"
-                      (dndMoved)="onDragged(apple, apples)">
-        <h1 mat-line>{{apple}}</h1>
-      </mat-list-item>
-    </mat-list>
-  </div>
-  <div class="col-4">
-    <pre>Bananas</pre>
-    <mat-list [dndDropzone]="['banana']"
-            dndEffectAllowed="move"
-            (dndDrop)="onDrop($event, bananas)"
-            class="dndList">
-
-    <mat-list-item dndPlaceholderRef
-                    class="dndPlaceholder">
-    </mat-list-item>
-
-    <mat-list-item *ngFor="let banana of bananas"
-                    [dndDraggable]="banana"
-                    [dndType]="banana"
-                    dndEffectAllowed="move"
-                    (dndMoved)="onDragged(banana, bananas)">
-      <h1 mat-line>{{banana}}</h1>
-    </mat-list-item>
-    </mat-list>
-  </div>
-</div> -->

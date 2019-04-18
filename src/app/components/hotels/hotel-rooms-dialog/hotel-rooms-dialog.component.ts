@@ -8,7 +8,7 @@ import { Hotel, RoomType } from '../../../hotels/hotel.model';
 import { HotelReservation } from '../../../hotels/hotel-reservation.model';
 import { HotelRoomReservation } from '../../../hotels/hotel-room-reservation.model';
 import { HotelsService } from '../../../hotels/hotels.service';
-import { validateDate } from '../../../core/helpers/utils';
+import { validateDate, dateToUTC, dateToMoment } from '../../../core/helpers/utils';
 
 @Component({
   selector: 'app-hotel-rooms-dialog',
@@ -43,8 +43,8 @@ export class HotelRoomsDialogComponent implements OnInit {
     var roomsControl = this.fb.array([]); 
     this.form = this.fb.group({
       hotel: this.fb.control(null, (c) => this.customHotelValidator(c)),
-      fromDate: this.fb.control(null, Validators.required),
-      toDate: this.fb.control(null, Validators.required),
+      fromDate: this.fb.control(this.hotelBooking ? dateToMoment(this.hotelBooking.fromDate) : null, Validators.required),
+      toDate: this.fb.control(this.hotelBooking ? dateToMoment(this.hotelBooking.toDate) : null, Validators.required),
       rooms: roomsControl,
     });
 
@@ -70,6 +70,9 @@ export class HotelRoomsDialogComponent implements OnInit {
     else {
       reservation.hotel = this.form.value.hotel;
     }
+
+    reservation.fromDate = dateToUTC(this.form.value.fromDate);
+    reservation.toDate = dateToUTC(this.form.value.toDate);
 
     this.rooms.controls.forEach((control, i) => {
       var roomCount: number = control.value.roomCount;

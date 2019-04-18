@@ -6,6 +6,7 @@
                 <button class="btn btn-info" (click)="openHotelDialog()"><mat-icon>add</mat-icon>Ajouter un hôtel</button>
             </div>
             <app-spinner [loader]="loader"></app-spinner>
+            <h3 *ngIf="hotels && hotels.paging.totalCount == 0">Aucun hôtel</h3>
             <div class="card" *ngIf="loader.closed && hotels && hotels.data && hotels.data.length > 0">
                 <div class="card-header card-header-warning">
                     <h4 class="card-title pull-left">Hôtels</h4>

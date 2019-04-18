@@ -5,12 +5,20 @@
             <i class="fa fa-close" aria-hidden="true"></i>    
         </div>
     </div>
+    <!-- <div class="nav-user-container-body">
+        <div>Base de données</div>
+        <input class="form-control form-control-sm" [(ngModel)]="nbCustomer" placeholder="Nb clients" type="number">
+        <button matTooltip="Créer" mat-icon-button (click)="openConfirmationDialog()">
+            <mat-icon class="text-success">archive</mat-icon>
+        </button>
+        <button matTooltip="Vider" mat-icon-button (click)="openDeleteDialog()">
+            <mat-icon class="text-danger">delete_forever</mat-icon>
+        </button>
+    </div> -->
     <div class="nav-user-container-bottom">
         <div class="logout">
             <a routerLink="/auth" (click)="logout()">
                 <button type="button" class="btn btn-sm btn-outline-secondary nav-user-button">{{ 'TOOLBAR.LOGOUT' | translate }}</button>
             </a>
-        </div>
-        
     </div>
 </div>

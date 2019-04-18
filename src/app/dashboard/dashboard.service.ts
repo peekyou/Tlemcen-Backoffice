@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { HotelReservation } from '../hotels/hotel-reservation.model';
 import { FlightBooking } from '../airlines/flight-booking.model';
 import { CustomerCountModel, DailyRevenuesModel, MonthlyCustomerCountModel, RevenuesModel } from './dashboard.model';
+import { DashboardModel } from './tlemcen/dashboard-tlemcen.model';
 import { SearchFilter } from '../core/models/search-filter.model';
 import { AuthHttpService } from '../core/services/auth-http.service';
 
@@ -12,6 +13,10 @@ export class DashboardService {
   resource = 'dashboard';
 
   constructor(private http: AuthHttpService) { }
+
+  getTravelsSummary(): Observable<DashboardModel> {
+    return this.http.get(this.resource + '/travels/summary');
+  }
 
   getCustomerCount(filter: SearchFilter): Observable<CustomerCountModel> {
     return this.http.post(this.resource + '/customers/count', filter);

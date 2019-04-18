@@ -12,11 +12,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     constructor(private router: Router, private auth: AuthService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (this.auth.isAuthenticated()) {
-            return true;
-        }
-        this.router.navigate(['/omra']);
-        return false;
+        return true;
+        // if (this.auth.isAuthenticated()) {
+        //     return true;
+        // }
+        // this.router.navigate(['/notes']);
+        // return false;
     }
 
     canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {

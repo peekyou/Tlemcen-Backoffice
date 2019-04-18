@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Hajj } from './hajj.model';
-import { TravelType } from '../travels/travel.model';
+import { TravelType, TravelStatus } from '../travels/travel.model';
 import { TravelService } from '../travels/travel.service';
 import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
@@ -15,8 +15,8 @@ export class HajjService extends TravelService {
     this.resource = 'hajjs';
   }
 
-  getHajjList(page: number, count: number): Observable<PagingResponse<Hajj>> {
-    return super.getTravels(page, count);
+  getHajjList(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Hajj>> {
+    return super.getTravels(status, page, count);
   }
 
   getHajj(id: string, itemsCount: number): Observable<Hajj> {

@@ -49,8 +49,8 @@ export class HttpService {
             .pipe(map(r => r.body, catchError(this.showToaster(this.toasterService))));
     }
     
-    download(resource: string): Observable<any> {
-        return this.http.get(this.apiHost + resource, { 
+    download(resource: string, data?: any): Observable<any> {
+        return this.http.post(this.apiHost + resource, data, { 
                 headers: this.headers,
                 observe: 'response', 
                 responseType: 'blob' 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormControl, Validators,  FormGroup, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription, Observable } from 'rxjs';
@@ -16,12 +16,19 @@ export class DocumentDialogComponent implements OnInit {
   form: FormGroup;
   document: AppDocument = new AppDocument();
   saveSubscription: Subscription;
+  isEdit = false;
 
   constructor(
     private service: DocumentService,
     private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DocumentDialogComponent>,
     private dialog: MatDialog) {
+
+      if (data && data.document) {
+        this.document = data.document;
+        this.isEdit = true;
+      }
   }
 
   ngOnInit() {
@@ -39,26 +46,29 @@ export class DocumentDialogComponent implements OnInit {
   }
 
   save() {
-    var doc = new AppDocument();
-    doc.name = this.form.value.name;
-    doc.mandatory = this.form.value.mandatory == true;
+    this.document.name = this.form.value.name;
+    this.document.mandatory = this.form.value.mandatory == true;
+    this.document.categories = [];
     if (this.form.value.hajj == true) {
-      doc.categories.push(TravelType.Hajj);
+      this.document.categories.push(TravelType.Hajj);
     }
     if (this.form.value.omra == true) {
-      doc.categories.push(TravelType.Omra);
+      this.document.categories.push(TravelType.Omra);
     }
     if (this.form.value.travel == true) {
-      doc.categories.push(TravelType.Travel);
+      this.document.categories.push(TravelType.Travel);
     }
     
-    this.saveSubscription = this.service
-        .createDocument(doc)
-        .subscribe(
-            res => {
-                this.dialogRef.close(res);
-            },
-            err => console.log(err)
-        );
+    this.saveSubscription = this.saveDocument()
+      .subscribe(
+        res => {
+            this.dialogRef.close(res);
+        },
+        err => console.log(err)
+      );
+  }
+
+  private saveDocument() : Observable<AppDocument> {
+      return this.isEdit ? this.service.updateDocument(this.document) : this.service.createDocument(this.document);
   }
 }

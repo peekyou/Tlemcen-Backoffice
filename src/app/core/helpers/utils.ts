@@ -58,9 +58,12 @@ export function dateToMoment(date) {
     return null;
 }
 
-export function filterLookup(value: string, list: any[]): any[] {
+export function filterLookup(value: string, list: any[], searchOnId = false): any[] {
     if (typeof value === 'string') {
         const filterValue = value.toLowerCase();
+        if (searchOnId) {
+            return list.filter(c => c.id.toLowerCase() == filterValue);
+        }
         return list.filter(c => c.name.toLowerCase().indexOf(filterValue) !== -1);
     }
     return [value];
@@ -78,4 +81,23 @@ export function isMekka(address): boolean {
         return address.city.toLowerCase().indexOf('mecque') !== -1;
     }
     return false;
+}
+
+export function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+export function dateToUTC(date) {
+    if (date) {
+        var time = Date.UTC(date.year(), date.month(), date.date());
+        return new Date(time);
+    }
+    return null;
 }

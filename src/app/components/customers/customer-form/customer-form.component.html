@@ -1,7 +1,7 @@
 <form [formGroup]="form" *ngIf="!showCamera">
   <div>
     <div class="picture">
-      <label>{{ 'CUSTOMER.PICTURE' | translate }}</label>
+      <label>{{ 'CUSTOMERS.PICTURE' | translate }}</label>
       <app-file-upload [imageWidth]="116" [imageHeight]="150" [(file)]="customer.picture" (onOpenCamera)="showCamera=true"></app-file-upload>
       <!-- <img *ngIf="customer.picture && customer.picture.src" [src]="customer.picture.src" /> -->
     </div>
@@ -19,7 +19,7 @@
             </mat-form-field>
             <mat-form-field class="full-width">
                 <input matInput [matDatepicker]="picker" maxlength="10" (keypress)="validateDate($event)"
-                    placeholder="{{ 'COMMON.BIRTHDATE' | translate }}" formControlName="birthDate">
+                    placeholder="{{ 'COMMON.BIRTHDATE' | translate }}" formControlName="birthDate" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-error *ngIf="birthDate.errors?.required && (birthDate.dirty ||birthDate.touched)">
@@ -27,7 +27,7 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile">
+                <input matInput placeholder="{{ 'COMMON.PHONE' | translate }}" formControlName="mobile" required>
             </mat-form-field>
             <mat-form-field class="full-width">
                 <input matInput placeholder="Téléphone fixe" formControlName="phone">
@@ -39,10 +39,44 @@
                 </mat-error>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input matInput placeholder="Profession"
-                    autoClose [control]="profession" formControlName="profession" [matAutocomplete]="autoProfession">
-                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                    <mat-option *ngFor="let option of filteredProfessions | async" [value]="option">
+                <input matInput placeholder="Nationalité" required
+                    autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="autoNationality">
+                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn.bind(this)"
+                    (optionSelected)='nationalitySelected($event.option.value)'>
+                    <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="{{ 'COMMON.STREET' | translate }}" formControlName="address1" required>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}" required
+                    autoClose [control]="cityPostalCode" formControlName="cityPostalCode" [matAutocomplete]="autoCity">
+                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let option of filteredCities | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col">
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Numéro de passeport" formControlName="passportNumber" 
+                    upperCase (keypress)="passportValidator($event)" required>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput [matDatepicker]="pickerPassport" maxlength="10" (keypress)="validateDate($event)"
+                    placeholder="Date d'expiration du passeport" formControlName="passportExpiryDate" required>
+                <mat-datepicker-toggle matSuffix [for]="pickerPassport"></mat-datepicker-toggle>
+                <mat-datepicker #pickerPassport></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <input matInput placeholder="Pays de délivrance du passeport"
+                    autoClose [control]="passportIssuingCountry" formControlName="passportIssuingCountry" [matAutocomplete]="passportIssuingCountry">
+                <mat-autocomplete #passportIssuingCountry="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredPassportCountries | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-autocomplete>
@@ -57,42 +91,10 @@
                 </mat-autocomplete>
             </mat-form-field>
             <mat-form-field class="full-width">
-                <input matInput placeholder="Nationalité"
-                    autoClose [control]="nationality" formControlName="nationality" [matAutocomplete]="autoNationality">
-                <mat-autocomplete #autoNationality="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                    <mat-option *ngFor="let option of filteredNationalities | async" [value]="option">
-                        {{ option.name }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>
-        <div class="col">
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Numéro de passeport" formControlName="passportNumber">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput [matDatepicker]="pickerPassport" maxlength="10" (keypress)="validateDate($event)"
-                    placeholder="Date d'expiration du passeport" formControlName="passportExpiryDate">
-                <mat-datepicker-toggle matSuffix [for]="pickerPassport"></mat-datepicker-toggle>
-                <mat-datepicker #pickerPassport></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="Pays de délivrance du passeport"
-                    autoClose [control]="passportIssuingCountry" formControlName="passportIssuingCountry" [matAutocomplete]="passportIssuingCountry">
-                <mat-autocomplete #passportIssuingCountry="matAutocomplete" [displayWith]="displayFn.bind(this)">
-                    <mat-option *ngFor="let option of filteredPassportCountries | async" [value]="option">
-                        {{ option.name }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.STREET' | translate }}" formControlName="address1">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <input matInput placeholder="{{ 'COMMON.CITY_ZIP_CODE' | translate }}"
-                    autoClose [control]="cityPostalCode" formControlName="cityPostalCode" [matAutocomplete]="autoCity">
-                <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayFn">
-                    <mat-option *ngFor="let option of filteredCities | async" [value]="option">
+                <input matInput placeholder="Profession"
+                    autoClose [control]="profession" formControlName="profession" [matAutocomplete]="autoProfession">
+                <mat-autocomplete #autoProfession="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredProfessions | async" [value]="option">
                         {{ option.name }}
                     </mat-option>
                 </mat-autocomplete>

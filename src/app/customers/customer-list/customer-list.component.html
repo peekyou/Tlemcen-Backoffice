@@ -2,41 +2,54 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="action-buttons">
-                    <button class="btn btn-info" (click)="openCustomerDialog()"><mat-icon>add</mat-icon>Ajouter un client</button>
-                </div>
-
-                <app-spinner [loader]="loader"></app-spinner>
-                
-                <div class="card" *ngIf="loader.closed && customers && customers.data && customers.data.length > 0">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title">Clients</h4>
+                <div class="row">
+                    <form class="col-12 col-md-6 form-outline" (ngSubmit)="getCustomers(true)" novalidate>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Chercher</mat-label>
+                            <input matInput name="searchTerm" [(ngModel)]="searchTerm"
+                                placeholder="{{ 'CUSTOMERS.SEARCH_PLACEHOLDER' | translate }}" />
+                            <button matSuffix mat-icon-button type="submit">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </form>
+                    <div class="col-12 col-md-6">
+                        <button class="btn btn-info" (click)="openCustomerDialog()"><mat-icon>add</mat-icon>Ajouter un client</button>
                     </div>
-                    <div class="card-body table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-warning">
-                                <th>{{ 'COMMON.NAME' | translate }}</th>
-                                <th>{{ 'COMMON.GENDER' | translate }}</th>
-                                <th>{{ 'COMMON.AGE' | translate }}</th>
-                                <th>{{ 'COMMON.PHONE' | translate }}</th>
-                                <th>{{ 'COMMON.EMAIL' | translate }}</th>
-                                <th></th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }" [routerLink]="['/customers', customer.id]">
-                                  <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                  <td>{{ customer.gender }}</td>
-                                  <td><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
-                                  <td>{{ customer.mobileNumber }}</td>
-                                  <td>{{ customer.email }}</td>
-                                  <td>
-                                    <button mat-icon-button (click)="openDeleteDialog(customer);$event.stopPropagation()">
-                                        <mat-icon class="text-danger">delete</mat-icon>
-                                    </button>
-                                  </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                </div>
+                <app-spinner [loader]="loader"></app-spinner>
+                <h3 *ngIf="customers && customers.paging.totalCount == 0">Aucun client</h3>
+                <div *ngIf="loader.closed && customers && customers.data && customers.data.length > 0">
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h4 class="card-title">Clients</h4>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover">
+                                <thead class="text-warning">
+                                    <th>{{ 'COMMON.NAME' | translate }}</th>
+                                    <th>{{ 'COMMON.GENDER' | translate }}</th>
+                                    <th>{{ 'COMMON.AGE' | translate }}</th>
+                                    <th>{{ 'COMMON.PHONE' | translate }}</th>
+                                    <th>{{ 'COMMON.EMAIL' | translate }}</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let customer of customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: customers?.paging?.totalCount }" [routerLink]="['/customers', customer.id]">
+                                    <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+                                    <td>{{ customer.gender }}</td>
+                                    <td><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
+                                    <td>{{ customer.mobileNumber }}</td>
+                                    <td>{{ customer.email }}</td>
+                                    <td>
+                                        <button mat-icon-button (click)="openDeleteDialog(customer);$event.stopPropagation()">
+                                            <mat-icon class="text-danger">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <pagination-controls *ngIf="customers" (pageChange)="pageChanged($event)" 
                         autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">

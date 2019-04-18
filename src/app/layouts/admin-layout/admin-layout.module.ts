@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../core/shared/shared.module';
 import { ComponentsModule } from '../../components/components.module';
 import { AdminLayoutRoutes } from './admin-layout.routing';
-import { DashboardComponent } from '../../dashboard/dashboard.component';
+// import { DashboardComponent } from '../../dashboard/dashboard.component';
+import { DashboardTlemcenComponent } from '../../dashboard/tlemcen/dashboard-tlemcen.component';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { DashboardComponent } from '../../dashboard/dashboard.component';
     RouterModule.forChild(AdminLayoutRoutes),
   ],
   declarations: [
-    DashboardComponent
+    // DashboardComponent,
+    DashboardTlemcenComponent
   ]
 })
 

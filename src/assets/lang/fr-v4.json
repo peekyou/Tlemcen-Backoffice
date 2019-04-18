@@ -16,6 +16,7 @@
         "CLOSE": "Fermer",
         "CANCEL": "Annuler",
         "DELETE": "Supprimer",
+        "CONFIRM": "Confirmer",
         "USERNAME": "Nom utilisateur",
         "PASSWORD": "Mot de passe",
         "PASSWORD_CONFIRMATION": "Confirmer mot de passe",
@@ -70,14 +71,25 @@
         "FORGET_PASSWORD_TITLE": "Récupérer mot de passe",
         "FORGET_PASSWORD_SUCCESS": "Un email a été envoyé pour réinitialiser votre mot de passe"
     },
-    "CUSTOMER": {
-        "PICTURE": "Photo"
+    "CUSTOMERS": {
+        "PICTURE": "Photo",
+        "SEARCH_PLACEHOLDER": "Nom, email, no passeport"
     },
     "AIRLINES": {
         "AIRLINE": "Compagnie"
     },
     "HOTELS": {
         "HOTEL": "Hôtel"
+    },
+    "TRAVEL": {
+        "RELATIONSHIP": "Relation",
+        "RESIDENCE": "Chambres privées",
+        "DOCUMENTS": "Documents",
+        "SERVICES": "Services supplémentaires",
+        "PAYMENT": "Paiement",
+        "INFANTS": "Bébé(s)",
+        "CHILDREN": "Enfant(s)",
+        "ADULTS": "Adulte(s)"
     },
     "CAMPAIGNS": {
         "PERIOD": "Période",
@@ -122,6 +134,10 @@
         "PUSH_CHARS_RECOMMENDED": "recommandés",
         "PUSH_CHARS": "caractères"
     },
+    "NOTES": {
+        "TITLE": "Titre",
+        "CONTENT": "Contenu"
+    },
     "ERRORS": {
         "SERVER_ERROR": "Une erreur est survenue",
         "NOT_FOUND": "Elément introuvable",
@@ -134,6 +150,7 @@
         "TOKEN_EXPIRED": "Token invalide",
         "TOKEN_MISMATCH": "Token invalide",
         "TRAVELER_ALREADY_IN_TRAVEL": "Client déjà inscrit au voyage",
+        "TRAVELER_NOT_IN_TRAVEL": "Impossible d'ajouter un client pas inscrit au voyage",
         "FILE_TOO_BIG": "Fichier trop gros",
         "FLIGHT_BOOKING_ALREADY_EXISTS": "Ce vol existe déjà",
         "PAYMENT_NOT_FOUND": "Paiement introuvable",

@@ -10,17 +10,17 @@ import { OmraService } from '../omra.service';
   templateUrl: './omra-flights-plan.component.html',
   styleUrls: ['./omra-flights-plan.component.scss']
 })
-export class OmraRoomsPlanComponent implements OnInit {
-  omra: Omra;
+export class OmraFlightsPlanComponent implements OnInit {
+  flightBookingId: string;
+  omraId: string;
   loader: Subscription;
 
   constructor(private route: ActivatedRoute, private service: OmraService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      if(params['id']) {
-        this.loader = this.service.getOmra(params['id'], null).subscribe(res => this.omra = res );
-      }
+      this.omraId = params['id'];
+      this.flightBookingId = params['flightId'];
     });
   }
 }

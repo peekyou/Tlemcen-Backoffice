@@ -6,6 +6,7 @@
                 <button class="btn btn-info" (click)="openAirlineDialog()"><mat-icon>add</mat-icon>Ajouter une compagnie</button>
               </div>
               <app-spinner [loader]="loader"></app-spinner>
+              <h3 *ngIf="airlines && airlines.paging.totalCount == 0">Aucune compagnie</h3>
               <div class="card" *ngIf="loader.closed && airlines && airlines.data && airlines.data.length > 0">
                   <div class="card-header card-header-warning">
                     <h4 class="card-title">Compagnies aériennes</h4>

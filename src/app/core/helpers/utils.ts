@@ -7,6 +7,13 @@ export function guid() {
     });
 }
 
+export function generateGroupId() {
+    var id = guid().replace(/[\-]+/g, '');
+    var ticks = new Date().getTime().toString();
+    id = id.substring(ticks.length);
+    return ticks + id;
+}
+
 export function removeFromArray(array, value) {
     var idx = array.indexOf(value);
     if (idx !== -1) {

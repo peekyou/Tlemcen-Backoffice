@@ -1,7 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Travel, TravelStatus } from './travel.model';
+import { Travel, TravelStatus, TravelType } from './travel.model';
+import { TravelGroup } from './travel-group.model';
 import { Customer } from '../customers/customer.model';
 import { HotelReservation } from '../hotels/hotel-reservation.model';
 import { FlightBooking } from '../airlines/flight-booking.model';
@@ -17,8 +18,8 @@ export class TravelService {
 
   constructor(private http: AuthHttpService) { }
 
-  getTravels(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Travel>> {
-    return this.http.get(this.resource + '?travelStatus=' + status + '&pageNumber=' + page + '&itemsCount=' + count);
+  getTravels(status: TravelStatus, page: number, count: number, type: TravelType = TravelType.Travel): Observable<PagingResponse<Travel>> {
+    return this.http.get(this.resource + '?travelType=' + type + '&travelStatus=' + status + '&pageNumber=' + page + '&itemsCount=' + count);
   }
 
   getTravelsAsLookup(): Observable<Lookup[]> {
@@ -49,19 +50,23 @@ export class TravelService {
     return this.http.post(this.resource + '/hotels/validate', { travelId: travelId, entityIds: hotelIds });
   }
 
-  getTravelers(travelId: string, page: number, count: number): Observable<PagingResponse<Travel>> {
-    return this.http.get(this.resource + '/' + travelId + '/travelers?pageNumber=' + page + '&itemsCount=' + count);
+  getTravelers(travelId: string, page: number, count: number, searchTerm: string = ''): Observable<PagingResponse<Travel>> {
+    return this.http.get(this.resource + '/' + travelId + '/travelers?pageNumber=' + page + '&itemsCount=' + count+ '&searchTerm=' + searchTerm);
   }
 
   getTraveler(travelId: string, travelerId: string, onlySeparateBooking: boolean = false): Observable<CustomerTravel> {
     return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '?onlySeparateBooking=' + onlySeparateBooking);
   }
 
-  addTravelers(customersTravel: CustomerTravel[]): Observable<boolean> {
+  getGroupTravelers(travelId: string, travelerId: string): Observable<TravelGroup> {
+    return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '/group');
+  }
+
+  addTravelers(customersTravel: CustomerTravel[]): Observable<string> {
     return this.http.post(this.resource + '/travelers', customersTravel);
   }
   
-  updateTraveler(customerTravel: CustomerTravel): Observable<boolean> {
+  updateTraveler(customerTravel: CustomerTravel): Observable<string> {
     return this.http.put(this.resource + '/travelers', customerTravel);
   }
 
@@ -119,8 +124,8 @@ export class TravelService {
     return this.http.download(this.resource + '/' + travelId + '/travelers/badges');
   }
   
-  downloadInhumationAuthorization(travelId: string, travelerId: string): Observable<CustomerTravel> {
-    return this.http.download(this.resource + '/' + travelId + '/travelers/' + travelerId + '/inhumation');
+  downloadInhumationAuthorization(travelId: string, travelerIds: string[]): Observable<CustomerTravel> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/inhumation', travelerIds);
   }
 
   downloadAirlineFile(travelId: string, airlineId: string): Observable<CustomerTravel> {

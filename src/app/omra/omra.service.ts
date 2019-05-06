@@ -12,24 +12,23 @@ export class OmraService extends TravelService {
   
   constructor(http: AuthHttpService) {
     super(http);
-    this.resource = 'omras';
   }
   
   getOmraList(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Omra>> {
-    return super.getTravels(status, page, count);
+    return super.getTravels(status, page, count, TravelType.Omra);
   }
 
   getOmra(id: string, itemsCount: number): Observable<Omra> {
     return super.getTravel(id, itemsCount);
   }
 
-  createOmra(hajj: Omra): Observable<Omra> {
-    hajj.travelTypeId = TravelType.Omra;
-    return super.createTravel(hajj);
+  createOmra(omra: Omra): Observable<Omra> {
+    omra.travelTypeId = TravelType.Omra;
+    return super.createTravel(omra);
   }
   
-  updateOmra(hajj: Omra): Observable<Omra> {
-    return super.updateTravel(hajj);
+  updateOmra(omra: Omra): Observable<Omra> {
+    return super.updateTravel(omra);
   }
 }
 

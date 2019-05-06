@@ -121,8 +121,11 @@
                 <div *ngIf="travel.customers.data && travel.customers.data.length > 0">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openAddCustomerDialog()"><mat-icon>person_add</mat-icon>Ajouter des pèlerins</button>
-                        <button class="btn btn-info" (click)="openAddCustomerDialog(true)"><mat-icon>group_add</mat-icon>Ajouter un groupe</button>
-                        <!-- <button class="btn btn-info" routerLink="groups"><mat-icon>group</mat-icon>Voir les groupes</button> -->
+                        <button class="btn btn-info" [matMenuTriggerFor]="groupMenu">Groupes<mat-icon>expand_more</mat-icon></button>
+                        <mat-menu #groupMenu="matMenu">
+                          <button mat-menu-item (click)="openAddCustomerDialog(true)"><mat-icon>group_add</mat-icon>Créer un groupe</button>
+                          <button mat-menu-item routerLink="groups"><mat-icon>group</mat-icon>Gérer les groupes</button>
+                        </mat-menu>
                         <button class="btn btn-primary" [disabled]="generatingBadges" (click)="downloadAllBadges()"><mat-icon>picture_in_picture</mat-icon>Imprimer badges</button>
                     </div>
                     <div class="card">
@@ -130,43 +133,47 @@
                             <h4 class="card-title pull-left">Pèlerins</h4>
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table table-hover">
+                            <form class="form-outline p-b-0" (ngSubmit)="searchCustomers(true)" novalidate>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Chercher</mat-label>
+                                    <input matInput name="searchTerm" [(ngModel)]="searchTerm"
+                                        placeholder="{{ 'CUSTOMERS.SEARCH_PLACEHOLDER' | translate }}" />
+                                    <button matSuffix mat-icon-button type="submit">
+                                        <mat-icon>search</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </form>
+                            <table class="table table-hover pilgrims-table">
                                 <thead class="text-warning">
                                     <th>Nom</th>
                                     <th>Age</th>
                                     <th>Telephone</th>
                                     <th>Documents</th>
-                                    <th>Paiment</th>
+                                    <th>Paiement</th>
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let customer of travel.customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: travel.customers?.paging?.totalCount }" [routerLink]="['customers', customer.id]">
-                                    <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                    <td><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
-                                    <td>{{ customer.mobileNumber }}</td>
-                                    <td>
-                                        <span [matTooltip]="getCustomerDocumentsStatus(customer)" matTooltipClass="multiline" *ngIf="customer.documentsErrors && customer.documentsErrors.length > 0" class="badge badge-danger">Incomplet</span>
-                                        <span *ngIf="!customer.documentsErrors || customer.documentsErrors.length == 0" class="badge badge-success">Complet</span>
-                                    </td>
-                                    <td *ngIf="customer.travelPayment">
-                                        <span *ngIf="customer.travelPayment.status == 'P'" class="badge badge-success">Payé</span>
-                                        <span *ngIf="customer.travelPayment.status == 'I'" class="badge badge-danger">Incomplet</span>
-                                        <span *ngIf="customer.travelPayment.status == 'R'" class="badge badge-warning">A rembourser</span>
-                                    </td>
-                                    <td>
-                                        <button mat-icon-button matTooltip="Imprimer contrat" (click)="downloadTravelerContract(customer);$event.stopPropagation()">
-                                            <mat-icon class="text-primary">chrome_reader_mode</mat-icon>
-                                        </button>
-                                        <button mat-icon-button matTooltip="Imprimer reçu" (click)="downloadPaymentReceipt(customer);$event.stopPropagation()">
-                                            <mat-icon class="text-seconary">receipt</mat-icon>
-                                        </button>
-                                        <button mat-icon-button matTooltip="Imprimer badge" (click)="downloadTravelerBadge(customer);$event.stopPropagation()">
-                                            <mat-icon class="text-info">picture_in_picture</mat-icon>
-                                        </button>
-                                        <button mat-icon-button matTooltip="Enlever du voyage" (click)="openDeletePilgrimDialog(customer);$event.stopPropagation()">
-                                            <mat-icon class="text-danger">close</mat-icon>
-                                        </button>
-                                    </td>
+                                    <tr *ngFor="let customer of travel.customers.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: travel.customers?.paging?.totalCount }; let i = index" [routerLink]="['customers', customer.id]">
+                                        <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">{{ customer.firstname }} {{ customer.lastname }}</td>
+                                        <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}"><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
+                                        <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">{{ customer.mobileNumber }}</td>
+                                        <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
+                                            <span [matTooltip]="getCustomerDocumentsStatus(customer)" matTooltipClass="multiline" *ngIf="customer.documentsErrors && customer.documentsErrors.length > 0" class="badge badge-danger">Incomplet</span>
+                                            <span *ngIf="!customer.documentsErrors || customer.documentsErrors.length == 0" class="badge badge-success">Complet</span>
+                                        </td>
+                                        <td *ngIf="customer.travelPayment" [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
+                                            <span *ngIf="customer.travelPayment.status == 'P'" class="badge badge-success">Payé</span>
+                                            <span *ngIf="customer.travelPayment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                                            <span *ngIf="customer.travelPayment.status == 'R'" class="badge badge-warning">A rembourser</span>
+                                        </td>
+                                        <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
+                                            <button mat-icon-button matTooltip="Imprimer documents" (click)="printDocuments(customer);$event.stopPropagation()">
+                                                <mat-icon class="text-primary">print</mat-icon>
+                                            </button>
+                                            <button mat-icon-button matTooltip="Enlever du voyage" (click)="openDeletePilgrimDialog(customer);$event.stopPropagation()">
+                                                <mat-icon class="text-danger">close</mat-icon>
+                                            </button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

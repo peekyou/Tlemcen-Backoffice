@@ -27,7 +27,10 @@ export class Customer {
     isConverted?: boolean;
     picture?: AppFile;
     documents?: CustomerDocument[];
+
+    // For travel detail
     travelPayment?: Payment;
+    travelGroupId?: string;
     
     // UI properties
     hovered?: boolean;

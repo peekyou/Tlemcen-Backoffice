@@ -13,7 +13,6 @@ export class Payment {
     paymentTypeId?: string;
 
     // UI Properties
-    payLater?: boolean;
     isEdit?: boolean;
 
     constructor() {

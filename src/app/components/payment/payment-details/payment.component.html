@@ -5,9 +5,26 @@
             <div class="col">{{ fee.price }}€</div>
         </div>
     </div>
-    <div *ngIf="customer.travelPayment.discount > 0" class="row">
-        <div class="col">Remise</div>
-        <div class="col">-{{ customer.travelPayment.discount }}€</div>
+
+    <!-- Discounts -->
+    <div *ngIf="customer.travelPayment && customer.travelPayment.discount > 0" class="row" style="font-style: italic">
+        <div class="col">Remise(s)</div>
+    </div>
+    <div class="payment-details">
+        <div *ngFor="let payment of discountHistory">
+            <div *ngIf="payment.discount > 0" class="row">
+                <div class="col payment-date">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
+                <!-- <div class="col">-{{ customer.travelPayment.discount }}€</div> -->
+                <div class="col amount">
+                    <span *ngIf="!payment.isEdit">-{{ payment.discount }}€</span>
+                    <input type="number" *ngIf="payment.isEdit" [(ngModel)]="newDiscountAmount" style="max-width: 70px"/>
+                    <mat-icon *ngIf="!readOnly && !payment.isEdit" class="icon-sm" (click)="payment.isEdit = true; newDiscountAmount = payment.discount" matTooltip="Modifier" style="margin-left: 25px">edit</mat-icon>
+                    <mat-icon *ngIf="!readOnly && !payment.isEdit" (click)="openDeletePaymentDialog(payment, true)" class="text-danger icon-sm" matTooltip="Supprimer" style="margin-left: 10px">delete</mat-icon>
+                    <mat-icon *ngIf="!readOnly && payment.isEdit" class="text-success icon-sm" (click)="updatePayment(payment, true)" matTooltip="Valider" style="margin-left: 5px">check</mat-icon>
+                    <mat-icon *ngIf="!readOnly && payment.isEdit" class="icon-sm" (click)="payment.isEdit = false" matTooltip="Annuler" style="margin-left: 10px">close</mat-icon>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="total row bold">
@@ -15,7 +32,7 @@
         <div class="col">{{ calculateTotal() }}€</div>
     </div>
 
-    <div *ngIf="customer.travelPayment.amountPaid > 0" class="row">
+    <div *ngIf="customer.travelPayment && customer.travelPayment.amountPaid > 0" class="row">
         <div class="col">Montant payé</div>
         <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
     </div>
@@ -27,10 +44,11 @@
                 <div class="col payment-date">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
                 <div class="col amount">
                     <span *ngIf="!payment.isEdit">{{ payment.amountPaid }}€</span>
-                    <input type="number" *ngIf="payment.isEdit" [(ngModel)]="payment.amountPaid" style="max-width: 70px"/>
-                    <mat-icon *ngIf="!readOnly && !payment.isEdit" class="icon-sm" (click)="payment.isEdit = true" matTooltip="Modifier" style="margin-left: 25px">edit</mat-icon>
+                    <input type="number" *ngIf="payment.isEdit" [(ngModel)]="paymentNewAmountPaid" style="max-width: 70px"/>
+                    <mat-icon *ngIf="!readOnly && !payment.isEdit" class="icon-sm" (click)="payment.isEdit = true; paymentNewAmountPaid = payment.amountPaid" matTooltip="Modifier" style="margin-left: 25px">edit</mat-icon>
+                    <mat-icon *ngIf="!readOnly && !payment.isEdit" (click)="openDeletePaymentDialog(payment)" class="text-danger icon-sm" matTooltip="Supprimer" style="margin-left: 10px">delete</mat-icon>
                     <mat-icon *ngIf="!readOnly && payment.isEdit" class="text-success icon-sm" (click)="updatePayment(payment)" matTooltip="Valider" style="margin-left: 5px">check</mat-icon>
-                    <mat-icon *ngIf="!readOnly" (click)="openDeletePaymentDialog(payment)" class="text-danger icon-sm" matTooltip="Supprimer" style="margin-left: 10px">delete</mat-icon>
+                    <mat-icon *ngIf="!readOnly && payment.isEdit" class="icon-sm" (click)="payment.isEdit = false" matTooltip="Annuler" style="margin-left: 10px">close</mat-icon>
                 </div>
             </div>
         </div>
@@ -45,7 +63,7 @@
             <div class="col">RESTE A PAYER</div>
             <div class="col">{{ getAmountToPay() }}€</div>
         </div>
-        <div *ngIf="!payLater.value">
+        <div>
             <div *ngIf="getAmountToRefund() > 0" class="total row bold">
                 <div class="col">A REMBOURSER</div>
                 <div class="col">{{ getAmountToRefund() }}€</div>

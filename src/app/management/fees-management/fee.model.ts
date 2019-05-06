@@ -8,7 +8,6 @@ export class Fee {
     isDynamic?: boolean;
     isServiceFee?: boolean;
     isMandatoryFee?: boolean;
-    isPreviousFee?: boolean; // from previous customer
 
     // UI Properties
     checked?: boolean = false

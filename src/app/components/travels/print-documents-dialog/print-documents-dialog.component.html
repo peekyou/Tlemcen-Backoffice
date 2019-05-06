@@ -1,21 +1,31 @@
 <div mat-dialog-title>Imprimer documents</div>
 <mat-dialog-content>
-  <div class="row">
+  <table class="table table-hover" *ngIf="customers && customers.length > 0">
+    <tbody>
+      <tr *ngFor="let customer of customers">
+        <td>
+          <mat-checkbox (change)="onCustomerChecked($event, customer)" [checked]="isCustomerChecked(customer)"></mat-checkbox>
+        </td>
+        <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-info" [matMenuTriggerFor]="menu" [disabled]="customersChecked.length == 0">Imprimer<mat-icon>expand_more</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="printContract()"><mat-icon>chrome_reader_mode</mat-icon>Contrat</button>
+    <button mat-menu-item (click)="printPaymentReceipt()"><mat-icon>receipt</mat-icon>Reçu</button>
+    <button mat-menu-item (click)="printTravelerBadge()"><mat-icon>picture_in_picture</mat-icon>Badge</button>
+    <button mat-menu-item (click)="printInhumationAuthorization()"><mat-icon>airline_seat_flat</mat-icon>Autorisation d'inhumation</button>
+  </mat-menu>
+
+  <!-- <div class="row">
     <div class="col">
-      <button class="btn btn-info" (click)="printContract()"><mat-icon>chrome_reader_mode</mat-icon>Imprimer contrat</button>        
+      <button class="btn btn-info" (click)="printContract()" [disabled]="customersChecked.length == 0"><mat-icon>chrome_reader_mode</mat-icon>Imprimer contrat</button>        
     </div>
     <div class="col">
-      <button class="btn btn-info" (click)="printPaymentReceipt()"><mat-icon>receipt</mat-icon>Imprimer reçu</button>
+      <button class="btn btn-info" (click)="printPaymentReceipt()" [disabled]="customersChecked.length == 0"><mat-icon>receipt</mat-icon>Imprimer reçu</button>
     </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <button class="btn btn-info" (click)="printTravelerBadge()"><mat-icon>picture_in_picture</mat-icon>Imprimer badge</button>
-    </div>
-    <div class="col">
-      <button class="btn btn-info" (click)="printInhumationAuthorization()"><mat-icon>airline_seat_flat</mat-icon>Autorisation d'inhumation</button>
-    </div>
-  </div>
+  </div> -->
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-raised-button class="btn btn-secondary" (click)="close()">{{ 'COMMON.CLOSE' | translate }}</button>

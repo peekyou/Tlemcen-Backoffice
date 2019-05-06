@@ -40,7 +40,7 @@ export class CustomerListComponent implements OnInit {
       res => this.customers = res,
       err => console.log(err)
     );
-}
+  }
 
   pageChanged(page) {
     this.currentPage = page;

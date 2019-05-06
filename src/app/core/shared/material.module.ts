@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
     MatButtonModule,
+    MatMenuModule,
     MatButtonToggleModule,
     MatIconModule,
     MatAutocompleteModule,
@@ -33,6 +34,7 @@ import { MomentDateAdapter, MOMENT_DATE_FORMATS } from '../helpers/date.adapter'
 @NgModule({
     exports: [
         MatButtonModule,
+        MatMenuModule,
         MatButtonToggleModule,
         MatIconModule,
         MatAutocompleteModule,

@@ -42,3 +42,11 @@
 .action-buttons button {
     margin-left: 5px; 
 }
+
+.no-border {
+    border-top: none !important;
+}
+
+.pilgrims-table td {
+    border-top: 1px solid rgba(0, 0, 0, 0.13);
+}

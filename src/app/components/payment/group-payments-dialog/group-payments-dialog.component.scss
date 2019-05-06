@@ -1,0 +1,36 @@
+// .row {
+// 	margin-bottom: .5rem;
+//     padding-bottom: .5rem;
+//     border-bottom: 1px solid #ddd;
+// }
+
+.details {
+	font-size: .87rem;
+	padding-left: .6rem;
+	
+	.row {
+		margin-bottom: 0rem;
+		padding-bottom: 0rem;
+		border-bottom: none;
+		border-top: 1px solid #eee;
+		width: 98%;
+	}
+}
+
+.table th, .table td {
+    border-top: none !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+td {
+	vertical-align: top !important;
+}
+
+a {
+	color: #4688f1 !important;
+	font-size: .8rem
+}
+
+a:hover {
+	text-decoration: underline !important;
+}

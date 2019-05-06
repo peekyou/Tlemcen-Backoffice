@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { TravelService } from '../../travels/travel.service';
+import { TravelGroup } from '../../travels/travel-group.model';
 import { Customer } from '../../customers/customer.model';
 import { CustomerTravel } from '../../customers/customer-travel.model';
 import { Omra } from '../omra.model';
@@ -12,13 +13,10 @@ import { Omra } from '../omra.model';
   styleUrls: ['./omra-add-customers.component.scss']
 })
 export class OmraAddCustomersComponent implements OnInit {
-  customers: Customer[];
   omra: Omra;
   isGroup: boolean;
   isEdit: boolean = false;
-
-  // For edit mode
-  customerTravel: CustomerTravel;
+  travelGroup: TravelGroup;
 
   constructor(
     private travelService: TravelService,
@@ -29,7 +27,7 @@ export class OmraAddCustomersComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id'] && params['customerId']) {
-        this.travelService.getTraveler(params['id'], params['customerId'], true)
+        this.travelService.getGroupTravelers(params['id'], params['customerId'])
           .subscribe(
             res => {
               if (!res) {
@@ -38,16 +36,17 @@ export class OmraAddCustomersComponent implements OnInit {
               else {
                 this.isEdit = true;
                 this.omra = res.travel;
-                this.isGroup = res.customer.relationship != null;
-                this.customers = [res.customer];
-                this.customerTravel = res;
+                this.isGroup = res.groupId != null;
+                this.travelGroup = res;
               }
             });
         }
         else {
           if (this.travelService.travelWithCustomers) {
-            this.customers = this.travelService.travelWithCustomers.customers;
-            this.omra = this.travelService.travelWithCustomers.travel;
+            this.travelGroup = {
+              travel: this.travelService.travelWithCustomers.travel,
+              customers: this.travelService.travelWithCustomers.customers
+            };
             this.isGroup = this.travelService.travelWithCustomers.isGroup;
             this.travelService.travelWithCustomers = null;
           }

@@ -14,7 +14,7 @@ import { RoomsAssignmentComponent } from './hotels/rooms-assignment/rooms-assign
 import { SearchCustomerDialogComponent } from './customers/search-customer-dialog/search-customer-dialog.component';
 import { CustomerDialogComponent } from './customers/customer-dialog/customer-dialog.component';
 import { UploadDocumentsComponent } from './upload-documents/upload-documents.component';
-import { PaymentComponent } from './payment/payment.component';
+import { PaymentComponent } from './payment/payment-details/payment.component';
 import { HotelRoomsDialogComponent } from './hotels/hotel-rooms-dialog/hotel-rooms-dialog.component';
 import { SubmitButtonComponent } from './common/submit-button/submit-button.component';
 import { ErrorMessageComponent } from './common/error-message/error-message.component';
@@ -32,6 +32,8 @@ import { FlightsAssignmentComponent } from './airlines/flights-assignment/flight
 import { FlightDetailComponent } from './airlines/flight-detail/flight-detail.component';
 import { HotelBookingComponent } from './hotels/hotel-booking/hotel-booking.component';
 import { HotelBookingDialogComponent } from './hotels/hotel-booking-dialog/hotel-booking-dialog.component';
+import { GroupsManagementComponent } from './travels/groups-management/groups-management.component';
+import { GroupPaymentsDialogComponent } from './payment/group-payments-dialog/group-payments-dialog.component';
 
 const MODALS = [
   CustomerDialogComponent,
@@ -42,6 +44,7 @@ const MODALS = [
   FlightBookingDialogComponent,
   PrintDocumentsDialogComponent,
   HotelBookingDialogComponent,
+  GroupPaymentsDialogComponent,
 ];
 
 @NgModule({
@@ -72,6 +75,7 @@ const MODALS = [
     FlightsAssignmentComponent,
     FlightDetailComponent,
     HotelBookingComponent,
+    GroupsManagementComponent,
     ...MODALS,
   ],
   exports: [
@@ -93,6 +97,7 @@ const MODALS = [
     CircleProgressComponent,
     FlightsAssignmentComponent,
     FlightDetailComponent,
+    GroupsManagementComponent,
     ...MODALS
   ],
   entryComponents: MODALS

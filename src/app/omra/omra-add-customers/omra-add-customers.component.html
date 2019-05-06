@@ -2,8 +2,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
-          <app-customer-travel *ngIf="omra" [isGroup]="isGroup" [isEdit]="isEdit"
-            [customers]="customers" [travel]="omra" [customerTravel]="customerTravel"></app-customer-travel>
+          <app-customer-travel *ngIf="travelGroup" [isGroup]="isGroup" [isEdit]="isEdit" [travelGroup]="travelGroup"></app-customer-travel>
         </div>
       </div>
   </div>

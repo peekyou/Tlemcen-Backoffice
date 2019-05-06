@@ -23,6 +23,10 @@ export class PaymentService {
     return this.http.post(this.resource, payment);
   }
 
+  createGroupPayment(groupId: string, payment: Payment): Observable<Payment> {
+    return this.http.post(this.resource + '/group/' + groupId, payment);
+  }
+
   deletePayment(id): Observable<Payment> {
     return this.http.delete(this.resource + '/' + id);
   }

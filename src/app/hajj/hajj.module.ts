@@ -9,9 +9,10 @@ import { HajjRoomsPlanComponent } from './hajj-rooms-plan/hajj-rooms-plan.compon
 import { HajjDialogComponent } from './hajj-dialog/hajj-dialog.component';
 import { HajjAddCustomersComponent } from './hajj-add-customers/hajj-add-customers.component';
 import { HajjFlightsPlanComponent } from './hajj-flights-plan/hajj-flights-plan.component';
+import { HajjGroupsManagementComponent } from './hajj-groups-management/hajj-groups-management.component';
 
 @NgModule({
-  declarations: [HajjListComponent, HajjDetailComponent, HajjRoomsPlanComponent, HajjDialogComponent, HajjAddCustomersComponent, HajjFlightsPlanComponent],
+  declarations: [HajjListComponent, HajjDetailComponent, HajjRoomsPlanComponent, HajjDialogComponent, HajjAddCustomersComponent, HajjFlightsPlanComponent, HajjGroupsManagementComponent],
   imports: [
     SharedModule,
     ComponentsModule,

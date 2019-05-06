@@ -226,3 +226,9 @@ app-login, app-set-password, app-forget-password {
         -webkit-transform: translateY(-1em)scale(.75) !important;
     }
 }
+
+.form-outline.p-b-0 {
+    .mat-form-field-wrapper {
+        padding-bottom: 0 !important;
+    }
+}

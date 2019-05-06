@@ -12,11 +12,10 @@ export class HajjService extends TravelService {
 
   constructor(http: AuthHttpService) {
     super(http);
-    this.resource = 'hajjs';
   }
 
   getHajjList(status: TravelStatus, page: number, count: number): Observable<PagingResponse<Hajj>> {
-    return super.getTravels(status, page, count);
+    return super.getTravels(status, page, count, TravelType.Hajj);
   }
 
   getHajj(id: string, itemsCount: number): Observable<Hajj> {

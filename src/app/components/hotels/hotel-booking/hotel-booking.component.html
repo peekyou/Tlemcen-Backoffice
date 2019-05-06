@@ -16,11 +16,11 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field *ngIf="hotelMekka.value && !customers" class="col-6 col-md-3">
+      <!-- <mat-form-field *ngIf="hotelMekka.value && !customers" class="col-6 col-md-3">
           <input type="number" matInput min="0" placeholder="Prix" formControlName="hotelMekkaRoomPrice">
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
-    <div *ngIf="customers && hotelMekka.value" formArrayName="hotelMekkaRoomPrices">
+    <!-- <div *ngIf="customers && hotelMekka.value" formArrayName="hotelMekkaRoomPrices">
       <div class="row" *ngFor="let customer of customers; let i = index">
         <div class="col name-label">
           {{ customer.firstname }} {{ customer.lastname }}
@@ -29,7 +29,7 @@
             <input type="number" matInput min="0" placeholder="Prix" formControlName="{{i}}">
         </mat-form-field>
       </div>
-    </div>
+    </div> -->
 
     <div class="row">
       <mat-form-field class="col-12 col-md-6">
@@ -47,11 +47,11 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field *ngIf="hotelMedina.value && !customers" class="col-6 col-md-3">
+      <!-- <mat-form-field *ngIf="hotelMedina.value && !customers" class="col-6 col-md-3">
           <input type="number" matInput min="0" placeholder="Prix" formControlName="hotelMedinaRoomPrice">
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
-    <div *ngIf="customers && hotelMedina.value" formArrayName="hotelMedinaRoomPrices">
+    <!-- <div *ngIf="customers && hotelMedina.value" formArrayName="hotelMedinaRoomPrices">
       <div class="row" *ngFor="let customer of customers; let i = index">
         <div class="col name-label">
           {{ customer.firstname }} {{ customer.lastname }}
@@ -60,6 +60,6 @@
             <input type="number" matInput min="0" placeholder="Prix" formControlName="{{i}}">
         </mat-form-field>
       </div>
-    </div>
+    </div> -->
 </form>
 <!-- <pre>{{ form.value | json }}</pre> -->

@@ -6,11 +6,13 @@ import { OmraDetailComponent } from './omra-detail/omra-detail.component';
 import { OmraRoomsPlanComponent } from './omra-rooms-plan/omra-rooms-plan.component';
 import { OmraFlightsPlanComponent } from './omra-flights-plan/omra-flights-plan.component';
 import { OmraAddCustomersComponent } from './omra-add-customers/omra-add-customers.component';
+import { OmraGroupsManagementComponent } from './omra-groups-management/omra-groups-management.component';
 
 const routes: Routes = [
   { path: '', component: OmraListComponent },
   { path: ':id', component: OmraDetailComponent },
   { path: ':id/rooms', component: OmraRoomsPlanComponent },
+  { path: ':id/groups', component: OmraGroupsManagementComponent },
   { path: ':id/flights/:flightId', component: OmraFlightsPlanComponent },
   { path: ':id/customers', component: OmraAddCustomersComponent },
   { path: ':id/customers/:customerId', component: OmraAddCustomersComponent }

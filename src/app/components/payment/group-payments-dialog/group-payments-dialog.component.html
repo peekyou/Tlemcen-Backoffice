@@ -1,0 +1,147 @@
+<div *ngIf="customers">
+    <table class="table">
+        <thead>
+            <th>Nom</th>
+            <th>Montant</th>
+            <th>Payé</th>
+            <th>Reste</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let customer of customers">
+                <td>{{ customer.firstname }} {{ customer.lastname }}
+                    <br>
+                    <a *ngIf="!customer.hovered" (click)="customer.hovered = true">Voir détail</a>
+                    <a *ngIf="customer.hovered" (click)="customer.hovered = false">Masquer détail</a>
+                </td>
+                <td>
+                    {{ calculateCustomerAmount(customer) }}€
+                    <div *ngIf="customer.hovered" class="details">
+                        <div class="row">
+                            <div class="col-9">{{ travel.name }}</div>
+                            <div class="col-3">{{ travel.unitPrice }}€</div>
+                        </div>
+                        <div class="row" *ngFor="let fee of customer.additionalFees">
+                            <div class="col-9">{{ fee.name }}</div>
+                            <div class="col-3">{{ fee.price }}€</div>
+                        </div>
+                        <div *ngFor="let payment of customer.payments">
+                            <div *ngIf="payment.discount > 0" class="row">
+                                <div class="col-9">Remise</div>
+                                <div class="col-3">
+                                    <span>-{{ payment.discount }}€</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    {{ customer.travelPayment.amountPaid }}€
+                    <div *ngIf="customer.hovered" class="details">
+                        <div *ngFor="let payment of customer.payments">
+                            <div *ngIf="payment.amountPaid > 0" class="row">
+                                <div class="col">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
+                                <div class="col">
+                                    <span>{{ payment.amountPaid }}€</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ calculateRemainingAmount(customer) }}€</td>
+            </tr>
+            <tr class="bold">
+                <td>TOTAL</td>
+                <td>{{ calculateTotal() }}€</td>
+                <td>{{ calculateTotalPaid() }}€</td>
+                <td>{{ calculateTotal() - calculateTotalPaid() }}€</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form [formGroup]="form">
+        <mat-form-field class="row col-12 col-md-3">
+            <input type='number' matInput min="0" placeholder="Remise globale en €" formControlName="discount">
+        </mat-form-field>
+        <div class="row">
+            <mat-form-field class="col-12 col-md-3">
+                <input type="number" matInput min="0" placeholder="Paiement global en €" formControlName="amount">
+            </mat-form-field>
+            <mat-radio-group formControlName="paymentType" class="col-12 col-md-9" style="margin-top: 17px">
+                <mat-radio-button *ngFor="let p of paymentTypes" style="margin-left: 15px" [value]="p.id">
+                    {{ p.name }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </form>
+<!-- 
+    <div class="row bold">
+        <div class="col">Nom</div>
+        <div class="col">Montant</div>
+        <div class="col">Payé</div>
+        <div class="col">Reste</div>
+    </div>
+    <div class="row" *ngFor="let customer of customers">
+        <div class="col">
+            {{ customer.firstname }} {{ customer.lastname }}
+            <br>
+            <a *ngIf="!customer.hovered" (click)="customer.hovered = true">Voir détail</a>
+            <a *ngIf="customer.hovered" (click)="customer.hovered = false">Masquer détail</a>
+        </div>
+        <div class="col">
+            {{ customer.travelPayment.amount - customer.travelPayment.discount }}€
+            <div *ngIf="customer.hovered" class="details">
+                <div class="row">
+                    <div class="col">{{ travel.name }}</div>
+                    <div class="col">{{ travel.unitPrice }}€</div>
+                </div>
+                <div class="row" *ngFor="let fee of customer.additionalFees">
+                    <div class="col">{{ fee.name }}</div>
+                    <div class="col">{{ fee.price }}€</div>
+                </div>
+                <div *ngFor="let payment of customer.payments">
+                    <div *ngIf="payment.discount > 0" class="row">
+                        <div class="col">Remise</div>
+                        <div class="col">
+                            <span>-{{ payment.discount }}€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            {{ customer.travelPayment.amountPaid }}€
+            <div *ngIf="customer.hovered" class="details">
+                <div *ngFor="let payment of customer.payments">
+                    <div *ngIf="payment.amountPaid > 0" class="row">
+                        <div class="col">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
+                        <div class="col">
+                            <span>{{ payment.amountPaid }}€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">{{ customer.travelPayment.amount - customer.travelPayment.discount - customer.travelPayment.amountPaid }}€</div>
+    </div>
+    <div class="row">
+        <div class="col">TOTAL</div>
+        <div class="col">1233€</div>
+        <div class="col">1233€</div>
+        <div class="col">0€</div>
+    </div> -->
+
+    <!-- <div class="total row bold">
+        <div class="col">Total</div>
+        <div class="col">{{ calculateTotal() }}€</div>
+    </div>
+
+    <div class="row">
+        <div class="col">Total payé</div>
+        <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
+    </div> -->
+</div>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button type="submit" class="btn btn-info" (click)="saveGroupPayment()" [disabled]="saving">Valider</button>
+    <button mat-raised-button class="btn btn-secondary" (click)="close()">Fermer</button>
+</mat-dialog-actions>

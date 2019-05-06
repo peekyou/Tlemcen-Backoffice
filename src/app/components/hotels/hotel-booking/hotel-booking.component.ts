@@ -79,45 +79,45 @@ export class HotelBookingComponent implements OnInit {
       this._customer.hotelBookings = [];
     }
 
-    var hotelMekkaRoomPrices = this.fb.array([]);
-    var hotelMedinaRoomPrices = this.fb.array([]);
-    if (this.customers) {
-      this.customers.forEach(c => {
-        hotelMekkaRoomPrices.push(new FormControl());
-        hotelMedinaRoomPrices.push(new FormControl());
-      })
-    }
+    // var hotelMekkaRoomPrices = this.fb.array([]);
+    // var hotelMedinaRoomPrices = this.fb.array([]);
+    // if (this.customers) {
+    //   this.customers.forEach(c => {
+    //     hotelMekkaRoomPrices.push(new FormControl());
+    //     hotelMedinaRoomPrices.push(new FormControl());
+    //   })
+    // }
 
-    var mekkahPrice = null;
-    var medinaPrice = null;
-    if (this._customer.hotelBookings.length > 0 && this._customer.hotelBookings[0].rooms && this._customer.hotelBookings[0].rooms.length > 0){
-      var makkahRoom = this._customer.hotelBookings[0].rooms[0];
-      if (makkahRoom.customers && makkahRoom.customers.length > 0 && makkahRoom.customers[0].roomPrice != null) {
-        mekkahPrice = makkahRoom.customers[0].roomPrice;
-      }
-      else {
-        mekkahPrice = makkahRoom.price;
-      }
-    }
-    if (this._customer.hotelBookings.length > 1 && this._customer.hotelBookings[1].rooms && this._customer.hotelBookings[1].rooms.length > 0){
-      var medinaRoom = this._customer.hotelBookings[1].rooms[0];
-      if (medinaRoom.customers && medinaRoom.customers.length > 0 && medinaRoom.customers[0].roomPrice != null) {
-        medinaPrice = medinaRoom.customers[0].roomPrice;
-      }
-      else {
-        medinaPrice = medinaRoom.price;
-      }
-    }
+    // var mekkahPrice = null;
+    // var medinaPrice = null;
+    // if (this._customer.hotelBookings.length > 0 && this._customer.hotelBookings[0].rooms && this._customer.hotelBookings[0].rooms.length > 0){
+    //   var makkahRoom = this._customer.hotelBookings[0].rooms[0];
+    //   if (makkahRoom.customers && makkahRoom.customers.length > 0 && makkahRoom.customers[0].roomPrice != null) {
+    //     mekkahPrice = makkahRoom.customers[0].roomPrice;
+    //   }
+    //   else {
+    //     mekkahPrice = makkahRoom.price;
+    //   }
+    // }
+    // if (this._customer.hotelBookings.length > 1 && this._customer.hotelBookings[1].rooms && this._customer.hotelBookings[1].rooms.length > 0){
+    //   var medinaRoom = this._customer.hotelBookings[1].rooms[0];
+    //   if (medinaRoom.customers && medinaRoom.customers.length > 0 && medinaRoom.customers[0].roomPrice != null) {
+    //     medinaPrice = medinaRoom.customers[0].roomPrice;
+    //   }
+    //   else {
+    //     medinaPrice = medinaRoom.price;
+    //   }
+    // }
     
     this.form = this.fb.group({
       hotelMekka: this.fb.control(this._customer.hotelBookings.length > 0 ? this._customer.hotelBookings[0].hotel.id : null),
       hotelMekkaRoom: this.fb.control(this._customer.hotelBookings.length > 0 && this._customer.hotelBookings[0].rooms && this._customer.hotelBookings[0].rooms.length > 0 && this._customer.hotelBookings[0].rooms[0].roomType ? this._customer.hotelBookings[0].rooms[0].roomType.id : 4),
-      hotelMekkaRoomPrice: this.fb.control(mekkahPrice),
+      // hotelMekkaRoomPrice: this.fb.control(mekkahPrice),
       hotelMedina: this.fb.control(this._customer.hotelBookings.length > 1 ? this._customer.hotelBookings[1].hotel.id : null),
       hotelMedinaRoom: this.fb.control( this._customer.hotelBookings.length > 1 && this._customer.hotelBookings[1].rooms && this._customer.hotelBookings[1].rooms.length > 0 && this._customer.hotelBookings[1].rooms[0].roomType ? this._customer.hotelBookings[1].rooms[0].roomType.id : 4),
-      hotelMedinaRoomPrice: this.fb.control(medinaPrice),
-      hotelMekkaRoomPrices: hotelMekkaRoomPrices,
-      hotelMedinaRoomPrices: hotelMedinaRoomPrices
+      // hotelMedinaRoomPrice: this.fb.control(medinaPrice),
+      // hotelMekkaRoomPrices: hotelMekkaRoomPrices,
+      // hotelMedinaRoomPrices: hotelMedinaRoomPrices
     });
 
     this.form.valueChanges.subscribe(data => {
@@ -159,11 +159,11 @@ export class HotelBookingComponent implements OnInit {
     if (hotelId && roomTypeId) {
       var hotel = this.hotels.find(x => x.id == hotelId);
       var roomType = this.roomTypes.find(x => x.id == roomTypeId);
-      var fees = price && !Array.isArray(price) ? price : null;
-      this.hotelFees.push({ 
-        name: hotel.name + ' ' + roomType.name,
-        price: fees
-      });
+      // var fees = price && !Array.isArray(price) ? price : null;
+      // this.hotelFees.push({ 
+      //   name: hotel.name + ' ' + roomType.name,
+      //   price: fees
+      // });
 
       if (this.customers) {
         this.customers.forEach((c, i) => {
@@ -171,7 +171,7 @@ export class HotelBookingComponent implements OnInit {
             hotel: { id: hotelId, name: hotel.name },
             rooms: [{
               roomType: { id: roomTypeId, name: roomType.name },
-              customers: [{ id: c.id, roomPrice: price[i] }]
+              customers: [{ id: c.id, roomPrice: null/*price[i]*/ }]
             }]
           });
         });
@@ -180,7 +180,7 @@ export class HotelBookingComponent implements OnInit {
         this._customer.hotelBookings.push({
           hotel: { id: hotelId },
           rooms: [{
-            price: fees,
+            //price: fees,
             roomType: { id: roomTypeId },
             customers: [{ id: this._customer.id }]
           }]

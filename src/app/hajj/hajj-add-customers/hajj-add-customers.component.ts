@@ -38,7 +38,7 @@ export class HajjAddCustomersComponent implements OnInit {
               else {
                 this.isEdit = true;
                 this.hajj = res.travel;
-                this.isGroup = res.customer.relationship != null;
+                this.isGroup = res.groupId != null;
                 this.customers = [res.customer];
                 this.customerTravel = res;
               }

@@ -36,12 +36,14 @@
                         <td>{{ customer.firstname }} {{ customer.lastname }}</td>
                         <td *ngIf="!data.isGroup">{{ customer.mobileNumber }}</td>
                         <td *ngIf="!data.isGroup">
-                            <button class="dummy" mat-icon-button>
-                                <mat-icon>add</mat-icon>
-                            </button>
-                            <button *ngIf="customer.hovered" mat-icon-button matTooltip="Ajouter" (click)="addExisting(customer)">
-                                <mat-icon>add</mat-icon>
-                            </button>
+                            <div style="display:flex">
+                                <button class="dummy" mat-icon-button>
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                                <button *ngIf="customer.hovered" mat-icon-button matTooltip="Ajouter" (click)="addExisting(customer)">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

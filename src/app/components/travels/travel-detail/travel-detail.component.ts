@@ -19,6 +19,7 @@ import { FlightBookingDialogComponent } from '../../airlines/flight-booking-dial
 import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.component';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { HotelBookingDialogComponent } from '../../hotels/hotel-booking-dialog/hotel-booking-dialog.component';
+import { PrintDocumentsDialogComponent } from '../print-documents-dialog/print-documents-dialog.component';
 
 @Component({
   selector: 'app-travel-detail',
@@ -32,6 +33,7 @@ export class TravelDetailComponent implements OnInit {
   itemsPerPage = 200;
   generatingAirlinesFiles = false;
   generatingBadges = false;
+  searchTerm: string;
   loader: Subscription;
 
   constructor(
@@ -57,12 +59,21 @@ export class TravelDetailComponent implements OnInit {
     this.loader = this.service.getTravel(travelId, this.itemsPerPage)
     .subscribe(
       res => {
-        this.travel = res
+        this.travel = res;
         if (!this.travel) {
           var route = this.travel.travelTypeId == TravelType.Hajj ? '/hajj' : this.travel.travelTypeId == TravelType.Omra ? '/omra' : '/travel';
           this.router.navigate([route]);
         }
       });
+  }
+
+  searchCustomers() {
+    this.currentPage = 1;
+    this.loader = this.service.getTravelers(this.travel.id, this.currentPage, this.itemsPerPage, this.searchTerm)
+    .subscribe(
+      res => this.travel.customers = res,
+      err => console.log(err)
+    );
   }
 
   openAddCustomerDialog(isGroup = false) {
@@ -234,20 +245,27 @@ export class TravelDetailComponent implements OnInit {
     });
   }
 
+  openPrintDocumentsDialog(customers: Customer[]) {
+    let dialogRef = this.dialog.open(PrintDocumentsDialogComponent, {
+        autoFocus: false,
+        width: '534px',
+        data: {
+          travel: this.travel,
+          customers: customers
+        }
+    });
+  }
+
   downloadArrivalInformationFile() {
     this.service.downloadArrivalInformationFile(this.travel.id).subscribe(res => {});
   }
 
-  downloadTravelerContract(customer: Customer) {
-    this.service.downloadTravelerContract(this.travel.id, [customer.id]).subscribe(res => {});
-  }
-
-  downloadPaymentReceipt(customer: Customer) {
-    this.service.downloadPaymentReceipt(this.travel.id, [customer.id]).subscribe(res => {});
-  }
-
-  downloadTravelerBadge(customer: Customer) {
-    this.service.downloadTravelerBadge(this.travel.id, [customer.id]).subscribe(res => {});
+  printDocuments(customer: Customer) {
+    var customers = [customer];
+    if (customer.travelGroupId) {
+      customers = this.travel.customers.data.filter(x => x.travelGroupId == customer.travelGroupId);
+    }
+    this.openPrintDocumentsDialog(customers);
   }
 
   downloadAllBadges() {

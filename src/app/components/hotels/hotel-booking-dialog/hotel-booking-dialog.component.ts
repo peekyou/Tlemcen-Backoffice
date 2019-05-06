@@ -45,14 +45,15 @@ export class HotelBookingDialogComponent implements OnInit {
   }
 
   onHotelsChange(hotels) {
-    this.customers = hotels.customers;
-    this.fees = hotels.fees;
-    for (var i = 0; i < hotels.customers.length; i++) {
-      if (hotels.customers[i].hotelBookings.length > 0) {
-        this.canContinue = true;
-        break;
-      }
-    }
+    this.canContinue = true;
+    // this.customers = hotels.customers;
+    // this.fees = hotels.fees;
+    // for (var i = 0; i < hotels.customers.length; i++) {
+    //   if (hotels.customers[i].hotelBookings.length > 0) {
+    //     this.canContinue = true;
+    //     break;
+    //   }
+    // }
   }
   
   save() {

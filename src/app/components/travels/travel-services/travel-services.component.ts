@@ -36,6 +36,7 @@ export class TravelServicesComponent implements OnInit {
   set customer(customer: CustomerDetail) {
     this._customer = customer;
     this.reset();
+    this.populateCustomerFees();
   }
   get customer(): CustomerDetail {
       return this._customer;
@@ -88,7 +89,7 @@ export class TravelServicesComponent implements OnInit {
   }
 
   populateCustomerFees() {
-    if (this.customer && this.customer.additionalFees) {
+    if (this.customer && this.customer.additionalFees && this.fees) {
       this.customer.additionalFees.forEach(customerFee => {
         var fee = this.fees.find(f => f.id == customerFee.id);
         if (fee) {
@@ -98,10 +99,10 @@ export class TravelServicesComponent implements OnInit {
           }
         }
       });
+      
+      // For edit mode
+      this.emitChanges();
     }
-    
-    // For edit mode
-    this.emitChanges();
   }
 
   serviceChecked(event, fee) {
@@ -138,6 +139,9 @@ export class TravelServicesComponent implements OnInit {
     if (this.fees) {
       this.fees.forEach(f => {
         f.checked = false;
+        if (f.isDynamic) {
+          f.price = null;
+        }
       });
     }
   }

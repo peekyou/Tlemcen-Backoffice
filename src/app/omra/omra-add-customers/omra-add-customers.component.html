@@ -2,6 +2,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
+          <app-spinner [loader]="loader"></app-spinner>
           <app-customer-travel *ngIf="travelGroup" [isGroup]="isGroup" [isEdit]="isEdit" [travelGroup]="travelGroup"></app-customer-travel>
         </div>
       </div>

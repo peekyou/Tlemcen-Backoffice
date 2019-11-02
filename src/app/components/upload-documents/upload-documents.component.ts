@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Subscription, forkJoin } from 'rxjs';
 
 import { AppDocument } from '../../management/documents-management/document.model';
@@ -18,6 +18,8 @@ export class UploadDocumentsComponent implements OnInit {
   _customer: CustomerDetail = {};
   
   @Input() travelTypeId: string;
+  @Input() travelId: string;
+  @Output() onChange: EventEmitter<any> = new EventEmitter();
   
   @Input() 
   set customer(customer: CustomerDetail) {
@@ -61,14 +63,42 @@ export class UploadDocumentsComponent implements OnInit {
       });
     }
   }
+  
+  documentChecked(event, document: AppDocument) {
+    var found = this._customer.documents.find(x => x.documentTypeId == document.id);
+    if (found == null) {
+      this._customer.documents.push({
+        documentTypeId: document.id,
+        received: event.checked,
+        travelId: this.travelId
+      });
+    }
+    else {
+      found.received = event.checked;
+    }
+
+    this.emitChanges();
+  }
+  
+  emitChanges() {
+    this.onChange.emit(this._customer.documents);
+  }
 
   uploadDocument(file, customer, document) {
     this.customerService
-        .uploadCustomerDocument(customer.id, document.id, file)
+        .uploadCustomerDocument(this.travelId, customer.id, document.id, file)
         .subscribe(
             r => { },
             err => { console.log(err); }
         );
+  }
+
+  isDocumentReceived(document: AppDocument) {
+    if (this._customer.documents) {
+      var customerDoc = this._customer.documents.find(x => x.documentTypeId == document.id);
+      return customerDoc && customerDoc.received;
+    }
+    return false;
   }
 
   resetDocuments() {

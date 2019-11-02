@@ -1,8 +1,10 @@
 <form [formGroup]="form" *ngIf="!showCamera">
   <div>
+    <input *ngIf="customer" type="hidden" id="cefhidden" value="{{customer.id}}"/>
     <div class="picture">
       <label>{{ 'CUSTOMERS.PICTURE' | translate }}</label>
-      <app-file-upload [imageWidth]="116" [imageHeight]="150" [(file)]="customer.picture" (onOpenCamera)="showCamera=true"></app-file-upload>
+      <app-file-upload [imageWidth]="116" [imageHeight]="150" [(file)]="customer.picture"
+        [centerImage]="true" (onOpenCamera)="showCamera=true"></app-file-upload>
       <!-- <img *ngIf="customer.picture && customer.picture.src" [src]="customer.picture.src" /> -->
     </div>
     <mat-radio-group formControlName="gender">

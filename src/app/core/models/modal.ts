@@ -1,4 +1,5 @@
 export enum ModalButtons {
     YesNo = 1,
-    OkCancel
+    OkCancel,
+    Ok
 }

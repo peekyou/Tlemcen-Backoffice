@@ -45,7 +45,7 @@ export class HotelDialogComponent implements OnInit {
             roomsCount: this.fb.control(this.hotel.roomsCount)
         });
         
-        this.lookupService.fetchCities('sa').subscribe(res => {
+        this.lookupService.fetchCities('voyage').subscribe(res => {
             this.cities = res;
             this.patchLookups();
         });

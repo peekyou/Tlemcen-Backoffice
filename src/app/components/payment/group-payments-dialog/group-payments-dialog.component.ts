@@ -43,7 +43,16 @@ export class GroupPaymentsDialogComponent implements OnInit {
   ngOnInit() {
     this.paymentService.getPaymentTypes().subscribe(res => this.paymentTypes = res);
 
-    this.sumCustomersPayments();
+    if (this.customers.length == 1 && this.groupId != null) {
+      this.loader = this.travelService.getGroupTravelers(this.travel.id, this.customers[0].id)
+        .subscribe(res => {
+          this.customers = res.customers;
+          this.sumCustomersPayments();
+        });
+    }
+    else {
+      this.sumCustomersPayments();
+    }
 
     this.form = this.fb.group({
       amount: [null, Validators.required],
@@ -56,12 +65,18 @@ export class GroupPaymentsDialogComponent implements OnInit {
     if (this.customers) {
       this.customers.forEach(c => {
         c.travelPayment = new Payment();
-        c.payments.forEach(p => {
-          // The latest payment is the current one
-          c.travelPayment.amount = p.amount;
-          c.travelPayment.discount += p.discount;
-          c.travelPayment.amountPaid += p.amountPaid;
-        });
+        if (c.payments) {
+          c.payments.forEach(p => {
+            // The latest payment is the current one
+            c.travelPayment.amount = p.amount;
+            c.travelPayment.discount += p.discount;
+            c.travelPayment.amountPaid += p.amountPaid;
+          });
+        }
+        else {
+          // In case of creation, just add the travel fee amount
+          c.travelPayment.amount = this.travel.unitPrice;
+        }
       });
     }
   }

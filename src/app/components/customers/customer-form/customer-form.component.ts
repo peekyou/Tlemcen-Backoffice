@@ -45,6 +45,8 @@ export class CustomerFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.customer) this.customer = new Customer();
+        
         this.initForm();
         forkJoin(
             this.lookupService.fetchCountries('fr'),

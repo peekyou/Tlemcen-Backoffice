@@ -1,4 +1,4 @@
 <div class="progress-container">
-    <mat-progress-spinner style="margin:2rem auto;" mode="indeterminate" *ngIf="loader && !loader.closed">
+    <mat-progress-spinner *ngIf="loader && !loader.closed" mode="indeterminate" [diameter]="diameter">
     </mat-progress-spinner>
 </div>

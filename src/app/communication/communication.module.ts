@@ -9,14 +9,26 @@ import { SmsListComponent } from './sms/sms-list/sms-list.component';
 import { SmsInfoComponent } from './sms/sms-new/sms-info/sms-info.component';
 import { SmsFilterComponent } from './sms/sms-new/sms-filter/sms-filter.component';
 import { SmsPackDialogComponent } from './sms/sms-pack-dialog/sms-pack-dialog.component';
+import { SmsPreviewComponent } from './sms/sms-preview/sms-preview.component';
 
 @NgModule({
-  declarations: [CommunicationDashboardComponent, SmsComponent, SmsListComponent, SmsInfoComponent, SmsFilterComponent, SmsPackDialogComponent],
+  declarations: [
+    CommunicationDashboardComponent,
+    SmsComponent,
+    SmsListComponent,
+    SmsInfoComponent,
+    SmsFilterComponent,
+    SmsPackDialogComponent,
+    SmsPreviewComponent
+  ],
   imports: [
     SharedModule,
     ComponentsModule,
     CommunicationRoutingModule
   ],
-  entryComponents: [SmsPackDialogComponent]
+  entryComponents: [
+    SmsPackDialogComponent,
+    SmsPreviewComponent
+  ]
 })
 export class CommunicationModule { }

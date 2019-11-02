@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { TravelService } from '../../../travels/travel.service';
 import { Travel } from '../../../travels/travel.model';
@@ -15,6 +16,8 @@ export class PrintDocumentsDialogComponent implements OnInit {
   customers: CustomerDetail[];
   travel: Travel;
   customersChecked: Customer[] = [];
+  loader: Subscription;
+  printLoader: Subscription;
 
   constructor(
     private service: TravelService,
@@ -24,7 +27,17 @@ export class PrintDocumentsDialogComponent implements OnInit {
       if (data) {
         this.travel = data.travel;
         this.customers = data.customers;
-        this.customers.forEach(c => this.customersChecked.push(c));
+
+        if (this.customers.length == 1 && this.customers[0].travelGroupId != null) {
+          this.loader = this.service.getGroupTravelers(this.travel.id, this.customers[0].id)
+            .subscribe(res => {
+              this.customers = res.customers;
+              this.customers.forEach(c => this.customersChecked.push(c));
+            });
+        }
+        else {
+          this.customers.forEach(c => this.customersChecked.push(c));
+        }
       }
     }
 
@@ -45,22 +58,27 @@ export class PrintDocumentsDialogComponent implements OnInit {
   }
 
   printContract() {
-    this.service.downloadTravelerContract(this.travel.id, this.customersChecked.map(x => x.id))
+    this.printLoader = this.service.downloadTravelerContract(this.travel.id, this.customersChecked.map(x => x.id))
     .subscribe(res => {});
   }
 
   printPaymentReceipt() {
-    this.service.downloadPaymentReceipt(this.travel.id, this.customersChecked.map(x => x.id))
+    this.printLoader = this.service.downloadPaymentReceipt(this.travel.id, this.customersChecked.map(x => x.id))
+    .subscribe(res => {});
+  }
+
+  printDocumentsReceipt() {
+    this.printLoader = this.service.downloadDocumentsReceipt(this.travel.id, this.customersChecked.map(x => x.id))
     .subscribe(res => {});
   }
 
   printTravelerBadge() {
-    this.service.downloadTravelerBadge(this.travel.id, this.customersChecked.map(x => x.id))
+    this.printLoader = this.service.downloadTravelerBadge(this.travel.id, this.customersChecked.map(x => x.id))
     .subscribe(res => {});
   }
 
   printInhumationAuthorization() {
-    this.service.downloadInhumationAuthorization(this.travel.id, this.customersChecked.map(x => x.id))
+    this.printLoader = this.service.downloadInhumationAuthorization(this.travel.id, this.customersChecked.map(x => x.id))
     .subscribe(res => {});
   }
 

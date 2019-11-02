@@ -24,6 +24,7 @@ export class RoomsAssignmentComponent implements OnInit, AfterViewInit {
   groupedRoomByHotelBooking = {};
   isEdit = false;
   loader: Subscription;
+  saveLoader: Subscription;
 
   @Input() hotelBookings: HotelReservation[];
   @Input() travelId: string;
@@ -100,21 +101,35 @@ export class RoomsAssignmentComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((newReservation: HotelReservation) => {
       if (newReservation) {
+		newReservation.hotel.expanded = true;
         this.groupBookingRoomByType(newReservation);
-
-        // Get new rooms
-        newReservation.rooms.forEach(r => {
-          var existing = this.selectedBooking.rooms.find(x => x.id == r.id);
-          if (!existing) {
-            this.selectedBooking.rooms.push(r);
-          }
-        });
+		
+        // Get new reservation
+		var index = this.hotelBookings.indexOf(this.selectedBooking);
+		if (index !== -1) {
+			this.hotelBookings[index] = this.selectedBooking = newReservation;
+		}
       }
     });
   }
 
   deleteEmptyRooms() {
-    this.hotelService.deleteEmptyRooms(this.travelId).subscribe(res => {});
+	// First save the plan, in case there are new unsaved rooms
+	this.travelService.saveHotelsPlan(this.travelId, this.hotelBookings)
+      .subscribe(res => {
+        if (res === true) {
+		  this.doEmptyRoomDeletion(); 
+        }
+		else {
+          this.toasterService.showToaster('Erreur lors de la sauvegarde', ToasterType.Error);
+		}
+    });
+  }
+  
+  doEmptyRoomDeletion() {
+    this.hotelService.deleteEmptyRooms(this.travelId).subscribe(res => {
+	  this.toasterService.showToaster('Chambres supprimées', ToasterType.Success);
+	});
 
     var groups = this.groupedRoomByHotelBooking[this.selectedBooking.id];
     groups.forEach(rooms => {
@@ -127,11 +142,14 @@ export class RoomsAssignmentComponent implements OnInit, AfterViewInit {
   }
 
   save() {
-    this.travelService.saveHotelsPlan(this.travelId, this.hotelBookings)
+    this.saveLoader = this.travelService.saveHotelsPlan(this.travelId, this.hotelBookings)
       .subscribe(res => {
         if (res === true) {
           this.toasterService.showToaster('Plan de chambre sauvegardé', ToasterType.Success);
         }
+		else {
+          this.toasterService.showToaster('Erreur lors de la sauvegarde', ToasterType.Error);
+		}
       });
   }
 

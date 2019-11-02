@@ -13,8 +13,9 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'customers',      loadChildren: '../../customers/customers.module#CustomersModule', data: { roles: [Roles.Customers, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
     { path: 'hotels',         loadChildren: '../../hotels/hotels.module#HotelsModule', data: { roles: [Roles.Hotels, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
     { path: 'airlines',       loadChildren: '../../airlines/airlines.module#AirlinesModule', data: { roles: [Roles.Airlines, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
+    { path: 'accounting',     loadChildren: '../../accounting/accounting.module#AccountingModule', data: { roles: [Roles.Payments, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
     { path: 'payments',       loadChildren: '../../payments/payments.module#PaymentsModule', data: { roles: [Roles.Payments, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
     { path: 'communication',  loadChildren: '../../communication/communication.module#CommunicationModule', data: { roles: [Roles.Communication, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
     { path: 'management',     loadChildren: '../../management/management.module#ManagementModule', data: { roles: [Roles.DocumentsManagement, Roles.UserManagement, Roles.FeesManagement, Roles.Admin] }, canActivate: [AuthGuard, RoleGuard] },
-    { path: 'notes',     loadChildren: '../../notes/notes.module#NotesModule' }
+    { path: 'notes',          loadChildren: '../../notes/notes.module#NotesModule' }
 ];

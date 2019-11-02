@@ -3,10 +3,10 @@
   <div class="issue-drop-zone">
     <span class="issue-drop-zone__text">
         <button type="button" class="issue-drop-zone__button" (click)="fileInput.click()">
-            <span *ngIf="browseLa bel">{{ browseLabel }}</span>
+            <span *ngIf="browseLabel">{{ browseLabel }}</span>
             <span *ngIf="!browseLabel">{{ 'COMMON.BROWSE' | translate }}</span>
         </button>
-        <input type="file" (change)="onFileChanged($event)" class="issue-drop-zone__file" accept="image/*" #fileInput>
+        <input type="file" (change)="onFileChanged($event)" class="issue-drop-zone__file" #fileInput>
         <div *ngIf="enableCamera">
             <button mat-raised-button class="btn btn-sm" (click)="openCamera()">Ou prendre une photo</button>
         </div>
@@ -27,10 +27,10 @@
 
 <ng-template #thumbnails>
   <div id="attachment_thumbnails" class="row item-attachments" *ngIf="!simple || file">
-    <div [ngClass]="{'hidden': loading}" [ngClass]="{'center-img': enableCamera}">
+    <div [ngClass]="{'hidden': loading, 'center-img': centerImage}">
         <div class="col attachment-content" *ngFor="let f of files || [file]">
             <div *ngIf="f">
-                <div class="attachment-thumb">
+                <div (click)="download(f)" class="attachment-thumb">
                     <img *ngIf="isPdfFile()" [height]="imageHeight" [width]="imageWidth" src="/assets/images/pdf-icon.png"/>
                     <img *ngIf="!isImageFile() && !isPdfFile()" [height]="imageHeight" [width]="imageWidth" src="/assets/images/file-icon.png"/>
                     <img *ngIf="isImageFile()" [height]="imageHeight" [width]="imageWidth" [src]="f.src | safe" (load)="fileLoad()">

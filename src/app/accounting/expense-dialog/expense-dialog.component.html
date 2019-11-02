@@ -1,0 +1,72 @@
+<div mat-dialog-title>Nouvelle dépense</div>
+<div mat-dialog-content>
+    <app-spinner [loader]="loader"></app-spinner>
+    <form [formGroup]="form" *ngIf="!loader || loader.closed">
+        <div class="row">
+            <mat-form-field class="col-6">
+                <input matInput placeholder="Catégorie" autoClose [control]="category"
+                    formControlName="category" [matAutocomplete]="autoCategory">
+                <mat-autocomplete #autoCategory="matAutocomplete" [displayWith]="displayFn.bind(this)"
+                    (optionSelected)="getSubcategories($event.option.value)">
+                    <mat-option *ngFor="let option of filteredCategories | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+                <button mat-raised-button matSuffix class="btn btn-sm btn-info" (click)="openCategoryDialog();$event.stopPropagation()">
+                    Créer
+                </button>
+            </mat-form-field>
+            <mat-form-field class="col-6">
+                <input matInput placeholder="Sous-catégorie" autoClose [control]="subcategory"
+                    formControlName="subcategory" [matAutocomplete]="autoSubcategory">
+                <mat-autocomplete #autoSubcategory="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredSubcategories | async" [value]="option">
+                        {{ option.name }}
+                    </mat-option>
+                </mat-autocomplete>
+                <button [disabled]="!category || !category.value || category.value.id == 2" mat-raised-button matSuffix class="btn btn-sm btn-info" 
+                    (click)="openCategoryDialog(true);$event.stopPropagation()">
+                    Créer
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="col-6">
+                <input matInput placeholder="Intitulé" formControlName="title" required>
+            </mat-form-field>
+            <mat-form-field class="col-6">
+                <input matInput [matDatepicker]="picker" maxlength="10" (keypress)="validateDate($event)"
+                    placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="date.errors?.required && (date.dirty || date.touched)">
+                    {{ 'FORM.INVALID_DATE' | translate }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <mat-form-field class="col-12 col-md-3">
+                <input type="number" matInput min="0" placeholder="Montant en €" formControlName="amount" required>
+            </mat-form-field>
+            <mat-radio-group formControlName="paymentType" class="col-12 col-md-9" style="margin-top: 17px">
+                <mat-radio-button *ngFor="let p of paymentTypes" style="margin-left: 15px" [value]="p.id">
+                    {{ p.name }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div class="row">
+            <mat-form-field class="full-width" class="col-6">
+                <textarea rows="3" matInput placeholder="Informations" formControlName="details"></textarea>
+            </mat-form-field>
+            <app-file-upload [(file)]="expense.attachments[0]" [enableCamera]="false" 
+                [centerImage]="true" class="col-6"></app-file-upload>                    
+        </div>
+    </form>    
+</div>
+<mat-dialog-actions align="end">
+    <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+        loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+        [subscription]="submitSubscription" (click)="onSubmit()">
+    </app-submit-button>
+    <button mat-raised-button class="btn btn-secondary" (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+</mat-dialog-actions>

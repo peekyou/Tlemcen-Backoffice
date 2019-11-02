@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { TravelService } from '../../travels/travel.service';
+import { TravelGroup } from '../../travels/travel-group.model';
 import { Customer } from '../../customers/customer.model';
 import { CustomerTravel } from '../../customers/customer-travel.model';
 import { Hajj } from '../hajj.model';
@@ -12,14 +14,12 @@ import { Hajj } from '../hajj.model';
   styleUrls: ['./hajj-add-customers.component.scss']
 })
 export class HajjAddCustomersComponent implements OnInit {
-  customers: Customer[];
   hajj: Hajj;
   isGroup: boolean;
   isEdit: boolean = false;
-
-  // For edit mode
-  customerTravel: CustomerTravel;
-
+  travelGroup: TravelGroup;
+  loader: Subscription;
+  
   constructor(
     private travelService: TravelService,
     private router: Router,
@@ -29,7 +29,7 @@ export class HajjAddCustomersComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id'] && params['customerId']) {
-        this.travelService.getTraveler(params['id'], params['customerId'])
+        this.loader = this.travelService.getGroupTravelers(params['id'], params['customerId'])
           .subscribe(
             res => {
               if (!res) {
@@ -39,15 +39,16 @@ export class HajjAddCustomersComponent implements OnInit {
                 this.isEdit = true;
                 this.hajj = res.travel;
                 this.isGroup = res.groupId != null;
-                this.customers = [res.customer];
-                this.customerTravel = res;
+                this.travelGroup = res;
               }
             });
         }
         else {
           if (this.travelService.travelWithCustomers) {
-            this.customers = this.travelService.travelWithCustomers.customers;
-            this.hajj = this.travelService.travelWithCustomers.travel;
+            this.travelGroup = {
+              travel: this.travelService.travelWithCustomers.travel,
+              customers: this.travelService.travelWithCustomers.customers
+            };
             this.isGroup = this.travelService.travelWithCustomers.isGroup;
             this.travelService.travelWithCustomers = null;
           }

@@ -3,9 +3,12 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { ServiceFeeDialogComponent } from '../service-fee-dialog/service-fee-dialog.component';
+import { DeleteDialogComponent } from '../../../components/common/delete-dialog/delete-dialog.component';
 import { TravelService } from '../../../travels/travel.service';
 import { HotelsService } from '../../../hotels/hotels.service';
 import { AirlinesService } from '../../../airlines/airlines.service';
+import { ToasterService } from '../../../core/services/toaster.service';
+import { ToasterType } from '../../../core/models/toaster-type';
 import { FeeService } from '../fee.service';
 import { Fee } from '../fee.model';
 import { PagingResponse } from '../../../core/models/paging';
@@ -31,6 +34,7 @@ export class FeeListComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private feeService: FeeService,
+    private toasterService: ToasterService,
     private travelService: TravelService,
     private hotelService: HotelsService,
     private airlineService: AirlinesService) {
@@ -68,7 +72,32 @@ export class FeeListComponent implements OnInit {
   }
 
   updateFee(fee: Fee) {
-    this.feeService.updateFee(fee).subscribe(res => {});
+    this.feeService.updateFee(fee).subscribe(res => {
+      this.toasterService.showToaster('Prix modifié', ToasterType.Success);
+    });
+  }
+
+  openDeleteDialog(fee: Fee) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: fee.name }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.feeService.deleteFee(fee.id)
+        .subscribe(
+          res => {
+            var index = this.additionalFees.data.indexOf(fee);
+            if (index > -1) {
+                this.additionalFees.data.splice(index, 1);
+                this.additionalFees.paging.totalCount--;
+            }
+          },
+          err => console.log(err)
+        );
+      }
+    });
   }
 
   displayCategories(fee: Fee) {

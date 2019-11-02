@@ -2,16 +2,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col">
-          <mat-form-field>
-              <mat-select placeholder="Sélectionnez le pélerin" [(ngModel)]="selectedPilgrim">
-                <mat-option *ngFor="let pilgrim of pilgrims" [value]="pilgrim">
-                  {{ pilgrim.firstname }} {{ pilgrim.lastname }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-          <app-customer-travel *ngIf="hajj" [isGroup]="isGroup" [isEdit]="isEdit"
-            [customers]="customers" [travel]="hajj" [customerTravel]="customerTravel"></app-customer-travel>
+          <app-spinner [loader]="loader"></app-spinner>
+          <app-customer-travel *ngIf="travelGroup" [isGroup]="isGroup" [isEdit]="isEdit" [travelGroup]="travelGroup"></app-customer-travel>
         </div>
       </div>
   </div>

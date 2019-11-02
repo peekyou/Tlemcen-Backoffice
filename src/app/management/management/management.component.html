@@ -25,6 +25,14 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="user.isInRole([adminRole, documentManagementRole])" class="col-lg-4 col-md-12">
+                <div class="card card-block">
+                    <div class="card-body" routerLink="expenses">
+                        <mat-icon>label</mat-icon>
+                        <div class="text-icon">Gestion des dépenses</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
   </div>

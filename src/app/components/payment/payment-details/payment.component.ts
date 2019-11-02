@@ -36,8 +36,11 @@ export class PaymentComponent implements OnInit {
     if (customer.payments && customer.payments.length > 0) {
       this.paymentHistory = customer.payments.map(x => ({ ...x })); // clone payments
       this.discountHistory = customer.payments.filter(x => x.discount > 0).map(x => ({ ...x }));
-      this.sumCustomerPayments();
     }
+    else {
+      this.paymentHistory = this.discountHistory = [];
+    }
+    this.sumCustomerPayments();
 
     if (this.form) {
       this.form.reset();
@@ -184,30 +187,10 @@ export class PaymentComponent implements OnInit {
     this.paymentService.updatePayment(payment)
       .subscribe(
         res => {
-          // if (isDiscount) {
-          //   this.updatePaymentDiscount(payment);
-          // }
-          // this.updateCustomerPayment(payment);
-          // this.sumCustomerPayments();
           this.emitExistingPaymentUpdated();
         },
         err => console.log(err)
       );
-  }
-
-  updateCustomerPayment(payment) {
-    var customerPayment = this.customer.payments.find(x => x.id == payment.id);
-    if (customerPayment) {
-      customerPayment.discount = payment.discount;
-      customerPayment.amountPaid = payment.amountPaid;
-    }
-  }
-
-  updatePaymentDiscount(payment) {
-    var correspondingPayment = this.paymentHistory.find(x => x.id == payment.id);
-    if (correspondingPayment) {
-      correspondingPayment.discount = payment.discount;
-    }
   }
 
   openDeletePaymentDialog(payment: Payment, isDiscount: boolean = false) {
@@ -228,10 +211,6 @@ export class PaymentComponent implements OnInit {
         this.paymentService.updatePayment(payment)
         .subscribe(
           res => {
-            // if (isDiscount) {
-            //   this.updatePaymentDiscount(payment);
-            // }
-            // this.sumCustomerPayments();
             this.emitExistingPaymentUpdated();
           },
           err => console.log(err)

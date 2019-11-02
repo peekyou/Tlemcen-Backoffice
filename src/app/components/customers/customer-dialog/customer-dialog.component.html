@@ -1,6 +1,8 @@
 <div mat-dialog-title>Nouveau client</div>
 <div mat-dialog-content>
-  <app-customer-form (onSave)="onSubmit($event)" [submitSubscription]="saveSubscription" (onCancel)="close()">
+  <app-spinner [loader]="loader"></app-spinner>
+  <app-customer-form *ngIf="!loader || loader.closed" [customer]="customer" (onSave)="onSubmit($event)" 
+    [submitSubscription]="saveSubscription" (onCancel)="close()">
   </app-customer-form>
 </div>
 <!-- <mat-dialog-actions align="end">

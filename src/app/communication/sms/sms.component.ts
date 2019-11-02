@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
 
-import { ConfirmationDialogComponent } from '../../components/common/confirmation-dialog/confirmation-dialog.component';
+import { SmsPreviewComponent } from './sms-preview/sms-preview.component';
 import { SmsPackDialogComponent } from './sms-pack-dialog/sms-pack-dialog.component';
 import { TranslationService } from '../../core/services/translation.service';
 import { ModalButtons } from '../../core/models/modal';
@@ -94,15 +94,18 @@ export class SmsComponent implements OnInit {
 
   openModal() {
       var promoInfo = this.topLevelForm.value['stepInfo'];
-      var sentence = '';
-      sentence = this.modalSentence.replace('{{smsNumber}}', (promoInfo.nbRecipients * promoInfo.nbSmsPerCustomer).toString());
+      var smsCount = promoInfo.nbRecipients * promoInfo.nbSmsPerCustomer;
+      if (smsCount > this.smsPack.quota) {
+          this.openSmsPackModal();
+          return;
+      }
 
-      let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      let dialogRef = this.dialog.open(SmsPreviewComponent, {
         width: '534px',
         autoFocus: false,
         data: {
-          text: sentence,
-          buttons: ModalButtons.OkCancel
+          smsNumber: promoInfo.nbRecipients * promoInfo.nbSmsPerCustomer,
+          sms: promoInfo.details
         }
       });
   

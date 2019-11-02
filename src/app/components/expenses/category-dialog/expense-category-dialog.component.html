@@ -1,0 +1,25 @@
+<div mat-dialog-title>
+    <span *ngIf="parentCategoryId">Nouvelle sous catégorie</span>
+    <span *ngIf="!parentCategoryId">Nouvelle catégorie</span>
+</div>
+<div mat-dialog-content>
+    <form [formGroup]="form">
+        <div class="row">
+            <mat-form-field class="col-12">
+                <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="name" required>
+            </mat-form-field>
+        </div>
+        <div class="pull-right">
+            <app-submit-button value="{{ 'COMMON.SAVE' | translate }}" buttonClass="btn btn-info"
+                loadingValue="{{ 'COMMON.SAVING' | translate }}" [form]="form"
+                [subscription]="submitSubscription" (click)="onSubmit()">
+            </app-submit-button>
+           <button mat-raised-button class="btn btn-secondary" (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+        </div>
+    </form>    
+</div>
+<!-- <mat-dialog-actions align="end">
+    <button mat-raised-button type="submit" class="btn btn-info" 
+    >{{ 'COMMON.SAVE' | translate }}</button>
+    <button mat-raised-button mat-dialog-close class="btn btn-secondary">{{ 'COMMON.CANCEL' | translate }}</button>
+</mat-dialog-actions> -->

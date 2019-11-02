@@ -2,6 +2,8 @@
 	<app-spinner [loader]="loader"></app-spinner>
 	<div class="col-lg-4 col-12 document-card" *ngFor="let document of documentsConfigured; let i = index">
 		<label>{{ document.name }}</label>
+		<br>
+		<mat-checkbox [checked]="isDocumentReceived(document)" (change)="documentChecked($event, document)">Reçu ?</mat-checkbox>
 		<app-file-upload (fileChange)="uploadDocument($event, customer, document)" 
 			[(file)]="document.file" [enableCamera]="false" [simple]="true">
 		</app-file-upload>

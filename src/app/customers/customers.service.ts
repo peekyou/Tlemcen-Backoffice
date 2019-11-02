@@ -29,7 +29,7 @@ export class CustomersService {
     return this.http.post(this.resource, customer);
   }
 
-  updateCustomer(customer: Customer): Observable<boolean> {
+  updateCustomer(customer: Customer): Observable<Customer> {
     return this.http.put(this.resource + '/' + customer.id, customer);
   }
 
@@ -37,9 +37,9 @@ export class CustomersService {
     return this.http.delete(this.resource + '/' + id);
   }
 
-  uploadCustomerDocument(customerId: string, documentTypeId: string, file: AppFile): Observable<Customer> {
+  uploadCustomerDocument(travelId: string, customerId: string, documentTypeId: string, file: AppFile): Observable<Customer> {
     file.data = file.src;
-    return this.http.post(this.resource + '/document?customerId=' + customerId + '&documentTypeId=' + documentTypeId, file);
+    return this.http.post(this.resource + '/document?travelId=' + travelId + '&customerId=' + customerId + '&documentTypeId=' + documentTypeId, file);
   }
   
   getCustomerDocument(customerId: string, documentTypeId: string): Observable<any> {

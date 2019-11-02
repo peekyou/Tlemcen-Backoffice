@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { TravelService } from '../../travels/travel.service';
 import { TravelGroup } from '../../travels/travel-group.model';
@@ -17,6 +18,7 @@ export class OmraAddCustomersComponent implements OnInit {
   isGroup: boolean;
   isEdit: boolean = false;
   travelGroup: TravelGroup;
+  loader: Subscription;
 
   constructor(
     private travelService: TravelService,
@@ -27,7 +29,7 @@ export class OmraAddCustomersComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       if(params['id'] && params['customerId']) {
-        this.travelService.getGroupTravelers(params['id'], params['customerId'])
+        this.loader = this.travelService.getGroupTravelers(params['id'], params['customerId'])
           .subscribe(
             res => {
               if (!res) {

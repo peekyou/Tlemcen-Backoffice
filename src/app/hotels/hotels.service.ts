@@ -41,12 +41,11 @@ export class HotelsService {
     return this.http.post(this.resource + '/' + travelId + '/rooms', reservation);
   }
 
-  deleteEmptyRooms(travelId) : Observable<HotelReservation> {
-    return this.http.delete(this.resource + '/' + travelId + '/rooms');
+  updateHotelBooking(travelId: string, reservation: HotelReservation) : Observable<HotelReservation> {
+    return this.http.put(this.resource + '/' + travelId, reservation);
   }
 
-  createRoomsBooking(reservations: HotelRoomReservation[]) : Observable<HotelRoomReservation[]> {
-    // reservation.id = new Date().getMilliseconds().toString();
-    return of(reservations);
+  deleteEmptyRooms(travelId) : Observable<HotelReservation> {
+    return this.http.delete(this.resource + '/' + travelId + '/rooms');
   }
 }

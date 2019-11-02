@@ -19,6 +19,7 @@ import { CustomerTravel } from '../../../customers/customer-travel.model';
 import { Lookup } from '../../../core/models/lookup.model';
 import { LookupService } from '../../../core/services/lookup.service';
 import { generateGroupId } from '../../../core/helpers/utils';
+import { ModalButtons } from '../../../core/models/modal';
 
 @Component({
   selector: 'app-customer-travel',
@@ -32,11 +33,12 @@ export class CustomerTravelComponent implements OnInit {
   relationships: Lookup[] = [];
   selectedRelationship: Lookup;
   loading = false;
-  // groupId: string = null;
   canPay: boolean = true;
   selectedCustomer: CustomerDetail;
   currentPayment: Payment;
   loader: Subscription;
+  groupId: string;
+  customersSaved: string[] = [];
 
   @Input() travelGroup: TravelGroup;
   @Input() isGroup: boolean = false;
@@ -54,9 +56,10 @@ export class CustomerTravelComponent implements OnInit {
   ngOnInit() {
     this.selectedCustomer = this.travelGroup && this.travelGroup.customers ? this.travelGroup.customers[0] : null;
     this.canPay = !this.isGroup;
-    // if (this.isGroup) {
-    //   this.groupId = generateGroupId();
-    // }
+    if (this.isGroup) {
+      this.groupId = generateGroupId();
+    }
+
 
     // In case of group build the fees from the private booking
     this.buildHotelFeesFromGroup();
@@ -108,19 +111,23 @@ export class CustomerTravelComponent implements OnInit {
     this.saveTraveler({
       customer: customerCopy,
       travel: this.travelGroup.travel,
-      groupId: this.travelGroup.groupId
+      groupId: this.travelGroup.groupId ? this.travelGroup.groupId : this.groupId
     })
     .subscribe(
       res => {
         this.loading = false;
         this.updateSelectedCustomer(customerCopy.id);
+        this.customersSaved.push(customerCopy.id);
         this.gotoCustomer();
       },
       err => this.loading = false);
   }
 
   saveTraveler(customerTravel: CustomerTravel): Observable<string> {
-    return this.isEdit ? this.travelService.updateTraveler(customerTravel) : this.travelService.addTravelers([customerTravel]);
+    return this.isEdit || this.customersSaved.indexOf(customerTravel.customer.id) > -1 ? 
+      this.travelService.updateTraveler(customerTravel) 
+      : 
+      this.travelService.addTravelers([customerTravel]);
   }
 
   openConfirmationDialog() {
@@ -146,39 +153,99 @@ export class CustomerTravelComponent implements OnInit {
   }
 
   openPrintDocumentsDialog(redirectBack = false) {
-    let dialogRef = this.dialog.open(PrintDocumentsDialogComponent, {
-        autoFocus: false,
-        width: '534px',
-        data: {
-          travel: this.travelGroup.travel,
-          customers: this.travelGroup.customers
-        }
-    });
-
-    if (redirectBack) {
-      dialogRef.afterClosed().subscribe(res => {
-        var path = this.travelGroup.travel.travelTypeId == TravelType.Omra ? 'omra' : this.travelGroup.travel.travelTypeId == TravelType.Hajj ? 'hajj' : 'travel';
-        this.router.navigate(['/' + path, this.travelGroup.travel.id]);
+    if (!this.isEdit && this.customersSaved.length < this.travelGroup.customers.length) {
+      this.showNotSavedCustomerPopup(redirectBack);
+    }
+    else {
+      let dialogRef = this.dialog.open(PrintDocumentsDialogComponent, {
+          autoFocus: false,
+          width: '534px',
+          data: {
+            travel: this.travelGroup.travel,
+            customers: this.travelGroup.customers
+          }
       });
+
+      if (redirectBack) {
+        dialogRef.afterClosed().subscribe(res => {
+          this.goBack();
+        });
+      }
     }
   }
 
   openGroupPaymentsDialog() {
-    let dialogRef = this.dialog.open(GroupPaymentsDialogComponent, {
+    if (!this.isEdit && this.customersSaved.length < this.travelGroup.customers.length) {
+      this.showNotSavedCustomerPopup();
+    }
+    else {
+      let dialogRef = this.dialog.open(GroupPaymentsDialogComponent, {
         autoFocus: false,
         width: '900px',
         height: '500px',
         data: {
           travel: this.travelGroup.travel,
           customers: this.travelGroup.customers,
-          groupId: this.travelGroup.groupId
+          groupId: this.travelGroup.groupId ? this.travelGroup.groupId : this.groupId
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(customers => {
+        if (customers != null) {
+          this.travelGroup.customers = customers;
+          this.selectedCustomer = customers.find(x => x.id == this.selectedCustomer.id);
+        }
+      });
+    }
+  }
+
+  openCustomerDialog() {
+    let dialogRef = this.dialog.open(CustomerDialogComponent, {
+      autoFocus: false,
+      width: '534px',
+      data: {
+        customer: this.selectedCustomer,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(customer => {
+      if (customer) {
+        if (this.selectedCustomer.firstname != customer.firstname) {
+          this.selectedCustomer.firstname = customer.firstname;
+          this.travelGroup.customers[this.customerIndex].firstname = customer.firstname;
+        }
+        if (this.selectedCustomer.lastname != customer.lastname) {
+          this.selectedCustomer.lastname = customer.lastname;
+          this.travelGroup.customers[this.customerIndex].lastname = customer.lastname;
+        }
+      }
+    });
+  }
+
+  showNotSavedCustomerPopup(redirectToNotSavedCutomer = false) {
+    var notsaved = '';
+    var gotoIndex = -1;
+    this.travelGroup.customers.forEach((c, i) => {
+      if (this.customersSaved.indexOf(c.id) == -1) {
+        notsaved += c.firstname + ' ' + c.lastname + ', ';
+        if (gotoIndex == -1) {
+          gotoIndex = i;
+        }
+      }
+    });
+
+    let dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        autoFocus: false,
+        width: '500px',
+        data: {
+          text: 'Veuillez sauvegarder le(s) client(s) : ' + notsaved.substring(0, notsaved.length - 2),
+          buttons: ModalButtons.Ok
         }
     });
 
-    dialogRef.afterClosed().subscribe(customers => {
-      if (customers != null) {
-        this.travelGroup.customers = customers;
-        this.selectedCustomer = customers.find(x => x.id == this.selectedCustomer.id);
+    dialogRef.afterClosed().subscribe(res => {
+      if (redirectToNotSavedCutomer) {
+        this.gotoCustomer(gotoIndex);
       }
     });
   }
@@ -213,6 +280,10 @@ export class CustomerTravelComponent implements OnInit {
     var allExceptHotelFee: Fee[] = this.fees.filter((x: Fee) => x.isServiceFee || x.isMandatoryFee);
     this.fees = allExceptHotelFee.concat(feesAndBooking.fees);
     this.travelGroup.customers[this.customerIndex].hotelBookings = feesAndBooking.hotelBookings;
+  }
+
+  onDocumentsChange(documents) {
+    this.travelGroup.customers[this.customerIndex].documents = documents;    
   }
 
   onTravelServicesChange(feesAndBookings) {
@@ -256,12 +327,22 @@ export class CustomerTravelComponent implements OnInit {
     var customer: CustomerDetail = $event.value;
     var index = this.travelGroup.customers.indexOf(customer);
     if (index > -1) {
-      this.loader = this.travelService.getTraveler(this.travelGroup.travel.id, customer.id, true)
-      .subscribe(res => {
-        this.travelGroup.customers[index] = res.customer;
+      if (this.isEdit || this.customersSaved.indexOf(customer.id) > -1) {
+        this.loader = this.travelService.getTraveler(this.travelGroup.travel.id, customer.id, true)
+          .subscribe(res => {
+            this.travelGroup.customers[index] = res.customer;
+            this.gotoCustomer(index);
+          });
+      }
+      else {
         this.gotoCustomer(index);
-      });
+      }
     }
+  }
+
+  goBack() {
+    var path = this.travelGroup.travel.travelTypeId == TravelType.Omra ? 'omra' : this.travelGroup.travel.travelTypeId == TravelType.Hajj ? 'hajj' : 'travel';
+    this.router.navigate(['/' + path, this.travelGroup.travel.id]);
   }
 
   private buildHotelFeesFromGroup() {

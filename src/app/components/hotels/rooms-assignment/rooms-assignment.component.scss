@@ -19,10 +19,16 @@
     }
 }
 
-.customer-scrollable {
-    padding-top: 0 !important;
-    height: 70vh;
-    overflow: scroll;
+.customers-container {
+    background: #fefefe;
+    padding: 15px;
+    border-radius: 10px;
+    
+    .customer-scrollable {
+        padding-top: 0 !important;
+        height: 70vh;
+        overflow: scroll;
+    }
 }
 
 .customer {

@@ -1,3 +1,52 @@
-<p>
-  groups-management works!
-</p>
+<div style="margin-bottom: .3rem;">
+  <a (click)="goBack()">< Revenir en arrière</a>
+</div>
+
+<app-spinner [loader]="loader"></app-spinner>
+<h4 *ngIf="groups && groups.length == 0">Aucun groupe</h4>
+
+<div *ngIf="groups && groups.length > 0">
+  <h4>Groupes {{groups[0].travel.name}}</h4>
+  <div class="inline">
+    <button mat-raised-button class="btn btn-info" color="accent" (click)="save()">
+      <mat-icon>save</mat-icon>Sauvegarder
+    </button>
+    <button mat-raised-button class="btn btn-primary" (click)="createGroup()">
+      <mat-icon>group_add</mat-icon>Créer un groupe
+    </button>
+	  <div style="margin-top: -1.5rem; margin-left: 1rem; height: 30px;">
+	    <app-spinner [loader]="saveLoader" diameter="30"></app-spinner>
+    </div>
+  </div>
+
+  <div class="drag-wrapper row">
+    <div class="customers-container" [ngClass]="{'col-6 col-lg-4': customersExpanded, 'col': !customersExpanded}">
+      <div class="row">
+        <h4 *ngIf="customersExpanded && travelersAlone" class="col-9">{{ travelersAlone.length }} Personnes sans groupe</h4>
+        <button class="col-2" mat-icon-button (click)="customersExpanded = !customersExpanded">
+          <mat-icon *ngIf="customersExpanded">chevron_right</mat-icon>
+          <mat-icon *ngIf="!customersExpanded">chevron_right</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="customersExpanded" class="drag-container sticky-top customer-scrollable" 
+            dragula="GROUPS" [(dragulaModel)]="travelersAlone">
+        <div *ngFor="let customer of travelersAlone" class="customer"
+            [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
+            {{ customer.firstname }} {{ customer.lastname }}
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="{'col-6 col-lg-8': customersExpanded, 'col-12 col-lg-11': !customersExpanded}">
+      <div class="card-columns">
+        <div class="drag-container card" dragula="GROUPS" (click)="goToGroupDetails(group, $event);$event.stopPropagation()"
+          *ngFor="let group of groups; let i = index" [(dragulaModel)]="group.customers">
+          Groupe {{i + 1}}
+          <div *ngFor="let customer of group.customers" class="customer"
+              [ngClass]="{'background-pink': customer.gender == 'F', 'background-cyan': customer.gender == 'M'}">
+              {{ customer.firstname }} {{ customer.lastname }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

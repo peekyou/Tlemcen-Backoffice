@@ -10,9 +10,9 @@
   <div class="pull-buttons-right">
     <button mat-raised-button type="button" class="btn btn-sm btn-info" (click)="close(true)">
       <span *ngIf="buttons == 1">{{ 'COMMON.YES' | translate }}</span>
-      <span *ngIf="buttons == 2">{{ 'COMMON.OK' | translate }}</span>
+      <span *ngIf="buttons == 2 || buttons == 3">{{ 'COMMON.OK' | translate }}</span>
     </button>
-    <button mat-raised-button class="btn btn-sm btn-secondary" (click)="close()">
+    <button *ngIf="buttons != 3" mat-raised-button class="btn btn-sm btn-secondary" (click)="close()">
       <span *ngIf="buttons == 1">{{ 'COMMON.NO' | translate }}</span>
       <span *ngIf="buttons == 2">{{ 'COMMON.CANCEL' | translate }}</span>
     </button>

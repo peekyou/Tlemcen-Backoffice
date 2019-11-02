@@ -1,0 +1,186 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-warning">
+            <h4 class="card-title pull-left">Revenus</h4>
+          </div>
+          <div class="card-body table-responsive">
+            <form class="form-outline p-b-0" (ngSubmit)="searchTravels()" novalidate>
+              <mat-form-field appearance="outline">
+                <mat-label>Chercher</mat-label>
+                <input matInput name="searchTermRevenues" [(ngModel)]="searchTermRevenues" placeholder="{{ 'CUSTOMERS.SEARCH_PLACEHOLDER' | translate }}" />
+                <button matSuffix mat-icon-button type="submit">
+                  <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+            </form>
+            <app-spinner [loader]="loaderRevenues"></app-spinner>
+            <table class="table" *ngIf="travels && travels.data && (travels.data.length > 0 || searchTermRevenues != null)">
+              <thead class="text-warning">
+                <th>Date</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Total</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let travel of travels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentRevenuesPage, totalItems: travels.paging?.totalCount, id: 'pg-travels' }; let i = index" [routerLink]="['travel', travel.id]">
+                  <td>{{ travel.startDate | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ travel.name }}</td>
+                  <td>{{ travel.travelTypeId == 1 ? 'Voyage' : travel.travelTypeId == 2 ? 'Hajj' : 'Omra' }}</td>
+                  <td>{{ travel.revenues }}€</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <pagination-controls *ngIf="travels && travels.paging.itemsCount > 0" (pageChange)="travelsPageChanged($event)" 
+              id="pg-travels" autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div *ngIf="expenses && expenses.data && (expenses.data.length > 0 || searchTermExpense != null)">
+          <div class="action-buttons">
+            <button class="btn btn-info" (click)="openExpenseDialog()"><mat-icon>add</mat-icon>Ajouter une dépense</button>
+            <button [disabled]="exporting" class="btn btn-info" [matMenuTriggerFor]="exportMenu">Exporter<mat-icon>expand_more</mat-icon></button>
+            <mat-menu #exportMenu="matMenu">
+              <button mat-menu-item (click)="exportExpensesCSV()">CSV</button>
+              <button mat-menu-item (click)="exportExpensesExcel()">Excel</button>
+            </mat-menu>
+          </div>
+          <div class="card">
+            <div class="card-header card-header-warning">
+              <h4 class="card-title pull-left">Dépenses</h4>
+            </div>
+            <div class="card-body table-responsive">
+              <div class="row">
+                <mat-form-field class="col-12 col-md-6">
+                  <input matInput placeholder="Par voyage" autoClose [formControl]="expensesTravelControl"
+                    [control]="expensesTravelControl" [matAutocomplete]="autoTravels">
+                  <mat-autocomplete #autoTravels="matAutocomplete" [displayWith]="displayFn.bind(this)">
+                    <mat-option *ngFor="let option of filteredExpensesTravel | async" [value]="option">
+                      {{ option.name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <form class="form-outline p-b-0 col-12 col-md-6" (ngSubmit)="searchExpenses()" novalidate>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Chercher</mat-label>
+                    <input matInput name="searchTermExpense" [(ngModel)]="searchTermExpense" placeholder="{{ 'CUSTOMERS.SEARCH_PLACEHOLDER' | translate }}" />
+                    <button matSuffix mat-icon-button type="submit">
+                      <mat-icon>search</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </form>
+              </div>
+              <app-spinner [loader]="loaderExpenses"></app-spinner>
+              <table class="table table-hover">
+                <thead class="text-warning">
+                    <th>Date</th>
+                    <th>Catégorie</th>
+                    <th>Intitulé</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Information</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let expense of expenses.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentExpensesPage, totalItems: expenses.paging?.totalCount, id: 'pg-expenses' }; let i = index"
+                    (click)="openExpenseDialog(expense)">
+                    <td>{{ expense.date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ expense.subcategory ? expense.subcategory.name : expense.category ? expense.category.name : 'Aucune' }}</td>
+                    <td>{{ expense.title }}</td>
+                    <td>{{ expense.amount }}€</td>
+                    <td>
+                      <span *ngIf="expense.status == 'P'" class="badge badge-success">Payé</span>
+                      <span *ngIf="expense.status == 'I'" class="badge badge-danger">Partiel</span>
+                    </td>
+                    <td>{{ expense.details }}</td>
+                    <td>
+                      <button mat-icon-button (click)="openDeleteDialog(expense);$event.stopPropagation()">
+                          <mat-icon class="text-danger">delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls *ngIf="expenses && expenses.paging.itemsCount > 0" (pageChange)="expensesPageChanged($event)" 
+                id="pg-expenses" autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-warning">
+            <h4 class="card-title pull-left">Synthèse</h4>
+          </div>
+          <div class="card-body table-responsive">
+            <mat-form-field class="col-12">
+              <input matInput placeholder="Sélectionnez un voyage" autoClose [formControl]="travelSummaryControl"
+                [control]="travelSummaryControl" [matAutocomplete]="autoTravelsSummary">
+              <mat-autocomplete #autoTravelsSummary="matAutocomplete" [displayWith]="displayFn.bind(this)"
+                (optionSelected)="getTravelSummary($event.option.value)">
+                <mat-option *ngFor="let option of filteredTravelSummay | async" [value]="option">
+                  {{ option.name }}
+                </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+            <div class="row" *ngIf="travelSummary">
+              <div class="col-12 col-md-6">
+                <table class="table">
+                  <thead class="text-warning">
+                    <th>Revenus</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="flex-row">
+                        <div>{{ travelSummary.name }}</div>
+                        <div>{{ travelSummary.revenues }}€</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-12 col-md-6">
+                <table class="table">
+                  <thead class="text-warning">
+                    <th>Dépenses</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let expense of travelSummary.expenses">
+                      <td class="flex-row">
+                        <div>{{ expense.title }}</div>
+                        <div>{{ expense.amount }}€</div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="travelSummary.expenses.length > 1">
+                      <td class="flex-row bold">
+                        <div>Total</div>
+                        <div>{{ travelSummary.totalExpenses || 0 }}€</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <hr>
+            <div class="row text-center bold" *ngIf="travelSummary">
+              <div class="col summary-total">
+                Bénéfice : {{ (travelSummary.revenues || 0) - (travelSummary.totalExpenses || 0) }}€
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

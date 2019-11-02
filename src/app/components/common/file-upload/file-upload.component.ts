@@ -1,6 +1,7 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppFile } from '../../../core/models/file.model';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-file-upload',
@@ -15,6 +16,8 @@ export class FileUploadComponent {
     @Input() imageHeight = 125;
     @Input() simple: boolean = false;
     @Input() enableCamera: boolean = true;
+    @Input() acceptOnlyImages: boolean = false;
+    @Input() centerImage: boolean = false;
     @Input() browseLabel: string;
     @Input() files: AppFile[];
     @Input() fileHolder: any;
@@ -71,6 +74,7 @@ export class FileUploadComponent {
                 }
                 else {
                     this.onFileUpload(newFile, this.fileHolder);
+                    this.loading = false;
                 }
             }
             reader.readAsDataURL(file);
@@ -102,6 +106,14 @@ export class FileUploadComponent {
                 break;
             }
         }
+    }
+
+    download(f: AppFile) {
+        var fileName = f.name;
+        if (!fileName && f.mime) {
+            fileName = 'file.' + f.mime.split('/')[1];
+        }
+        saveAs(f.data || f.src, fileName);            
     }
 
     openCamera() {

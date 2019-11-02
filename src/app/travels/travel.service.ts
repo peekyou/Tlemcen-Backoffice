@@ -53,6 +53,14 @@ export class TravelService {
   getTravelers(travelId: string, page: number, count: number, searchTerm: string = ''): Observable<PagingResponse<Travel>> {
     return this.http.get(this.resource + '/' + travelId + '/travelers?pageNumber=' + page + '&itemsCount=' + count+ '&searchTerm=' + searchTerm);
   }
+  
+  getGroups(travelId: string): Observable<TravelGroup[]> {
+    return this.http.get(this.resource + '/' + travelId + '/groups');
+  }
+
+  saveGroups(travelId: string, groups: TravelGroup[]): Observable<void> {
+    return this.http.post(this.resource + '/' + travelId + '/groups', groups);
+  }
 
   getTraveler(travelId: string, travelerId: string, onlySeparateBooking: boolean = false): Observable<CustomerTravel> {
     return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '?onlySeparateBooking=' + onlySeparateBooking);
@@ -60,6 +68,10 @@ export class TravelService {
 
   getGroupTravelers(travelId: string, travelerId: string): Observable<TravelGroup> {
     return this.http.get(this.resource + '/' + travelId + '/travelers/' + travelerId + '/group');
+  }
+
+  getTravelersAlone(travelId): Observable<Customer[]> {
+    return this.http.get(this.resource + '/' + travelId + '/travelers/alone');
   }
 
   addTravelers(customersTravel: CustomerTravel[]): Observable<string> {
@@ -115,6 +127,10 @@ export class TravelService {
   downloadPaymentReceipt(travelId: string, travelerIds: string[]): Observable<void> {
     return this.http.download(this.resource + '/' + travelId + '/travelers/receipt', travelerIds);
   }
+  
+  downloadDocumentsReceipt(travelId: string, travelerIds: string[]): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/documentsreceipt', travelerIds);
+  }
 
   downloadTravelerBadge(travelId: string, travelerIds: string[]): Observable<void> {
     return this.http.download(this.resource + '/' + travelId + '/travelers/badge', travelerIds);
@@ -130,5 +146,9 @@ export class TravelService {
 
   downloadAirlineFile(travelId: string, airlineId: string): Observable<CustomerTravel> {
     return this.http.download(this.resource + '/' + travelId + '/airlines/' + airlineId + '/file');
+  }
+
+  exportPilgrims(travelId: string): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/export');
   }
 }

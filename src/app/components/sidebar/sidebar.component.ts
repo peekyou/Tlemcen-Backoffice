@@ -20,6 +20,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/hotels', title: 'Hôtels',  icon: 'hotel', class: '', roles: [Roles.Admin, Roles.Hotels] },
     { path: '/airlines', title: 'Compagnies',  icon: 'flight', class: '', roles: [Roles.Admin, Roles.Airlines] },
     { path: '/payments', title: 'Paiements',  icon: 'payment', class: '', roles: [Roles.Admin, Roles.Payments] },
+    { path: '/accounting', title: 'Comptabilité',  icon: 'account_balance_wallet', class: '', roles: [Roles.Admin, Roles.Payments] },
     { path: '/communication', title: 'Communication',  icon: 'forum', class: '', roles: [Roles.Admin, Roles.Communication] },
     { path: '/management', title: 'Gestion',  icon: 'settings', class: '', roles: [Roles.Admin, Roles.DocumentsManagement, Roles.FeesManagement, Roles.UserManagement] },
     { path: '/notes', title: 'Notes', icon: 'note', class: '' },        

@@ -1,0 +1,15 @@
+li {
+    cursor: pointer;
+}
+
+li:hover {
+    background: #ccc;
+}
+
+li ul li:hover {
+    background: #000;
+}
+
+.table-sm {
+    margin-left: 1rem;
+}

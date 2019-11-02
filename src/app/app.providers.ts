@@ -19,6 +19,8 @@ import { DocumentService } from './management/documents-management/document.serv
 import { CustomersTravelService } from './components/customers/customer-travel/customers-travel.service';
 import { SmsService } from './communication/sms/sms.service';
 import { NoteService } from './notes/note.service';
+import { AccountingService } from './accounting/accounting.service';
+
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
@@ -46,6 +48,7 @@ export const APP_PROVIDERS = [
     CustomersTravelService,
     SmsService,
     NoteService,
+    AccountingService,
     AuthGuard,
     PermissionGuard,
     RoleGuard

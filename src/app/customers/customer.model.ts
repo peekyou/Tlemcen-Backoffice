@@ -47,7 +47,9 @@ export class Customer {
 }
 
 export class CustomerDocument {
-    id: string;
-    documentTypeId: string;
-    config: AppDocument;
+    id?: string;
+    documentTypeId?: string;
+    travelId?: string;
+    config?: AppDocument;
+    received?: boolean;
 }

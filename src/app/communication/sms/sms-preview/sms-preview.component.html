@@ -1,0 +1,20 @@
+<div mat-dialog-title>
+  Envoyer la campagne
+</div>
+<div mat-dialog-content>
+  <b>Aperçu du SMS</b>
+  <div class="sms-preview">{{ sms }}</div>
+  <br />
+  <p>
+      {{ 'SMS.MODAL_SENTENCE' | translate:{smsNumber: smsNumber} }}
+      <br />Souhaitez-vous continuer ?
+  </p>
+  <div class="pull-buttons-right">
+    <button mat-raised-button type="button" class="btn btn-sm btn-info" (click)="close(true)">
+      {{ 'COMMON.YES' | translate }}
+    </button>
+    <button mat-raised-button class="btn btn-sm btn-secondary" (click)="close()">
+      {{ 'COMMON.NO' | translate }}
+    </button>
+  </div>
+</div>

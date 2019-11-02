@@ -24,7 +24,7 @@
                             <h4 class="card-title pull-left">Hôtels</h4>
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table">
+                            <table class="table table-hover">
                                 <thead class="text-warning">
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th>Pèlerins</th>
@@ -33,7 +33,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let reservation of travel.hotelBookings" [routerLink]="['/hotels', reservation.hotel.id]">
+                                    <tr *ngFor="let reservation of travel.hotelBookings" (click)="openRoomReservationDialog(reservation, true);$event.stopPropagation()">
                                     <td>{{ reservation.hotel.name }}</td>
                                     <td>{{ reservation.travelerCount }}</td>
                                     <td>{{ reservation.rooms.length }} ({{ getReservationAvailableSpace(reservation) }} places libres)</td>
@@ -100,7 +100,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="row" *ngIf="travel.customers.paging.totalCount == 0">
+                <div class="row" *ngIf="travel.customers.paging.totalCount == 0 && searchTerm == null">
                     <div class="col">
                         <div class="card card-block">
                             <div class="card-body" (click)="openAddCustomerDialog()">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 </div>
-                <div *ngIf="travel.customers.data && travel.customers.data.length > 0">
+                <div *ngIf="travel.customers.data && (travel.customers.data.length > 0 || searchTerm != null)">
                     <div class="action-buttons">
                         <button class="btn btn-info" (click)="openAddCustomerDialog()"><mat-icon>person_add</mat-icon>Ajouter des pèlerins</button>
                         <button class="btn btn-info" [matMenuTriggerFor]="groupMenu">Groupes<mat-icon>expand_more</mat-icon></button>
@@ -126,6 +126,7 @@
                           <button mat-menu-item (click)="openAddCustomerDialog(true)"><mat-icon>group_add</mat-icon>Créer un groupe</button>
                           <button mat-menu-item routerLink="groups"><mat-icon>group</mat-icon>Gérer les groupes</button>
                         </mat-menu>
+                        <button class="btn btn-primary" [disabled]="exportingPilgrims" (click)="exportPilgrims()"><mat-icon>person_pin</mat-icon>Exporter pèlerins</button>                        
                         <button class="btn btn-primary" [disabled]="generatingBadges" (click)="downloadAllBadges()"><mat-icon>picture_in_picture</mat-icon>Imprimer badges</button>
                     </div>
                     <div class="card">
@@ -147,7 +148,8 @@
                                 <thead class="text-warning">
                                     <th>Nom</th>
                                     <th>Age</th>
-                                    <th>Telephone</th>
+                                    <th>Téléphone</th>
+                                    <th *ngIf="travel.travelTypeId == 2">Mouton</th>
                                     <th>Documents</th>
                                     <th>Paiement</th>
                                     <th></th>
@@ -157,6 +159,11 @@
                                         <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">{{ customer.firstname }} {{ customer.lastname }}</td>
                                         <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}"><span *ngIf="customer.birthDate">{{ moment().diff(customer.birthDate, 'years') }}</span></td>
                                         <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">{{ customer.mobileNumber }}</td>
+                                        <td *ngIf="travel.travelTypeId == 2" 
+                                            [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
+                                            <span *ngIf="customer.additionalFees && customer.additionalFees.indexOf('MOUTON') > -1">OUI</span>
+                                            <span *ngIf="!customer.additionalFees || customer.additionalFees.indexOf('MOUTON') == -1">NON</span>                                            
+                                        </td>
                                         <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
                                             <span [matTooltip]="getCustomerDocumentsStatus(customer)" matTooltipClass="multiline" *ngIf="customer.documentsErrors && customer.documentsErrors.length > 0" class="badge badge-danger">Incomplet</span>
                                             <span *ngIf="!customer.documentsErrors || customer.documentsErrors.length == 0" class="badge badge-success">Complet</span>
@@ -167,6 +174,9 @@
                                             <span *ngIf="customer.travelPayment.status == 'R'" class="badge badge-warning">A rembourser</span>
                                         </td>
                                         <td [ngClass]="{'no-border': i > 0 && customer.travelGroupId && travel.customers.data[i-1].travelGroupId == customer.travelGroupId}">
+                                            <button mat-icon-button matTooltip="Paiements groupe" *ngIf="customer.travelGroupId" (click)="openGroupPaymentsDialog(customer);$event.stopPropagation()">
+                                                <mat-icon class="text-primary">payment</mat-icon>
+                                            </button>
                                             <button mat-icon-button matTooltip="Imprimer documents" (click)="printDocuments(customer);$event.stopPropagation()">
                                                 <mat-icon class="text-primary">print</mat-icon>
                                             </button>

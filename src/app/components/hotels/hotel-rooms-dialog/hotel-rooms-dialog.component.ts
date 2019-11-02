@@ -24,6 +24,7 @@ export class HotelRoomsDialogComponent implements OnInit {
   roomTypes: RoomType[];
   travelId: string;
   validateDate: Function;
+  isEdit = false;
 
   constructor(
     private service: HotelsService,
@@ -35,6 +36,7 @@ export class HotelRoomsDialogComponent implements OnInit {
       if (data) {
         this.hotelBooking = data.hotelReservation;
         this.travelId = data.travelId;
+        this.isEdit = data.isEdit;
       }
       service.getHotels(null, null).subscribe(res => this.hotels = res.data);
   }
@@ -62,6 +64,28 @@ export class HotelRoomsDialogComponent implements OnInit {
 
   save() {
     this.loading = true;
+    if (this.isEdit && this.hotelBooking) {
+      this.updateBooking();
+    }
+    else {
+      this.bookRooms();
+    }
+  }
+
+  private updateBooking() {
+    this.hotelBooking.fromDate = dateToUTC(this.form.value.fromDate);
+    this.hotelBooking.toDate = dateToUTC(this.form.value.toDate);
+    this.service.updateHotelBooking(this.travelId, this.hotelBooking)
+    .subscribe(
+      res => {
+          this.loading = false;
+          this.dialogRef.close(res);
+      },
+      err => this.loading = false
+    );
+  }
+
+  private bookRooms() {
     var reservation = new HotelReservation();
     if (this.hotelBooking) {
       reservation.hotel = this.hotelBooking.hotel;

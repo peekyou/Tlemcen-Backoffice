@@ -20,6 +20,7 @@ import { DeleteDialogComponent } from '../../common/delete-dialog/delete-dialog.
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { HotelBookingDialogComponent } from '../../hotels/hotel-booking-dialog/hotel-booking-dialog.component';
 import { PrintDocumentsDialogComponent } from '../print-documents-dialog/print-documents-dialog.component';
+import { GroupPaymentsDialogComponent } from '../../payment/group-payments-dialog/group-payments-dialog.component';
 
 @Component({
   selector: 'app-travel-detail',
@@ -33,6 +34,7 @@ export class TravelDetailComponent implements OnInit {
   itemsPerPage = 200;
   generatingAirlinesFiles = false;
   generatingBadges = false;
+  exportingPilgrims = false;
   searchTerm: string;
   loader: Subscription;
 
@@ -148,14 +150,15 @@ export class TravelDetailComponent implements OnInit {
     });
   }
 
-  openRoomReservationDialog(hotelReservation: HotelReservation = null) {
+  openRoomReservationDialog(hotelReservation: HotelReservation = null, isEdit = false) {
     let dialogRef = this.dialog.open(HotelRoomsDialogComponent, {
         autoFocus: false,
         width: '534px',
         data: {
           title: 'Hôtel ' + this.travel.name,
           hotelReservation: hotelReservation,
-          travelId: this.travel.id
+          travelId: this.travel.id,
+          isEdit: isEdit
         }
     });
 
@@ -256,6 +259,19 @@ export class TravelDetailComponent implements OnInit {
     });
   }
 
+  openGroupPaymentsDialog(customer: Customer) {
+    let dialogRef = this.dialog.open(GroupPaymentsDialogComponent, {
+      autoFocus: false,
+      width: '900px',
+      height: '500px',
+      data: {
+        travel: this.travel,
+        customers: [customer],
+        groupId: customer.travelGroupId
+      }
+    });
+  }
+
   downloadArrivalInformationFile() {
     this.service.downloadArrivalInformationFile(this.travel.id).subscribe(res => {});
   }
@@ -283,6 +299,15 @@ export class TravelDetailComponent implements OnInit {
     .subscribe(
       res => this.generatingAirlinesFiles = false,
       err => this.generatingAirlinesFiles = false
+    );
+  }
+
+  exportPilgrims() {
+    this.exportingPilgrims = true;
+    this.service.exportPilgrims(this.travel.id)
+    .subscribe(
+      res => this.exportingPilgrims = false,
+      err => this.exportingPilgrims = false
     );
   }
 

@@ -32,12 +32,15 @@ export class HotelBookingDialogComponent implements OnInit {
       if (data) {
         this.travelId = data.travelId;
         this.customers = data.customers;
-        this.customers.forEach(x => {
-          var age = getAge(x.birthDate);
-          if (age < 2) this.nbInfants++;
-          else if (age < 13) this.nbChildren++;
-          else this.nbAdults++;
-        })
+        
+        if (this.customers) {
+          this.customers.forEach(x => {
+            var age = getAge(x.birthDate);
+            if (age < 2) this.nbInfants++;
+            else if (age < 13) this.nbChildren++;
+            else this.nbAdults++;
+          });
+        }
       }
   }
 
@@ -61,6 +64,7 @@ export class HotelBookingDialogComponent implements OnInit {
     // .subscribe(res => {
     //   this.dialogRef.close(true);
     // });
+
     this.travelService.travelWithCustomers.customers = this.customers;
     this.dialogRef.close(true);
   }

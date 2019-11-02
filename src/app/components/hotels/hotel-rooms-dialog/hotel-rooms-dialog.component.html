@@ -1,4 +1,5 @@
-<div mat-dialog-title>Ajouter des chambres</div>
+<div *ngIf="hotelBooking" mat-dialog-title>Ajouter des chambres</div>
+<div *ngIf="!hotelBooking" mat-dialog-title>Hôtel</div>
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div>
@@ -6,7 +7,7 @@
 		<mat-form-field *ngIf="!hotelBooking">
 			<mat-select placeholder="Sélectionez un hôtel" formControlName="hotel">
 				<mat-option *ngFor="let h of hotels" [value]="h">
-						{{ h.name }}
+					{{ h.name }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
@@ -31,7 +32,7 @@
 					</mat-error>
 				</mat-form-field>
 			</div>
-			<div *ngIf="hotelBooking">
+			<div *ngIf="hotelBooking && !isEdit">
 				<div formArrayName="rooms" *ngFor="let room of rooms.controls; let i = index">
 					<div [formGroupName]="i" class="row">
 						<div class="col-12 col-md-4">

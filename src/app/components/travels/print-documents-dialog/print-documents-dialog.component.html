@@ -1,6 +1,7 @@
 <div mat-dialog-title>Imprimer documents</div>
 <mat-dialog-content>
-  <table class="table table-hover" *ngIf="customers && customers.length > 0">
+  <app-spinner [loader]="loader"></app-spinner>
+  <table class="table table-hover" *ngIf="customers && customers.length > 0 && (!loader || loader.closed)">
     <tbody>
       <tr *ngFor="let customer of customers">
         <td>
@@ -10,13 +11,21 @@
       </tr>
     </tbody>
   </table>
-  <button class="btn btn-info" [matMenuTriggerFor]="menu" [disabled]="customersChecked.length == 0">Imprimer<mat-icon>expand_more</mat-icon></button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="printContract()"><mat-icon>chrome_reader_mode</mat-icon>Contrat</button>
-    <button mat-menu-item (click)="printPaymentReceipt()"><mat-icon>receipt</mat-icon>Reçu</button>
-    <button mat-menu-item (click)="printTravelerBadge()"><mat-icon>picture_in_picture</mat-icon>Badge</button>
-    <button mat-menu-item (click)="printInhumationAuthorization()"><mat-icon>airline_seat_flat</mat-icon>Autorisation d'inhumation</button>
-  </mat-menu>
+  <div class="inline">
+    <div>
+      <button class="btn btn-info" [matMenuTriggerFor]="menu" [disabled]="customersChecked.length == 0">Imprimer<mat-icon>expand_more</mat-icon></button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="printContract()"><mat-icon>chrome_reader_mode</mat-icon>Contrat</button>
+        <button mat-menu-item (click)="printPaymentReceipt()"><mat-icon>receipt</mat-icon>Reçu de paiement</button>
+        <button mat-menu-item (click)="printDocumentsReceipt()"><mat-icon>description</mat-icon>Reçu de documents</button>        
+        <button mat-menu-item (click)="printTravelerBadge()"><mat-icon>picture_in_picture</mat-icon>Badge</button>
+        <button mat-menu-item (click)="printInhumationAuthorization()"><mat-icon>airline_seat_flat</mat-icon>Autorisation d'inhumation</button>
+      </mat-menu>
+    </div>
+	  <div style="margin-top: -1.5rem; margin-left: 1rem;">
+	    <app-spinner [loader]="printLoader" diameter="30"></app-spinner>
+    </div>
+  </div>
 
   <!-- <div class="row">
     <div class="col">

@@ -23,8 +23,11 @@
                   <td>{{ additionalFee.name }}</td>
                   <td class="row m-0 form-inline">
                     <input type="text" class="col form-control form-control-sm" placeholder="Prix" [(ngModel)]="additionalFee.price"/>
-                    <button class="save-btn" mat-icon-button (click)="updateFee(additionalFee)">
-                      <mat-icon class="text-success">check-circle</mat-icon>
+                    <button mat-icon-button (click)="updateFee(additionalFee)">
+                      <mat-icon class="text-success">save</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="openDeleteDialog(additionalFee)">
+                        <mat-icon class="text-danger">delete</mat-icon>
                     </button>
                   </td>
                 </tr>

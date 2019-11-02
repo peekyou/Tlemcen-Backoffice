@@ -26,7 +26,7 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "angular-2-dropdown-multiselect": "^1.8.1",
     "angular-star-rating": "^4.0.0-beta.3",
-    "bootstrap": "^4.1.3",
+    "bootstrap": "^4.3.1",
     "chartist": "^0.11.0",
     "core-js": "^2.5.4",
     "css-star-rating": "^1.2.4",

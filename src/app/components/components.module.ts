@@ -34,6 +34,7 @@ import { HotelBookingComponent } from './hotels/hotel-booking/hotel-booking.comp
 import { HotelBookingDialogComponent } from './hotels/hotel-booking-dialog/hotel-booking-dialog.component';
 import { GroupsManagementComponent } from './travels/groups-management/groups-management.component';
 import { GroupPaymentsDialogComponent } from './payment/group-payments-dialog/group-payments-dialog.component';
+import { PaymentDialogComponent } from './payment/payment-dialog/payment-dialog.component';
 import { ExpenseCategoryDialogComponent } from './expenses/category-dialog/expense-category-dialog.component';
 
 const MODALS = [
@@ -46,6 +47,7 @@ const MODALS = [
   PrintDocumentsDialogComponent,
   HotelBookingDialogComponent,
   GroupPaymentsDialogComponent,
+  PaymentDialogComponent,
   ExpenseCategoryDialogComponent,
 ];
 

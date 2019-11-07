@@ -2,10 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs';
 
-import { TravelService } from '../../travels/travel.service';
-import { CustomerTravel } from '../../customers/customer-travel.model';
-import { Payment } from '../payment.model';
-import { Fee } from '../../management/fees-management/fee.model';
+import { TravelService } from '../../../travels/travel.service';
+import { CustomerTravel } from '../../../customers/customer-travel.model';
+import { Payment } from '../../../payments/payment.model';
+import { Fee } from '../../../management/fees-management/fee.model';
 
 @Component({
   selector: 'app-payment-dialog',

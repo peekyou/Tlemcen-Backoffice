@@ -11,3 +11,22 @@
 hr {
     margin-top: 0;
 }
+
+a {
+	color: #4688f1 !important;
+	font-size: .8rem
+}
+
+a:hover {
+	text-decoration: underline !important;
+}
+
+.details {
+    font-size: .85rem;
+    border-top: 1px solid #eee;
+}
+
+.details.row:hover {
+    background-color: #ddd;
+
+}

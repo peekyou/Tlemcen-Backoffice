@@ -2,6 +2,9 @@ export class TableSearch {
     pageNumber: number | string;
     itemsCount: number | string;
     searchTerm?: string;
+    travelId?: number;
+    from?: Date;
+    to?: Date;
     filters?: FieldFilter[];
     sorts?: FieldSort[];
 }

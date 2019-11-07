@@ -5,8 +5,14 @@
         <div class="card">
           <div class="card-header card-header-warning">
             <h4 class="card-title pull-left">Revenus</h4>
+	            <div class="card-header-actions">
+                <button mat-icon-button (click)="revenuesExpanded = !revenuesExpanded">
+                    <mat-icon *ngIf="revenuesExpanded">expand_more</mat-icon>
+                    <mat-icon *ngIf="!revenuesExpanded">chevron_right</mat-icon>
+                </button>
+              </div>
           </div>
-          <div class="card-body table-responsive">
+          <div *ngIf="revenuesExpanded" class="card-body table-responsive">
             <form class="form-outline p-b-0" (ngSubmit)="searchTravels()" novalidate>
               <mat-form-field appearance="outline">
                 <mat-label>Chercher</mat-label>
@@ -17,19 +23,51 @@
               </mat-form-field>
             </form>
             <app-spinner [loader]="loaderRevenues"></app-spinner>
-            <table class="table" *ngIf="travels && travels.data && (travels.data.length > 0 || searchTermRevenues != null)">
+            <table class="table table-hover" *ngIf="travels && travels.data && (travels.data.length > 0 || searchTermRevenues != null)">
               <thead class="text-warning">
                 <th>Date</th>
                 <th>Nom</th>
                 <th>Type</th>
                 <th>Total</th>
+				        <th></th>
               </thead>
               <tbody>
-                <tr *ngFor="let travel of travels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentRevenuesPage, totalItems: travels.paging?.totalCount, id: 'pg-travels' }; let i = index" [routerLink]="['travel', travel.id]">
-                  <td>{{ travel.startDate | date:'dd/MM/yyyy' }}</td>
-                  <td>{{ travel.name }}</td>
-                  <td>{{ travel.travelTypeId == 1 ? 'Voyage' : travel.travelTypeId == 2 ? 'Hajj' : 'Omra' }}</td>
-                  <td>{{ travel.revenues }}€</td>
+                <tr *ngFor="let travel of travels.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentRevenuesPage, totalItems: travels.paging?.totalCount, id: 'pg-travels' }; let i = index"
+                  [routerLink]="travel.travelTypeId == 2 ? ['/hajj', travel.id] : ['/omra', travel.id]">
+                  <td class="align-top">{{ travel.startDate | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <b>{{ travel.name }}</b>
+                    <div *ngIf="paymentsByTravel[travel.id] && paymentsByTravel[travel.id].payments && paymentsByTravel[travel.id].show"
+                         style="min-width: 220px;">
+                      <div class="details row" *ngFor="let payment of paymentsByTravel[travel.id].payments" 
+                           (click)="openPaymentDialog(payment);$event.stopPropagation()">
+                        <div class="col-12 col-lg-3">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
+                        <div class="col-12 col-lg-2">{{ payment.amountPaid }} €</div>
+                        <div class="col-12 col-lg-5">
+                            <span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span>
+                        </div>
+                        <div class="col-12 col-lg-2">
+                          <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
+                          <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
+                          <span *ngIf="payment.status == 'R'" class="badge badge-warning">A rembourser</span>
+                        </div>                     
+                      </div>
+                      <a *ngIf="paymentsByTravel[travel.id].payments.length < paymentsByTravel[travel.id].totalCount" (click)="showPayments(travel, true);$event.stopPropagation()">Afficher plus de paiements</a>
+                    </div>
+                    <app-spinner *ngIf="paymentsByTravel[travel.id]" [loader]="paymentsByTravel[travel.id].loader"></app-spinner>                                        
+                  </td>
+                  <td class="align-top">{{ travel.travelTypeId == 1 ? 'Voyage' : travel.travelTypeId == 2 ? 'Hajj' : 'Omra' }}</td>
+                  <td class="align-top" (click)="$event.stopPropagation()">{{ travel.revenues }}€</td>
+				          <td class="align-top" (click)="$event.stopPropagation()">
+                    <button mat-icon-button *ngIf="!paymentsByTravel[travel.id] || !paymentsByTravel[travel.id].show"
+                      (click)="showPayments(travel);$event.stopPropagation()" matTooltip="Afficher les paiements">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-icon-button *ngIf="paymentsByTravel[travel.id] && paymentsByTravel[travel.id].show"
+                      (click)="hidePayments(travel);$event.stopPropagation()" matTooltip="Masquer les paiements">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -43,7 +81,8 @@
 
     <div class="row">
       <div class="col-12">
-        <div *ngIf="expenses && expenses.data && (expenses.data.length > 0 || searchTermExpense != null)">
+        <!-- <div *ngIf="expenses && expenses.data && (expenses.data.length > 0 || searchTermExpense != null)"> -->
+        <div>
           <div class="action-buttons">
             <button class="btn btn-info" (click)="openExpenseDialog()"><mat-icon>add</mat-icon>Ajouter une dépense</button>
             <button [disabled]="exporting" class="btn btn-info" [matMenuTriggerFor]="exportMenu">Exporter<mat-icon>expand_more</mat-icon></button>
@@ -55,10 +94,16 @@
           <div class="card">
             <div class="card-header card-header-warning">
               <h4 class="card-title pull-left">Dépenses</h4>
+			          <div class="card-header-actions">
+                  <button mat-icon-button (click)="expensesExpanded = !expensesExpanded">
+                      <mat-icon *ngIf="expensesExpanded">expand_more</mat-icon>
+                      <mat-icon *ngIf="!expensesExpanded">chevron_right</mat-icon>
+                  </button>
+              </div>
             </div>
-            <div class="card-body table-responsive">
+            <div *ngIf="expensesExpanded" class="card-body table-responsive">
               <div class="row">
-                <mat-form-field class="col-12 col-md-6">
+                <mat-form-field class="col-12 col-md-5">
                   <input matInput placeholder="Par voyage" autoClose [formControl]="expensesTravelControl"
                     [control]="expensesTravelControl" [matAutocomplete]="autoTravels">
                   <mat-autocomplete #autoTravels="matAutocomplete" [displayWith]="displayFn.bind(this)">
@@ -67,7 +112,27 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <form class="form-outline p-b-0 col-12 col-md-6" (ngSubmit)="searchExpenses()" novalidate>
+
+                <mat-form-field class="col-6 col-md-2">
+                  <input matInput [matDatepicker]="expensesFromPicker" maxlength="10" (keypress)="validateDate($event)"
+                    placeholder="Du" [(ngModel)]="expensesFrom" (dateChange)="fromDateChange($event)">
+                  <mat-datepicker-toggle matSuffix [for]="expensesFromPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #expensesFromPicker [startAt]="currentDate"></mat-datepicker>
+                  <!-- <mat-error *ngIf="expensesFrom.errors?.required && (expensesFrom.dirty ||expensesFrom.touched)">
+                      {{ 'FORM.INVALID_DATE' | translate }}
+                  </mat-error> -->
+                </mat-form-field>
+                <mat-form-field class="col-6 col-md-2">
+                  <input matInput [matDatepicker]="expensesToPicker" maxlength="10" (keypress)="validateDate($event)"
+                    placeholder="Au" [(ngModel)]="expensesTo" (dateChange)="toDateChange($event)">
+                  <mat-datepicker-toggle matSuffix [for]="expensesToPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #expensesToPicker [startAt]="currentDate"></mat-datepicker>
+                  <!-- <mat-error *ngIf="expensesTo.errors?.required && (expensesTo.dirty ||expensesTo.touched)">
+                      {{ 'FORM.INVALID_DATE' | translate }}
+                  </mat-error> -->
+                </mat-form-field>
+
+                <form class="form-outline p-b-0 col-12 col-md-3" (ngSubmit)="searchExpenses()" novalidate>
                   <mat-form-field appearance="outline">
                     <mat-label>Chercher</mat-label>
                     <input matInput name="searchTermExpense" [(ngModel)]="searchTermExpense" placeholder="{{ 'CUSTOMERS.SEARCH_PLACEHOLDER' | translate }}" />
@@ -78,7 +143,52 @@
                 </form>
               </div>
               <app-spinner [loader]="loaderExpenses"></app-spinner>
-              <table class="table table-hover">
+              <table class="table">
+                <thead class="text-warning">
+                    <th>Catégorie</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let expenseCategory of expenseCategories">
+                    <td>
+                      <b>{{ expenseCategory.name }}</b>
+                      <div *ngIf="expensesByCategory[expenseCategory.name] && expensesByCategory[expenseCategory.name].expenses && expenseCategory.expanded">
+                        <div class="details row" *ngFor="let expense of expensesByCategory[expenseCategory.name].expenses" 
+                              (click)="openExpenseDialog(expense);$event.stopPropagation()">
+                          <div class="col-6 col-md-2">{{ expense.date | date:'dd/MM/yyyy' }}</div>
+                          <div class="col-6 col-md-4">{{ expense.title }}</div>
+                          <div class="col-4 col-md-2">{{ expense.amount }}€</div>
+                          <div class="col-3 col-md-2">
+                            <span *ngIf="expense.status == 'P'" class="badge badge-success">Payé</span>
+                            <span *ngIf="expense.status == 'I'" class="badge badge-danger">Partiel</span>
+                          </div>
+                          <div class="col-5 col-md-2">
+                            <button mat-icon-button (click)="openDeleteDialog(expense);$event.stopPropagation()" matTooltip="Supprimer la dépense">
+                                <mat-icon class="text-danger">delete</mat-icon>
+                            </button>
+                            <button *ngIf="expense.hasFile" mat-icon-button (click)="downloadFile(expense);$event.stopPropagation()" matTooltip="Télécharger la facture">
+                                <mat-icon>cloud_download</mat-icon>
+                            </button>
+                          </div>                     
+                        </div>
+                        <a *ngIf="expensesByCategory[expenseCategory.name].expenses.length < expensesByCategory[expenseCategory.name].totalCount" (click)="showExpenses(expenseCategory, true);$event.stopPropagation()">Afficher plus de dépenses</a>
+                      </div>
+                      <app-spinner *ngIf="expensesByCategory[expenseCategory.name]" [loader]="expensesByCategory[expenseCategory.name].loader"></app-spinner> 
+                    </td>
+                    <td class="align-top">
+                      <button mat-icon-button *ngIf="!expenseCategory.expanded"
+                        (click)="showExpenses(expenseCategory);$event.stopPropagation()" matTooltip="Afficher les dépenses">
+                        <mat-icon>add</mat-icon>
+                      </button>
+                      <button mat-icon-button *ngIf="expenseCategory.expanded"
+                        (click)="hideExpenses(expenseCategory);$event.stopPropagation()" matTooltip="Masquer les dépenses">
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- <table class="table table-hover">
                 <thead class="text-warning">
                     <th>Date</th>
                     <th>Catégorie</th>
@@ -101,17 +211,20 @@
                     </td>
                     <td>{{ expense.details }}</td>
                     <td>
-                      <button mat-icon-button (click)="openDeleteDialog(expense);$event.stopPropagation()">
+                      <button mat-icon-button (click)="openDeleteDialog(expense);$event.stopPropagation()" matTooltip="Supprimer la dépense">
                           <mat-icon class="text-danger">delete</mat-icon>
+                      </button>
+                      <button *ngIf="expense.hasFile" mat-icon-button (click)="downloadFile(expense);$event.stopPropagation()" matTooltip="Télécharger la facture">
+                          <mat-icon>cloud_download</mat-icon>
                       </button>
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </table> -->
             </div>
-            <pagination-controls *ngIf="expenses && expenses.paging.itemsCount > 0" (pageChange)="expensesPageChanged($event)" 
+            <!-- <pagination-controls *ngIf="expenses && expenses.paging.itemsCount > 0" (pageChange)="expensesPageChanged($event)" 
                 id="pg-expenses" autoHide="true" directionLinks="true" previousLabel="" nextLabel="" maxSize="5">
-            </pagination-controls>
+            </pagination-controls> -->
           </div>
         </div>
       </div>
@@ -122,8 +235,14 @@
         <div class="card">
           <div class="card-header card-header-warning">
             <h4 class="card-title pull-left">Synthèse</h4>
+		        	<div class="card-header-actions">
+                <button mat-icon-button (click)="summaryExpanded = !summaryExpanded">
+                    <mat-icon *ngIf="summaryExpanded">expand_more</mat-icon>
+                    <mat-icon *ngIf="!summaryExpanded">chevron_right</mat-icon>
+                </button>
+              </div>
           </div>
-          <div class="card-body table-responsive">
+          <div *ngIf="summaryExpanded" class="card-body table-responsive">
             <mat-form-field class="col-12">
               <input matInput placeholder="Sélectionnez un voyage" autoClose [formControl]="travelSummaryControl"
                 [control]="travelSummaryControl" [matAutocomplete]="autoTravelsSummary">

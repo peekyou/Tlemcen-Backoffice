@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 import { PagingResponse } from '../../core/models/paging';
 import { Payment } from '../payment.model';
 import { PaymentService } from '../payment.service';
-import { PaymentDialogComponent } from '../payment-dialog/payment-dialog.component';
+import { PaymentDialogComponent } from '../../components/payment/payment-dialog/payment-dialog.component';
 
 @Component({
   selector: 'app-payment-list',

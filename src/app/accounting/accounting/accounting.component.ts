@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, forkJoin } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -10,11 +10,15 @@ import { Travel } from '../../travels/travel.model';
 import { TravelRevenues } from '../travel-revenues.model';
 import { AccountingService } from '../accounting.service';
 import { TravelService } from '../../travels/travel.service';
-import { Expense } from '../expense.model';
+import { PaymentService } from '../../payments/payment.service';
+import { Payment } from '../../payments/payment.model';
+import { PaymentDialogComponent } from '../../components/payment/payment-dialog/payment-dialog.component';
+import { Expense , ExpenseCategory} from '../expense.model';
 import { AccountingSummary } from '../accounting-summary.model';
 import { Lookup } from '../../core/models/lookup.model';
+import { TableSearch } from '../../core/models/table-search.model';
 import { ExpenseDialogComponent } from '../expense-dialog/expense-dialog.component';
-import { filterLookup } from '../../core/helpers/utils';
+import { filterLookup, validateDate, dateToUTC } from '../../core/helpers/utils';
 
 @Component({
   selector: 'app-accounting',
@@ -22,6 +26,11 @@ import { filterLookup } from '../../core/helpers/utils';
   styleUrls: ['./accounting.component.scss']
 })
 export class AccountingComponent implements OnInit {
+  validateDate: Function;
+  currentDate = new Date();
+  revenuesExpanded: boolean = true;
+  expensesExpanded: boolean = true;
+  summaryExpanded: boolean = true;
   searchTermExpense: string = '';
   searchTermRevenues: string = '';
   itemsPerPage = 20;
@@ -38,14 +47,31 @@ export class AccountingComponent implements OnInit {
   loaderRevenues: Subscription;
   loaderExpenses: Subscription;
   exporting: boolean = false;
+  expensesFrom: Date;
+  expensesTo: Date;
+  expensesTravel: Lookup = null;
+  paymentsByTravel = {};
+  expenseCategories: ExpenseCategory[] = [];
+  expensesByCategory = {};
   
   constructor(
     private dialog: MatDialog,
     private service: AccountingService,
-    private travelService: TravelService) { 
+    private travelService: TravelService,
+    private paymentService: PaymentService) { 
+   
+      this.validateDate = validateDate;
       this.getRevenues();
-      this.getExpenses();
-      travelService.getTravelsAsLookup().subscribe(x => this.travelsLightweight = x);
+      // this.getExpenses();
+
+      this.loaderExpenses = forkJoin(
+        travelService.getTravelsAsLookup(),
+        service.getAllExpenseCategories()
+      )
+      .subscribe(res => {
+        this.travelsLightweight = res[0];
+        this.expenseCategories = res[1].concat(<any>res[0]);
+      });
   }
 
   ngOnInit() {
@@ -80,8 +106,16 @@ export class AccountingComponent implements OnInit {
     );
   }
 
-  getExpenses(travel: Lookup = null) {
-    this.loaderExpenses = this.service.getExpenses(this.currentExpensesPage, this.itemsPerPage, this.searchTermExpense, travel ? travel.id : null)
+  getExpenses() {
+    var search = {
+      pageNumber: this.currentExpensesPage,
+      itemsCount: this.itemsPerPage,
+      searchTerm: this.searchTermExpense,
+      travelId: this.expensesTravel ? parseInt(this.expensesTravel.id) : null,
+      from: dateToUTC(this.expensesFrom),
+      to: dateToUTC(this.expensesTo)
+    }
+    this.loaderExpenses = this.service.getExpenses(search)
     .subscribe(
       res => this.expenses = res,
       err => console.log(err)
@@ -116,7 +150,8 @@ export class AccountingComponent implements OnInit {
   }
 
   travelExpensesSelected(travel: Lookup) {
-    this.getExpenses(travel);
+    this.expensesTravel = travel;
+    this.getExpenses();
   }
 
   getTravelSummary(travel: Lookup) {
@@ -168,6 +203,10 @@ export class AccountingComponent implements OnInit {
     });
   }
 
+  downloadFile(expense: Expense) {
+    this.service.downloadExpenseFile(expense.id).subscribe(x => {});
+  }
+
   exportExpensesExcel() {
     var travelId = this.expensesTravelControl.value ? this.expensesTravelControl.value.id : '';
     this.exporting = true;
@@ -178,5 +217,97 @@ export class AccountingComponent implements OnInit {
     var travelId = this.expensesTravelControl.value ? this.expensesTravelControl.value.id : '';
     this.exporting = true;
     this.service.downloadExpenses('csv', travelId).subscribe(x => this.exporting = false);
+  }
+  
+  showPayments(travel: Travel, showMore: boolean = false) {
+    var load = false;
+    if (!this.paymentsByTravel[travel.id]) {
+      load = true;
+      this.paymentsByTravel[travel.id] = {
+        currentPage: 1,
+        payments: [],
+        totalCount: 0,
+        show: true
+      }
+    }
+    else {
+      this.paymentsByTravel[travel.id].show = true;
+    }
+
+    if (showMore) {
+      load = true;
+      this.paymentsByTravel[travel.id].currentPage++;
+    }
+    
+    if (load) {
+      this.paymentsByTravel[travel.id].loader = this.paymentService.getPayments(this.paymentsByTravel[travel.id].currentPage, this.itemsPerPage, travel.id)
+        .subscribe(res => {
+          this.paymentsByTravel[travel.id].payments = this.paymentsByTravel[travel.id].payments.concat(res.data);
+          this.paymentsByTravel[travel.id].totalCount = res.paging.totalCount;
+        });
+    }
+  }
+
+  hidePayments(travel: Travel) {
+    this.paymentsByTravel[travel.id].show = false;
+  }
+
+  openPaymentDialog(payment: Payment) {
+    let dialogRef = this.dialog.open(PaymentDialogComponent, {
+      autoFocus: true,
+      width: '534px',
+      data: {
+        payment
+      }
+    });
+  }
+
+  fromDateChange(date) {
+    this.getExpenses();
+  }
+
+  toDateChange(date) {
+    this.getExpenses();
+  }
+
+  showExpenses(category: ExpenseCategory, showMore: boolean = false) {
+    var load = false;
+    if (!this.expensesByCategory[category.name]) {
+      load = category.expanded = true;
+      this.expensesByCategory[category.name] = {
+        currentPage: 1,
+        expenses: [],
+        totalCount: 0
+      }
+    }
+    else {
+      category.expanded = true;
+    }
+
+    if (showMore) {
+      load = true;
+      this.expensesByCategory[category.name].currentPage++;
+    }
+    
+    if (load) {
+      var search = {
+        pageNumber: this.expensesByCategory[category.name].currentPage,
+        itemsCount: this.itemsPerPage,
+        searchTerm: this.searchTermExpense,
+        travelId: this.expensesTravel ? parseInt(this.expensesTravel.id) : null,
+        from: dateToUTC(this.expensesFrom),
+        to: dateToUTC(this.expensesTo)
+      }
+
+      this.expensesByCategory[category.name].loader = this.service.getExpensesByCategory(search, category.id)
+        .subscribe(res => {
+          this.expensesByCategory[category.name].expenses = this.expensesByCategory[category.name].expenses.concat(res.data);
+          this.expensesByCategory[category.name].totalCount = res.paging.totalCount;
+        });
+    }
+  }
+
+  hideExpenses(category: ExpenseCategory) {
+    category.expanded = false;
   }
 }

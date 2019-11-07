@@ -11,6 +11,7 @@ export class Expense {
     attachments?: AppFile[];
     category?: ExpenseCategory;
     subcategory?: ExpenseCategory;
+    hasFile?: boolean;
 
     constructor() {
         this.attachments = [];
@@ -22,6 +23,9 @@ export class ExpenseCategory {
     parentId?: number;    
     name?: string;
     subcategories?: ExpenseCategory[];
+
+    // ui properties
+    expanded?: boolean;
 
     constructor() {
         this.subcategories = [];

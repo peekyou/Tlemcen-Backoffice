@@ -26,7 +26,7 @@ export class ExpenseDialogComponent implements OnInit {
   loader: Subscription;
   expense: Expense = new Expense();
   paymentTypes: PaymentType[] = [];
-  travelsLightweight: Lookup[] = [];  
+  travelsLightweight: Lookup[] = [];
   categories: ExpenseCategory[] = [];
   subcategories: ExpenseCategory[] = [];
   categorySubcategories: ExpenseCategory[] = [];  

@@ -3,7 +3,7 @@
     <app-spinner [loader]="loader"></app-spinner>
     <form [formGroup]="form" *ngIf="!loader || loader.closed">
         <div class="row">
-            <mat-form-field class="col-6">
+            <mat-form-field class="col-12 col-md-6">
                 <input matInput placeholder="Catégorie" autoClose [control]="category"
                     formControlName="category" [matAutocomplete]="autoCategory">
                 <mat-autocomplete #autoCategory="matAutocomplete" [displayWith]="displayFn.bind(this)"
@@ -16,7 +16,7 @@
                     Créer
                 </button>
             </mat-form-field>
-            <mat-form-field class="col-6">
+            <mat-form-field class="col-12 col-md-6">
                 <input matInput placeholder="Sous-catégorie" autoClose [control]="subcategory"
                     formControlName="subcategory" [matAutocomplete]="autoSubcategory">
                 <mat-autocomplete #autoSubcategory="matAutocomplete" [displayWith]="displayFn.bind(this)">
@@ -31,10 +31,10 @@
             </mat-form-field>
         </div>
         <div class="row">
-            <mat-form-field class="col-6">
+            <mat-form-field class="col-12 col-md-6">
                 <input matInput placeholder="Intitulé" formControlName="title" required>
             </mat-form-field>
-            <mat-form-field class="col-6">
+            <mat-form-field class="col-12 col-md-6">
                 <input matInput [matDatepicker]="picker" maxlength="10" (keypress)="validateDate($event)"
                     placeholder="{{ 'COMMON.DATE' | translate }}" formControlName="date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -55,11 +55,11 @@
             </mat-radio-group>
         </div>
         <div class="row">
-            <mat-form-field class="full-width" class="col-6">
+            <mat-form-field class="full-width" class="col-12 col-md-6">
                 <textarea rows="3" matInput placeholder="Informations" formControlName="details"></textarea>
             </mat-form-field>
             <app-file-upload [(file)]="expense.attachments[0]" [enableCamera]="false" 
-                [centerImage]="true" class="col-6"></app-file-upload>                    
+                [centerImage]="true" class="col-12 col-md-6"></app-file-upload>                    
         </div>
     </form>    
 </div>

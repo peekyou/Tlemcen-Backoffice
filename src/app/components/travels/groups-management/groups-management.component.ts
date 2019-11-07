@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription, forkJoin, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -34,7 +35,8 @@ export class GroupsManagementComponent implements OnInit {
     private service: TravelService,
     private dragulaService: DragulaService,
     private dialog: MatDialog,
-    private router: Router) {
+    private router: Router,
+    private location: Location) {
 
     if (!dragulaService.find('GROUPS')) {
       dragulaService.createGroup('GROUPS', {
@@ -87,8 +89,13 @@ export class GroupsManagementComponent implements OnInit {
   }
   
   goBack() {
-    var path = this.groups[0].travel.travelTypeId == TravelType.Omra ? 'omra' : this.groups[0].travel.travelTypeId == TravelType.Hajj ? 'hajj' : 'travel';
-    this.router.navigate(['/' + path, this.travelId]);
+    if (!this.groups || this.groups.length == 0) {
+      this.location.back();
+    }
+    else {
+      var path = this.groups[0].travel.travelTypeId == TravelType.Omra ? 'omra' : this.groups[0].travel.travelTypeId == TravelType.Hajj ? 'hajj' : 'travel';
+      this.router.navigate(['/' + path, this.travelId]);
+    }
   }
 
   goToGroupDetails(group: TravelGroup, $event) {

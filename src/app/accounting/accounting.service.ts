@@ -8,6 +8,7 @@ import { AuthHttpService } from '../core/services/auth-http.service';
 import { PagingResponse } from '../core/models/paging';
 import { AppFile } from '../core/models/file.model';
 import { Lookup } from '../core/models/lookup.model';
+import { TableSearch } from '../core/models/table-search.model';
 
 @Injectable()
 export class AccountingService {
@@ -19,8 +20,12 @@ export class AccountingService {
     return this.http.get(this.resource + '/revenues?pageNumber=' + page + '&itemsCount=' + count + '&searchTerm=' + searchTerm);
   }
 
-  getExpenses(page: number = null, count: number = null, searchTerm: string = '', travelId: string = ''): Observable<PagingResponse<Expense>> {
-    return this.http.get(this.resource + '/expenses?pageNumber=' + page + '&itemsCount=' + count + '&searchTerm=' + searchTerm + '&travelId=' + travelId);
+  getExpenses(tableSearch: TableSearch): Observable<PagingResponse<Expense>> {
+    return this.http.post(this.resource + '/expenses/search', tableSearch);
+  }
+
+  getExpensesByCategory(tableSearch: TableSearch, categoryId, subcategoryId = ''): Observable<PagingResponse<Expense>> {
+    return this.http.post(this.resource + '/expenses/search/' + categoryId + '?subcategoryId=' + subcategoryId, tableSearch);
   }
 
   getExpense(id): Observable<Expense> {
@@ -67,6 +72,10 @@ export class AccountingService {
 
   downloadExpenses(format: string, travelId: string = ''): Observable<void> {
     return this.http.download(this.resource + '/expenses/' + format + '?travelId=' + travelId);
+  }
+
+  downloadExpenseFile(expenseId): Observable<void> {
+    return this.http.download(this.resource + '/expenses/' + expenseId + '/file');
   }
 
   private validateExpense(expense: Expense) {

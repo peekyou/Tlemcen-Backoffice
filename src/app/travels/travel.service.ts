@@ -128,6 +128,10 @@ export class TravelService {
     return this.http.download(this.resource + '/' + travelId + '/travelers/receipt', travelerIds);
   }
   
+  downloadInvoice(travelId: string, travelerIds: string[]): Observable<void> {
+    return this.http.download(this.resource + '/' + travelId + '/travelers/invoice', travelerIds);
+  }
+  
   downloadDocumentsReceipt(travelId: string, travelerIds: string[]): Observable<void> {
     return this.http.download(this.resource + '/' + travelId + '/travelers/documentsreceipt', travelerIds);
   }

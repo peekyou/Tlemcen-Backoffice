@@ -3,8 +3,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="action-buttons">
-                  <button class="btn btn-info" (click)="openCategoryDialog()"><mat-icon>add</mat-icon>Ajouter une catégorie</button>
+                  <button class="btn btn-info" (click)="openCategoryDialog(null)"><mat-icon>add</mat-icon>Ajouter une catégorie</button>
                 </div>
+                <app-spinner [loader]="loader"></app-spinner>                
                 <div class="card" *ngIf="loader.closed && categories && categories.data && categories.data.length > 0">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Catégories des dépenses</h4>
@@ -35,41 +36,35 @@
                         </ul> -->
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <thead class="text-primary">
+                                <!-- <thead class="text-primary">
                                     <th>{{ 'COMMON.NAME' | translate }}</th>
                                     <th></th>
-                                </thead>
+                                </thead> -->
                                 <tbody>
                                     <ng-container *ngFor="let category of categories.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: categories?.paging?.totalCount }">
                                         <tr (click)="openCategoryDialog(category)">
-                                        <td>{{ category.name }}</td>
                                         <td>
+                                            <b>{{ category.name }}</b>
+                                            <div *ngIf="category.subcategories && category.subcategories.length > 0">
+                                                <div class="row details" *ngFor="let subcategory of category.subcategories" (click)="openCategoryDialog(subcategory);$event.stopPropagation()">
+                                                    <div class="col-9">{{ subcategory.name }}</div>
+                                                    <div class="col-3">
+                                                        <button matTooltip="Supprimer sous-catégorie" mat-icon-button (click)="openDeleteDialog(subcategory);$event.stopPropagation()">
+                                                            <mat-icon class="text-danger">delete</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-top">
                                             <button *ngIf="category.id != 2" mat-icon-button matTooltip="Créer sous-catégorie"
                                                 (click)="openCategoryDialog(category, true);$event.stopPropagation()">
                                                 <mat-icon>add</mat-icon>
                                             </button>
-                                            <button matTooltip="Supprimer catégorie" mat-icon-button (click)="openDeleteDialog(category);$event.stopPropagation()">
+                                            <button *ngIf="category.id != 1 && category.id != 2" matTooltip="Supprimer catégorie" mat-icon-button (click)="openDeleteDialog(category);$event.stopPropagation()">
                                                 <mat-icon class="text-danger">delete</mat-icon>
                                             </button>
                                         </td>
-                                        </tr>
-                                        <tr *ngIf="category.subcategories && category.subcategories.length > 0">
-                                            <table class="table table-sm table-hover">
-                                                <thead class="text-primary">
-                                                    <th>Sous-catégorie</th>
-                                                    <th></th>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let subcategory of category.subcategories" (click)="openCategoryDialog(subcategory);$event.stopPropagation()">
-                                                        <td>{{ subcategory.name }}</td>
-                                                        <td>
-                                                            <button matTooltip="Supprimer sous-catégorie" mat-icon-button (click)="openDeleteDialog(subcategory);$event.stopPropagation()">
-                                                                <mat-icon class="text-danger">delete</mat-icon>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
                                         </tr>
                                     </ng-container>
                                 </tbody>

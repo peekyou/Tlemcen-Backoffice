@@ -63,15 +63,7 @@ export class AccountingComponent implements OnInit {
       this.validateDate = validateDate;
       this.getRevenues();
       // this.getExpenses();
-
-      this.loaderExpenses = forkJoin(
-        travelService.getTravelsAsLookup(),
-        service.getAllExpenseCategories()
-      )
-      .subscribe(res => {
-        this.travelsLightweight = res[0];
-        this.expenseCategories = res[1].concat(<any>res[0]);
-      });
+      this.getAllExpenseCategories();
   }
 
   ngOnInit() {
@@ -97,6 +89,17 @@ export class AccountingComponent implements OnInit {
     );
   }
 
+  getAllExpenseCategories() {
+    this.loaderExpenses = forkJoin(
+      this.travelService.getTravelsAsLookup(),
+      this.service.getAllExpenseCategories()
+    )
+    .subscribe(res => {
+      this.travelsLightweight = res[0];
+      this.expenseCategories = res[1].filter(x => x.id != 2).concat(<any>res[0]);
+    });
+  }
+
   getRevenues() {
     window.scroll(0,0);
     this.loaderRevenues = this.service.getRevenues(this.currentRevenuesPage, this.itemsPerPage, this.searchTermRevenues)
@@ -114,7 +117,8 @@ export class AccountingComponent implements OnInit {
       travelId: this.expensesTravel ? parseInt(this.expensesTravel.id) : null,
       from: dateToUTC(this.expensesFrom),
       to: dateToUTC(this.expensesTo)
-    }
+    };
+
     this.loaderExpenses = this.service.getExpenses(search)
     .subscribe(
       res => this.expenses = res,
@@ -132,9 +136,39 @@ export class AccountingComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(newExpense => {
-      if (newExpense) {
-        this.currentExpensesPage = 1;
-        this.getExpenses();
+      var isUpdate = expense != null;
+      if (newExpense && newExpense.category) {
+        var newIndex = newExpense.category.id == 2 ? newExpense.subcategory ? newExpense.subcategory.name : null : newExpense.category.name;        
+      }
+      if (expense && expense.category) {
+        var oldIndex = expense.category.id == 2 ? expense.subcategory ? expense.subcategory.name : null : expense.category.name;        
+      }
+
+      if (!isUpdate && newIndex && this.expensesByCategory[newIndex] != null) {
+        this.expensesByCategory[newIndex] = null;
+        this.showExpenses(newExpense.category.id == 2 ? newExpense.subcategory : newExpense.category);
+      }
+      else if (isUpdate && oldIndex) {
+        if (oldIndex != newIndex) {
+          var i = this.expensesByCategory[oldIndex].expenses.indexOf(expense);
+          if (i > -1) {
+            this.expensesByCategory[oldIndex].expenses.splice(i, 1);
+          }
+        }
+        else {
+          var existing: Expense = this.expensesByCategory[newIndex].expenses.find(x => x.id == expense.id);
+          if (existing != null) {
+            existing.amount = newExpense.amount;
+            existing.attachments = newExpense.attachments;
+            existing.category = newExpense.category;
+            existing.subcategory = newExpense.subcategory;
+            existing.date = newExpense.date;
+            existing.details = newExpense.details;
+            existing.hasFile = newExpense.hasFile;
+            existing.paymentTypeId = newExpense.paymentTypeId;
+            existing.title = newExpense.title;
+          }
+        }
       }
     });
   }
@@ -142,16 +176,6 @@ export class AccountingComponent implements OnInit {
   searchTravels() {
     this.currentRevenuesPage = 1;
     this.getRevenues();
-  }
-
-  searchExpenses() {
-    this.currentExpensesPage = 1;
-    this.getExpenses();
-  }
-
-  travelExpensesSelected(travel: Lookup) {
-    this.expensesTravel = travel;
-    this.getExpenses();
   }
 
   getTravelSummary(travel: Lookup) {
@@ -191,10 +215,15 @@ export class AccountingComponent implements OnInit {
         this.service.deleteExpense(expense.id)
         .subscribe(
           res => {
-            var index = this.expenses.data.indexOf(expense);
-            if (index > -1) {
-                this.expenses.data.splice(index, 1);
-                this.expenses.paging.totalCount--;
+            // var index = this.expenses.data.indexOf(expense);
+            // if (index > -1) {
+            //     this.expenses.data.splice(index, 1);
+            //     this.expenses.paging.totalCount--;
+            // }
+            var index = expense.category.id == 2 ? expense.subcategory.name : expense.category.name;
+            var i = this.expensesByCategory[index].expenses.indexOf(expense);
+            if (i > -1) {
+              this.expensesByCategory[index].expenses.splice(i, 1);
             }
           },
           err => console.log(err)
@@ -205,6 +234,10 @@ export class AccountingComponent implements OnInit {
 
   downloadFile(expense: Expense) {
     this.service.downloadExpenseFile(expense.id).subscribe(x => {});
+  }
+
+  downloadInvoice(payment: Payment) {
+    this.travelService.downloadInvoice(payment.travelId, [payment.customer.id]).subscribe(x => {});
   }
 
   exportExpensesExcel() {
@@ -262,6 +295,16 @@ export class AccountingComponent implements OnInit {
     });
   }
 
+  searchExpenses() {
+    this.currentExpensesPage = 1;
+    this.getExpenses();
+  }
+
+  travelExpensesSelected(travel: Lookup) {
+    this.expensesTravel = travel;
+    this.expenseCategories = <any>this.travelsLightweight.filter(x => x.id = travel.id);
+  }
+
   fromDateChange(date) {
     this.getExpenses();
   }
@@ -288,7 +331,7 @@ export class AccountingComponent implements OnInit {
       load = true;
       this.expensesByCategory[category.name].currentPage++;
     }
-    
+
     if (load) {
       var search = {
         pageNumber: this.expensesByCategory[category.name].currentPage,
@@ -299,7 +342,9 @@ export class AccountingComponent implements OnInit {
         to: dateToUTC(this.expensesTo)
       }
 
-      this.expensesByCategory[category.name].loader = this.service.getExpensesByCategory(search, category.id)
+      var categoryId = category.parentId != null ? 2 : category.id;
+      var subcategoryId = categoryId == 2 ? category.id : null;
+      this.expensesByCategory[category.name].loader = this.service.getExpensesByCategory(search, categoryId, subcategoryId)
         .subscribe(res => {
           this.expensesByCategory[category.name].expenses = this.expensesByCategory[category.name].expenses.concat(res.data);
           this.expensesByCategory[category.name].totalCount = res.paging.totalCount;

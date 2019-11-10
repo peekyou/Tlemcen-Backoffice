@@ -43,13 +43,18 @@
                            (click)="openPaymentDialog(payment);$event.stopPropagation()">
                         <div class="col-12 col-lg-3">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
                         <div class="col-12 col-lg-2">{{ payment.amountPaid }} €</div>
-                        <div class="col-12 col-lg-5">
+                        <div class="col-12 col-lg-4">
                             <span *ngIf="payment.customer">{{ payment.customer.firstname }} {{ payment.customer.lastname }}</span>
                         </div>
-                        <div class="col-12 col-lg-2">
+                        <div class="col-6 col-lg-2">
                           <span *ngIf="payment.status == 'P'" class="badge badge-success">Payé</span>
                           <span *ngIf="payment.status == 'I'" class="badge badge-danger">Incomplet</span>
                           <span *ngIf="payment.status == 'R'" class="badge badge-warning">A rembourser</span>
+                        </div>
+                        <div class="col-6 col-lg-1">
+                          <button mat-icon-button (click)="downloadInvoice(payment);$event.stopPropagation()" matTooltip="Télécharger la facture">
+                              <mat-icon>cloud_download</mat-icon>
+                          </button>
                         </div>                     
                       </div>
                       <a *ngIf="paymentsByTravel[travel.id].payments.length < paymentsByTravel[travel.id].totalCount" (click)="showPayments(travel, true);$event.stopPropagation()">Afficher plus de paiements</a>
@@ -166,10 +171,10 @@
                             <button mat-icon-button (click)="openDeleteDialog(expense);$event.stopPropagation()" matTooltip="Supprimer la dépense">
                                 <mat-icon class="text-danger">delete</mat-icon>
                             </button>
-                            <button *ngIf="expense.hasFile" mat-icon-button (click)="downloadFile(expense);$event.stopPropagation()" matTooltip="Télécharger la facture">
+                            <button *ngIf="expense.hasFile" mat-icon-button (click)="downloadFile(expense);$event.stopPropagation()" matTooltip="Télécharger le fichier">
                                 <mat-icon>cloud_download</mat-icon>
                             </button>
-                          </div>                     
+                          </div>
                         </div>
                         <a *ngIf="expensesByCategory[expenseCategory.name].expenses.length < expensesByCategory[expenseCategory.name].totalCount" (click)="showExpenses(expenseCategory, true);$event.stopPropagation()">Afficher plus de dépenses</a>
                       </div>

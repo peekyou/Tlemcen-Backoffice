@@ -20,16 +20,10 @@ export const ROUTES: RouteInfo[] = [
     { path: '/hotels', title: 'Hôtels',  icon: 'hotel', class: '', roles: [Roles.Admin, Roles.Hotels] },
     { path: '/airlines', title: 'Compagnies',  icon: 'flight', class: '', roles: [Roles.Admin, Roles.Airlines] },
     { path: '/payments', title: 'Paiements',  icon: 'payment', class: '', roles: [Roles.Admin, Roles.Payments] },
-    { path: '/accounting', title: 'Comptabilité',  icon: 'account_balance_wallet', class: '', roles: [Roles.Admin, Roles.Payments] },
+    //{ path: '/accounting', title: 'Comptabilité',  icon: 'account_balance_wallet', class: '', roles: [Roles.Admin, Roles.Payments] },
     { path: '/communication', title: 'Communication',  icon: 'forum', class: '', roles: [Roles.Admin, Roles.Communication] },
     { path: '/management', title: 'Gestion',  icon: 'settings', class: '', roles: [Roles.Admin, Roles.DocumentsManagement, Roles.FeesManagement, Roles.UserManagement] },
-    { path: '/notes', title: 'Notes', icon: 'note', class: '' },        
-    // { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
-    // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
-    // { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    // { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
-    // { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' }
+    { path: '/notes', title: 'Notes', icon: 'note', class: '' },
 ];
 
 @Component({

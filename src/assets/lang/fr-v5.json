@@ -161,6 +161,7 @@
         "TEMPLATE_FILE_NOT_FOUND": "Fichier template introuvable",
         "INVALID_TEMPLATE_FORMAT": "Fichier template invalide",
         "NO_HOTEL_ASSIGNED_TO_TRAVELER": "Ce client n'est enregistré dans aucun hôtel",
-        "NO_FLIGHT_ASSIGNED_TO_TRAVELER": "Ce client n'est enregistré dans aucun vol"
+        "NO_FLIGHT_ASSIGNED_TO_TRAVELER": "Ce client n'est enregistré dans aucun vol",
+        "EXPENSE_CATEGORY_USED": "Cette catégorie est utilisée, elle ne peut pas être supprimée"
     }
 }

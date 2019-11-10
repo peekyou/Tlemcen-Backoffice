@@ -1,15 +1,10 @@
-li {
+.details {
+    font-size: .85rem;
+    border-top: 1px solid #eee;
+    padding-left: .7rem;
+}
+
+.details.row:hover {
+    background-color: #ddd;
     cursor: pointer;
-}
-
-li:hover {
-    background: #ccc;
-}
-
-li ul li:hover {
-    background: #000;
-}
-
-.table-sm {
-    margin-left: 1rem;
 }

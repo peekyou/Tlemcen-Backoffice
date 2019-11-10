@@ -105,7 +105,7 @@ export class TravelServicesComponent implements OnInit {
     }
   }
 
-  serviceChecked(event, fee) {
+  feeChanged(event, fee) {
     this.emitChanges();
   }
 

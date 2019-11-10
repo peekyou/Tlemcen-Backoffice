@@ -161,6 +161,7 @@
         "TEMPLATE_FILE_NOT_FOUND": "Template file not found",
         "INVALID_TEMPLATE_FORMAT": "Invalid template file",
         "NO_HOTEL_ASSIGNED_TO_TRAVELER": "The customer does not have a hotel room booked",
-        "NO_FLIGHT_ASSIGNED_TO_TRAVELER": "The customer does not have a flight booked"
+        "NO_FLIGHT_ASSIGNED_TO_TRAVELER": "The customer does not have a flight booked",
+        "EXPENSE_CATEGORY_USED": "This category is used, it cannot be deleted"
     }
 }

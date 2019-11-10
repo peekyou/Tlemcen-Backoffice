@@ -72,6 +72,11 @@ export class PrintDocumentsDialogComponent implements OnInit {
     .subscribe(res => {});
   }
 
+  printInvoice() {
+    this.printLoader = this.service.downloadInvoice(this.travel.id, this.customersChecked.map(x => x.id))
+    .subscribe(res => {});
+  }
+
   printTravelerBadge() {
     this.printLoader = this.service.downloadTravelerBadge(this.travel.id, this.customersChecked.map(x => x.id))
     .subscribe(res => {});

@@ -24,7 +24,7 @@ export class AccountingService {
     return this.http.post(this.resource + '/expenses/search', tableSearch);
   }
 
-  getExpensesByCategory(tableSearch: TableSearch, categoryId, subcategoryId = ''): Observable<PagingResponse<Expense>> {
+  getExpensesByCategory(tableSearch: TableSearch, categoryId, subcategoryId = null): Observable<PagingResponse<Expense>> {
     return this.http.post(this.resource + '/expenses/search/' + categoryId + '?subcategoryId=' + subcategoryId, tableSearch);
   }
 

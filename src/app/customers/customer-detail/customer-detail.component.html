@@ -1,6 +1,7 @@
 <div class="main-content">
-    <div class="container-fluid" *ngIf="customer">
-        <div class="row">
+    <div class="container-fluid">
+        <app-spinner [loader]="loader"></app-spinner>            
+        <div class="row" *ngIf="customer">
             <div class="col-md-8">
                 <div *ngIf="!isEditing" class="card card-profile">
                     <div class="card-body">

@@ -14,7 +14,8 @@ export class CustomerDetailComponent implements OnInit {
   isEditing = false;
   customer: Customer;
   saveSubscription: Subscription;
-
+  loader: Subscription;
+  
   constructor(
     private route: ActivatedRoute,
     private service: CustomersService) {
@@ -43,6 +44,6 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   getCustomer(id) {
-    this.service.getCustomer(id).subscribe(res => this.customer = res);
+    this.loader = this.service.getCustomer(id).subscribe(res => this.customer = res);
   }
 }

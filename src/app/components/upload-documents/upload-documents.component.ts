@@ -96,7 +96,7 @@ export class UploadDocumentsComponent implements OnInit {
   isDocumentReceived(document: AppDocument) {
     if (this._customer.documents) {
       var customerDoc = this._customer.documents.find(x => x.documentTypeId == document.id);
-      return customerDoc && customerDoc.received;
+      return customerDoc && customerDoc.received && customerDoc.travelId == this.travelId;
     }
     return false;
   }

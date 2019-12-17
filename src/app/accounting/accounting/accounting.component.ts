@@ -301,11 +301,14 @@ export class AccountingComponent implements OnInit {
   }
 
   travelExpensesSelected(travel: Lookup) {
-    this.expensesTravel = travel;
-    this.expenseCategories = <any>this.travelsLightweight.filter(x => x.id = travel.id);
+    if (travel) {
+      this.expensesTravel = travel;
+      this.expenseCategories = <any>this.travelsLightweight.filter(x => x.id == travel.id); 
+    }
   }
 
   fromDateChange(date) {
+    console.log(this.travelsLightweight)
     this.getExpenses();
   }
 

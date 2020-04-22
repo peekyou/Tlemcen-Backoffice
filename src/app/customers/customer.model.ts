@@ -3,6 +3,7 @@ import { AppFile } from '../core/models/file.model';
 import { Lookup } from '../core/models/lookup.model';
 import { AppDocument } from '../management/documents-management/document.model';
 import { Payment } from '../payments/payment.model';
+import { Travel } from '../travels/travel.model';
 
 export class Customer {
     id?: string;
@@ -27,6 +28,7 @@ export class Customer {
     isConverted?: boolean;
     picture?: AppFile;
     documents?: CustomerDocument[];
+    travels?: Travel[];
 
     // For travel detail
     travelPayment?: Payment;

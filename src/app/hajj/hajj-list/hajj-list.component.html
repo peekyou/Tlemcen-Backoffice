@@ -32,6 +32,9 @@
                                             <button mat-icon-button matTooltip="Modifier" (click)="openHajjDialog(hajj);$event.stopPropagation()">
                                                 <mat-icon>edit</mat-icon>
                                             </button>
+                                            <button mat-icon-button matTooltip="Supprimer" (click)="openDeleteDialog(hajj);$event.stopPropagation()">
+                                                <mat-icon class="text-danger">delete</mat-icon>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -63,6 +66,9 @@
                                         <td>
                                             <button mat-icon-button matTooltip="Modifier" (click)="openHajjDialog(hajj);$event.stopPropagation()">
                                                 <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button matTooltip="Supprimer" (click)="openDeleteDialog(hajj);$event.stopPropagation()">
+                                                <mat-icon class="text-danger">delete</mat-icon>
                                             </button>
                                         </td>
                                     </tr>

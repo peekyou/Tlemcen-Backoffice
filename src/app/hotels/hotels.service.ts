@@ -42,7 +42,7 @@ export class HotelsService {
   }
 
   updateHotelBooking(travelId: string, reservation: HotelReservation) : Observable<HotelReservation> {
-    return this.http.put(this.resource + '/' + travelId, reservation);
+    return this.http.put(this.resource + '/' + travelId + '/rooms', reservation);
   }
 
   deleteEmptyRooms(travelId) : Observable<HotelReservation> {

@@ -8,6 +8,7 @@ import { Omra } from '../omra.model';
 import { OmraService } from '../omra.service';
 import { OmraDialogComponent } from '../omra-dialog/omra-dialog.component';
 import { TravelStatus } from '../../travels/travel.model';
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-omra-list',
@@ -68,6 +69,35 @@ export class OmraListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(newOmra => {
       if (newOmra && newOmra.id) {
         this.router.navigate(['/omra', newOmra.id]);
+      }
+    });
+  }
+
+  openDeleteDialog(omra: Omra) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: omra.name }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.deleteTravel(omra.id)
+        .subscribe(
+          res => {
+            var index = this.currentOmra.indexOf(omra);
+            if (index > -1) {
+                this.currentOmra.splice(index, 1);
+            }
+            else {
+              index = this.completedOmra.data.indexOf(omra);
+              if (index > -1) {
+                  this.completedOmra.data.splice(index, 1);
+                  this.completedOmra.paging.totalCount--;
+              }
+            }
+          },
+          err => console.log(err)
+        );
       }
     });
   }

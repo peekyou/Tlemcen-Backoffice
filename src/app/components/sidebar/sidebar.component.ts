@@ -16,7 +16,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/omra', title: 'Omra',  icon: 'layers', class: '', roles: [Roles.Admin, Roles.Omra] },
     { path: '/hajj', title: 'Hajj',  icon: 'view_compact', class: '', roles: [Roles.Admin, Roles.Hajj] },
     { path: '/voyages', title: 'Voyages',  icon: 'card_travel', class: 'inactive', roles: [Roles.Admin, Roles.Travels] },
-    { path: '/customers', title: 'Clients',  icon: 'people', class: '', roles: [Roles.Admin, Roles.Customers] },
+    { path: '/customers', title: 'Pèlerins',  icon: 'people', class: '', roles: [Roles.Admin, Roles.Customers] },
     { path: '/hotels', title: 'Hôtels',  icon: 'hotel', class: '', roles: [Roles.Admin, Roles.Hotels] },
     { path: '/airlines', title: 'Compagnies',  icon: 'flight', class: '', roles: [Roles.Admin, Roles.Airlines] },
     { path: '/payments', title: 'Paiements',  icon: 'payment', class: '', roles: [Roles.Admin, Roles.Payments] },

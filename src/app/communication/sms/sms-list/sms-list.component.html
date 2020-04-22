@@ -9,7 +9,7 @@
         <th>{{ 'COMMON.NAME' | translate }}</th>
         <th class="w-50">{{ 'CAMPAIGNS.MESSAGE' | translate }}</th>
         <th>{{ 'CAMPAIGNS.TOTAL_RECIPIENTS' | translate }}</th>
-        <th>{{ 'CAMPAIGNS.TOTAL_RECEIVED' | translate }}</th>
+        <!-- <th>{{ 'CAMPAIGNS.TOTAL_RECEIVED' | translate }}</th> -->
       </thead>
       <tbody>
         <tr *ngFor="let promotion of promotions.data | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: promotions?.paging?.totalCount }">
@@ -19,7 +19,7 @@
           </th>
           <td class="campaign-content">{{promotion?.content}}</td>
           <td>{{promotion?.nbRecipients}}</td>
-          <td>{{promotion?.nbSmsSent}}</td>
+          <!-- <td>{{promotion?.nbSmsSent}}</td> -->
         </tr>
       </tbody>
     </table>

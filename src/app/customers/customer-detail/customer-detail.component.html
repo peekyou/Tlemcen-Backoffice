@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <app-spinner [loader]="loader"></app-spinner>            
         <div class="row" *ngIf="customer">
-            <div class="col-md-8">
+            <div class="col-12 col-md-7">
                 <div *ngIf="!isEditing" class="card card-profile">
                     <div class="card-body">
                         <div class="card-avatar">
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-4">
+            <div class="col-12 col-md-5">
                 <div class="card">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">Participations</h4>
@@ -78,17 +78,15 @@
                        <br>
                         <table class="table table-hover">
                             <tbody>
-                                <tr>
-                                    <td>Omra Janvier 2017</td>
-                                </tr>
-                                <tr>
-                                    <td>Hajj 2015</td>
+                                <tr *ngFor="let travel of customer.travels" [routerLink]="travel.travelTypeId == 2 ? ['/hajj', travel.id] : ['/omra', travel.id]">
+                                    <td>{{ travel.name }}</td>
+                                    <td>{{ travel.status }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
   </div>

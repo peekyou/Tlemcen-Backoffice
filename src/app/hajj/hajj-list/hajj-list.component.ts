@@ -8,6 +8,7 @@ import { Hajj } from '../hajj.model';
 import { HajjService } from '../hajj.service';
 import { HajjDialogComponent } from '../hajj-dialog/hajj-dialog.component';
 import { TravelStatus } from '../../travels/travel.model';
+import { DeleteDialogComponent } from '../../components/common/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-hajj-list',
@@ -64,6 +65,35 @@ export class HajjListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(newHajj => {
       if (newHajj && newHajj.id) {
         this.router.navigate(['/hajj', newHajj.id]);
+      }
+    });
+  }
+
+  openDeleteDialog(hajj: Hajj) {
+    let dialogRef = this.dialog.open(DeleteDialogComponent, {
+      autoFocus: false,
+      data: { name: hajj.name }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.service.deleteTravel(hajj.id)
+        .subscribe(
+          res => {
+            var index = this.currentHajj.indexOf(hajj);
+            if (index > -1) {
+                this.currentHajj.splice(index, 1);
+            }
+            else {
+              index = this.completedHajj.data.indexOf(hajj);
+              if (index > -1) {
+                  this.completedHajj.data.splice(index, 1);
+                  this.completedHajj.paging.totalCount--;
+              }
+            }
+          },
+          err => console.log(err)
+        );
       }
     });
   }

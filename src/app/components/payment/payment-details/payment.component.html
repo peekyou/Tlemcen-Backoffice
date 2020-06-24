@@ -32,7 +32,7 @@
         <div class="col">{{ calculateTotal() }}€</div>
     </div>
 
-    <div *ngIf="customer.travelPayment && customer.travelPayment.amountPaid > 0" class="row">
+    <div *ngIf="customer.travelPayment && customer.travelPayment.amountPaid != 0" class="row">
         <div class="col">Montant payé</div>
         <div class="col">{{ customer.travelPayment.amountPaid }}€</div>
     </div>
@@ -40,7 +40,7 @@
     <!-- Display payment details in read only mode -->
     <div class="payment-details">
         <div *ngFor="let payment of paymentHistory">
-            <div *ngIf="payment.amountPaid > 0 || payment.isEdit" class="row">
+            <div *ngIf="payment.amountPaid != 0 || payment.isEdit" class="row">
                 <div class="col payment-date">{{ payment.createdDate | date:'dd/MM/yyyy' }}</div>
                 <div class="col amount">
                     <span *ngIf="!payment.isEdit">{{ payment.amountPaid }}€</span>
